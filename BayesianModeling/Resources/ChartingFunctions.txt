@@ -1,0 +1,99 @@
+pieGraph = data.frame(Noise=output[[1]]['noise.prob'],
+                      Hyperbolic=output[[2]]['Mazur.prob'],
+                      Exponential=output[[3]]['exp.prob'],
+                      Hyperboloid.M=output[[4]]['MG.prob'],
+                      Hyperboloid.R=output[[5]]['Rachlin.prob'],
+                      QuasiHyperbolic=output[[9]]['BD.prob'])
+
+colnames(pieGraph)[1] <- "Noise"
+colnames(pieGraph)[2] <- "Hyperbolic"
+colnames(pieGraph)[3] <- "Exponential"
+colnames(pieGraph)[4] <- "Hyperboloid.M"
+colnames(pieGraph)[5] <- "Hyperboloid.R"
+colnames(pieGraph)[6] <- "QuasiHyperbolic"
+
+pieGraph <- pieGraph[colSums(!is.na(pieGraph)) > 0]
+pieGraph.melt <- melt(pieGraph)
+
+ggBar <- ggplot(pieGraph.melt, aes(x = factor(variable), y=value)) +
+  geom_bar(stat="identity") + 
+  ggtitle("Model Competition Results\n") +
+  ylab("Competition (higher is better)") +
+  theme_bw() +
+  theme(panel.grid.minor = element_blank()) +
+  theme(panel.grid.major = element_blank()) +
+  theme(axis.title.x = element_blank()) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+delaySeries = 1:endDelay
+expSeries = rep(NA,endDelay)
+hypSeries = rep(NA,endDelay)
+quaSeries = rep(NA,endDelay)
+myerSeries = rep(NA,endDelay)
+rachSeries = rep(NA,endDelay)
+
+samuelsonK <- as.numeric(output[[3]]['exp.lnk'])
+ainslieK <- as.numeric(output[[2]]['Mazur.lnk'])
+betaConstant <- as.numeric(output[[9]]['BD.beta'])
+deltaConstant <- as.numeric(output[[9]]['BD.delta'])
+myerK <- as.numeric(output[[4]]['MG.lnk'])
+myerS <- as.numeric(output[[4]]['MG.s'])
+rachK <- as.numeric(output[[5]]['Rachlin.lnk'])
+rachS <- as.numeric(output[[5]]['Rachlin.s'])
+
+for (delay in delaySeries)
+{
+  delaySeries[delay] = delay
+  
+  if(!is.na(samuelsonK))
+  {
+    expSeries[delay] = (A * exp(-(exp(samuelsonK))*delay))
+  }
+  if(!is.na(ainslieK))
+  {
+    hypSeries[delay] = A * (1+exp(ainslieK)*delay)^(-1)
+  }
+  if(!is.na(betaConstant))
+  {
+    quaSeries[delay] = A * ((betaConstant)*(deltaConstant)^delay)
+  }
+  if(!is.na(myerK))
+  {
+    myerSeries[delay] = A * (1+exp(myerK)*delay)^(-myerS)    
+  }
+  if(!is.na(rachK))
+  {
+    rachSeries[delay] = A * (1 + exp(rachK)*(delay^rachS))^(-1)
+  }
+}
+
+totalFrame = data.frame(Delays=log(delaySeries),
+                        Exponential=expSeries,
+                        Hyperbolic=hypSeries,
+                        QuasiHyperbolic=quaSeries,
+                        HyperboloidM=myerSeries,
+                        HyperboloidR=rachSeries)
+
+totalFrame.melt <- melt(totalFrame, id=c("Delays"))
+
+pointFrame <- data.frame(DelaysP=log(mDelays), ValuesP=mIndiff)
+
+logChart <- ggplot() +
+  geom_line(data=totalFrame.melt, aes(x=Delays, y=value, group=variable, colour = variable)) + 
+  geom_point(data=pointFrame, aes(x=pointFrame$DelaysP, y=pointFrame$ValuesP)) +
+  expand_limits(y=0) +
+  theme_bw() +
+  theme(panel.grid.minor = element_blank()) +
+  ggtitle("Fitted Discounting Functions\n") +
+  ylab("Value") +
+  xlab("log(Delay)") +
+  theme(legend.title = element_blank()) +
+  theme(legend.position = "bottom") +
+  theme(legend.direction = "vertical") + 
+  theme(panel.grid.minor = element_blank()) +
+  theme(panel.grid.major = element_blank()) +
+  guides(col = guide_legend(ncol = 3)) 
+  
+pushViewport(viewport(layout = grid.layout(1, 4, heights = unit(c(6, 6), "null"))))
+print(ggBar, vp = viewport(layout.pos.row = 1, layout.pos.col = 1:2))
+print(logChart, vp = viewport(layout.pos.row = 1, layout.pos.col = 3:4))

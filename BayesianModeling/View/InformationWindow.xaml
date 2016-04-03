@@ -1,0 +1,108 @@
+﻿<Window x:Class="BayesianModeling.View.InformationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BayesianModeling.View"
+        mc:Ignorable="d"
+        Title="Information Window" 
+        Height="600" 
+        ResizeMode="NoResize"
+        Width="450">
+    <Grid>
+        <FlowDocumentScrollViewer>
+            <FlowDocument>
+                <Paragraph>
+                    <Image Source="/Resources/SNS.png" Width="90" Height="90" Margin="0,0,30,0" />
+                    <Run 
+                        FontSize="22"
+                        BaselineAlignment="Center">Bayesian Model Simulator</Run>
+                </Paragraph>
+
+                <Paragraph>
+                    The
+                    <Bold>Bayesian Model Selection</Bold>
+                    procedure is an extension of earlier work by Chris Franck et al., 2015.  A link to the original work is included below:
+                </Paragraph>
+
+                <Paragraph>
+                    <Bold>
+                        <Hyperlink NavigateUri="http://www.smallnstats.com/" 
+                       RequestNavigate="Hyperlink_RequestNavigate">Small n Stats
+                        </Hyperlink>
+                    </Bold>,
+                    refers to a project developed/maintained by Shawn P. Gilroy. This project utilizes several open-source components, which are indicated below.
+                </Paragraph>
+
+                <Paragraph>
+                    <Bold>Credits and Acknowledgments:</Bold>
+                </Paragraph>
+
+                <List>
+                    <ListItem>
+                        <Paragraph>
+                            <Hyperlink NavigateUri="http://onlinelibrary.wiley.com/doi/10.1002/jeab.128/abstract" 
+                       RequestNavigate="Hyperlink_RequestNavigate">Franck, C. T., Koffarnus, M. N., House, L. L., Bickel, W. (2015). 
+                                Accurate characterization of delay discounting: A multiple model approach using approximate bayesian 
+                                model selection and a unified discounting measure, Journal of the Experimental Analysis of Behavior, 
+                                103, 218-233.
+                            </Hyperlink>
+                            <LineBreak />
+                        </Paragraph>
+                    </ListItem>
+
+                    <ListItem>
+                        <Paragraph>
+                            <Hyperlink NavigateUri="https://www.r-project.org/" 
+                       RequestNavigate="Hyperlink_RequestNavigate">R Project for Statistical Computing. R Core Team. Licensed under GPL-2.
+                            </Hyperlink>
+                            <LineBreak />
+                        </Paragraph>
+                    </ListItem>
+
+                    <ListItem>
+                        <Paragraph>
+                            <Hyperlink NavigateUri="https://github.com/lgautier/R-3-0-branch-alt/blob/master/src/library/stats/R/nls.R" 
+                       RequestNavigate="Hyperlink_RequestNavigate">NLS R package. Developed by Saikat DebRoy, Douglas M. Bates, Jose C. 
+                                Pinheiro 1999.  Licensed under GPL-2.
+                            </Hyperlink>
+                            <LineBreak />
+                        </Paragraph>
+                    </ListItem>
+
+                    <ListItem>
+                        <Paragraph>
+                            <Hyperlink NavigateUri="https://cran.r-project.org/web/packages/minpack.lm/index.html" 
+                       RequestNavigate="Hyperlink_RequestNavigate">Minpack.lm: : R Interface to the Levenberg-Marquardt Nonlinear 
+                                Least-Squares Algorithm Found in MINPACK, Plus Support for Bounds. Software developed by the 
+                                University of Chicago, as Operator of Argonne National Laboratory. Licensed under GPL-3.
+                            </Hyperlink>
+                            <LineBreak />
+                        </Paragraph>
+                    </ListItem>
+                    
+                    <ListItem>
+                        <Paragraph>
+                            <Hyperlink NavigateUri="https://github.com/jmp75/rdotnet" 
+                       RequestNavigate="Hyperlink_RequestNavigate">Rdotnet (R calls for to NLS package). R Programming language interop 
+                                library.  New BSD License.
+                            </Hyperlink>
+                            <LineBreak />
+                        </Paragraph>
+                    </ListItem>
+
+                    <ListItem>
+                        <Paragraph>
+                            <Hyperlink NavigateUri="https://reogrid.net/license/" 
+                       RequestNavigate="Hyperlink_RequestNavigate">Reogrid (Spreadsheet Views). Copyright (c) 2012-2015 unvell.com, 
+                                all rights reserved. BSD License for free (current) version.
+                            </Hyperlink>
+                            <LineBreak />
+                        </Paragraph>
+                    </ListItem>
+                </List>
+
+            </FlowDocument>
+        </FlowDocumentScrollViewer>
+    </Grid>
+</Window>
