@@ -120,26 +120,35 @@ namespace BayesianModeling.ViewModel
 
         private void ViewLoaded()
         {
-            SendMessageToOutput("Loading core modules...");
+            SendMessageToOutput("Attempting to link with R installation.");
+            SendMessageToOutput("Attempting to Load core binaries...");
 
             REngine.SetEnvironmentVariables();
             engine = REngine.GetInstance();
             engine.Initialize();
 
-            SendMessageToOutput("R interop modules loaded.");
-
             if (engine.IsRunning)
             {
                 SendMessageToOutput("R is found and running");
-                SendMessageToOutput("Checking for required packages...");
-                engine.Evaluate("if (!require(minpack.lm)) { install.packages('minpack.lm', repos = 'http://cran.us.r-project.org') }");
-                SendMessageToOutput("minpack.lm found");
+                SendMessageToOutput("");
+                SendMessageToOutput("Displaying R License:");
+                SendMessageToOutput("");
+                SendMessageToOutput("R Copyright (C) 2016 R Core Team");
+                SendMessageToOutput("This program comes with ABSOLUTELY NO WARRANTY;");
+                SendMessageToOutput("This is free software, and you are welcome to redistribute it");
+                SendMessageToOutput("under certain conditions.");
+                SendMessageToOutput("");
+                SendMessageToOutput("");
+                SendMessageToOutput("Checking for required packages: ");
                 engine.Evaluate("if (!require(ggplot2)) { install.packages('ggplot2', repos = 'http://cran.us.r-project.org') }");
-                SendMessageToOutput("ggplot2 found");
+                SendMessageToOutput("Package ggplot2 found/loaded");
+                SendMessageToOutput("");
                 engine.Evaluate("if (!require(reshape2)) { install.packages('reshape2', repos = 'http://cran.us.r-project.org') }");
-                SendMessageToOutput("reshape2 found");
+                SendMessageToOutput("Package reshape2 found/loaded");
+                SendMessageToOutput("");
                 engine.Evaluate("if (!require(gridExtra)) { install.packages('gridExtra', repos = 'http://cran.us.r-project.org') }");
-                SendMessageToOutput("gridExtra found");
+                SendMessageToOutput("Package gridExtra found/loaded");
+                SendMessageToOutput("");
                 SendMessageToOutput("All required packages have been found.  Ready to proceed.");
             }
             else
