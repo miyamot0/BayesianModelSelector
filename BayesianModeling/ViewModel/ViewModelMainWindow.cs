@@ -44,6 +44,9 @@ namespace BayesianModeling.ViewModel
         public RelayCommand RdotNetLicenseWindowCommand { get; set; }
         public RelayCommand ReogridLicenseWindowCommand { get; set; }
         public RelayCommand NlsLicenseWindowCommand { get; set; }
+        public RelayCommand Ggplot2LicenseWindowCommand { get; set; }
+        public RelayCommand Reshape2LicenseWindowCommand { get; set; }
+        public RelayCommand GridExtraLicenseWindowCommand { get; set; }
 
         /* Output View */
 
@@ -78,6 +81,10 @@ namespace BayesianModeling.ViewModel
             RdotNetLicenseWindowCommand = new RelayCommand(param => RdotNetLicenseInformationWindow(), param => true);
             ReogridLicenseWindowCommand = new RelayCommand(param => ReogridLicenseInformationWindow(), param => true);
             NlsLicenseWindowCommand = new RelayCommand(param => NlsLicenseInformationWindow(), param => true);
+
+            Ggplot2LicenseWindowCommand = new RelayCommand(param => Ggplot2LicenseInformationWindow(), param => true);
+            Reshape2LicenseWindowCommand = new RelayCommand(param => Reshape2LicenseInformationWindow(), param => true);
+            GridExtraLicenseWindowCommand = new RelayCommand(param => GridExtraLicenseInformationWindow(), param => true);
         }
 
         private void NlsLicenseInformationWindow()
@@ -120,6 +127,39 @@ namespace BayesianModeling.ViewModel
             {
                 licenseTitle = "License - R",
                 licenseText = Properties.Resources.License_R
+            };
+            window.Show();
+        }
+
+        private void Ggplot2LicenseInformationWindow()
+        {
+            var window = new License();
+            window.DataContext = new ViewModelLicense
+            {
+                licenseTitle = "License - ggplot2",
+                licenseText = Properties.Resources.License_ggplot2
+            };
+            window.Show();
+        }
+
+        private void Reshape2LicenseInformationWindow()
+        {
+            var window = new License();
+            window.DataContext = new ViewModelLicense
+            {
+                licenseTitle = "MIT License - reshape2",
+                licenseText = Properties.Resources.License_reshape2
+            };
+            window.Show();
+        }
+
+        private void GridExtraLicenseInformationWindow()
+        {
+            var window = new License();
+            window.DataContext = new ViewModelLicense
+            {
+                licenseTitle = "License - gridExtra",
+                licenseText = Properties.Resources.License_gridExtra
             };
             window.Show();
         }
@@ -237,7 +277,7 @@ namespace BayesianModeling.ViewModel
                 SendMessageToOutput("");
                 SendMessageToOutput("");
 
-                /* Interactive post for reshape2 package */
+                /* Interactive post for gridExtra package */
 
                 engine.Evaluate("if (!require(gridExtra)) { install.packages('gridExtra', repos = 'http://cran.us.r-project.org') }");
                 SendMessageToOutput("Package gridExtra found/loaded");
@@ -256,6 +296,10 @@ namespace BayesianModeling.ViewModel
                 SendMessageToOutput("R DLL's not found.");
                 MessageBox.Show("Please download and install the R statistical package to continue.  This is required.");
             }
+
+            SendMessageToOutput("A listing of all referenced software, with licensing, has been displayed above.");
+            SendMessageToOutput("License information is also provided in Information > Licenses > ... as well as");
+            SendMessageToOutput("in the install directory of this program (under Resources).");
         }
 
         private void ViewClosed()

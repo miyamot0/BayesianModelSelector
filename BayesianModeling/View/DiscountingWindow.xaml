@@ -57,17 +57,22 @@
         <Button Name="delaysButton" 
                 Grid.Row="1" 
                 Grid.Column="0"
+                Grid.ColumnSpan="2"
                 Margin="10"
-                Content="Delays"
+                Content="Click to Select Delays Range"
                 Command="{Binding GetDelaysRangeCommand}">
         </Button>
 
         <TextBox
             Grid.Row="1" 
-            Grid.Column="1"
-            Grid.ColumnSpan="3"
+            Grid.Column="2"
+            Grid.ColumnSpan="2"
             IsReadOnly="True"
             Margin="10"
+            Focusable="False"
+            AcceptsTab="False"
+            IsEnabled="False"
+            ToolTip="Click button to select delay points"
             Text="{Binding Delays}"
             Background="{Binding Path=DelaysBrush}">
         </TextBox>
@@ -75,32 +80,38 @@
         <Button Name="valuesButton" 
                 Grid.Row="2" 
                 Grid.Column="0"
+                Grid.ColumnSpan="2"
                 Margin="10"
-                Content="Values"
+                Content="Click to Select Values Range"
                 Command="{Binding GetValuesRangeCommand}">
         </Button>
 
         <TextBox
             Grid.Row="2" 
-            Grid.Column="1"
-            Grid.ColumnSpan="3"
+            Grid.Column="2"
+            Grid.ColumnSpan="2"
             IsReadOnly="True"
             Margin="10"
+            Focusable="False"
+            AcceptsTab="False"
+            IsEnabled="False"
+            ToolTip="Click button to select value points"
             Text="{Binding Values}"
             Background="{Binding Path=ValuesBrush}">
         </TextBox>
 
         <Label Grid.Row="3" 
                Grid.Column="0"
+               Grid.ColumnSpan="2"
                Margin="10"
-               Content="Max Value">
+               Content="Enter Max Bound for Values (A)">
         </Label>
 
         <TextBox
             Name="maxValue"
             Grid.Row="3" 
-            Grid.Column="1"
-            Grid.ColumnSpan="3"
+            Grid.Column="2"
+            Grid.ColumnSpan="2"
             Margin="10"
             Text="{Binding MaxValue}">
         </TextBox>

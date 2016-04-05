@@ -205,10 +205,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\FranckSimulation.txt" />
+    <Resource Include="Resources\FranckSimulation.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\ChartingFunctions.txt" />
+    <Resource Include="Resources\ChartingFunctions.txt" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\License-RdotNet.txt">
@@ -227,6 +227,21 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\License_R.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\License_ggplot2.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\License_gridExtra.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\License_reshape2.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>

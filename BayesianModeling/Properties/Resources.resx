@@ -124,6 +124,12 @@
   <data name="FranckSimulation" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\FranckSimulation.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
+  <data name="License_ggplot2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\License_ggplot2.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="License_gridExtra" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\License_gridExtra.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
   <data name="License_NLS" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\License_NLS.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
@@ -135,6 +141,9 @@
   </data>
   <data name="License_ReogridSpreadsheet" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\License_ReogridSpreadsheet.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="License_reshape2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\License_reshape2.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="SNS" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SNS.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

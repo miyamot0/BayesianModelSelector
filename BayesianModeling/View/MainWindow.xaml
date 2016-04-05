@@ -74,10 +74,13 @@
 
                 <MenuItem Header="_Information">
                     <MenuItem Header="_Licenses">
-                        <MenuItem Header="R.Net License" Command="{Binding RdotNetLicenseWindowCommand}"/>
                         <MenuItem Header="R License" Command="{Binding RLicenseWindowCommand}"/>
-                        <MenuItem Header="Unveil License" Command="{Binding ReogridLicenseWindowCommand}"/>
-                        <MenuItem Header="NLS R Package License" Command="{Binding NlsLicenseWindowCommand}"/>
+                        <MenuItem Header="R.Net License" Command="{Binding RdotNetLicenseWindowCommand}"/>
+                        <MenuItem Header="Reogrid (Unveil) License" Command="{Binding ReogridLicenseWindowCommand}"/>
+                        <MenuItem Header="nls (R Package) License" Command="{Binding NlsLicenseWindowCommand}"/>
+                        <MenuItem Header="ggplot2 (R Package) License" Command="{Binding Ggplot2LicenseWindowCommand}"/>
+                        <MenuItem Header="reshape2 (R Package) License" Command="{Binding Reshape2LicenseWindowCommand}"/>
+                        <MenuItem Header="gridExtra (R Package) License" Command="{Binding GridExtraLicenseWindowCommand}"/>
                     </MenuItem>
                     <MenuItem Header="_Credits" x:Name="credits" Command="{Binding InformationWindowCommand}"/>
                 </MenuItem>

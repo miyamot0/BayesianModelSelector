@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="{Binding LicenseTitle}" 
         Height="300" 
-        Width="300">
+        Width="450">
     <Grid>
         <ScrollViewer>
             <TextBlock Text="{Binding LicenseText}" 
