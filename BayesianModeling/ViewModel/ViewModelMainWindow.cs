@@ -301,7 +301,6 @@ namespace BayesianModeling.ViewModel
                 else
                 {
                     SendMessageToOutput("R DLL's not found.");
-                    MessageBox.Show("Please download and install the R statistical package to continue.  This is required.");
                 }
 
                 SendMessageToOutput("A listing of all referenced software, with licensing, has been displayed above.");

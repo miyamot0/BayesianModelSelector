@@ -107,6 +107,7 @@ namespace BayesianModeling.ViewModel
 
         private bool outputFigures = false;
         private bool outputWorkbook = false;
+        bool failed;
 
         /// <summary>
         /// Public constructor
@@ -156,16 +157,23 @@ namespace BayesianModeling.ViewModel
         {
             mInterface.SendMessageToOutput("---------------------------------------------------");
 
-            REngine.SetEnvironmentVariables();
-            engine = REngine.GetInstance();
-            engine.Initialize();
-            engine.AutoPrint = false;
+            failed = false;
 
-            mInterface.SendMessageToOutput("All R system components modules loaded.");
-            mInterface.SendMessageToOutput("Loading Curve Fitting modules and R interface...");
+            try
+            {
+                REngine.SetEnvironmentVariables();
+                engine = REngine.GetInstance();
+                engine.Initialize();
+                engine.AutoPrint = false;
 
-            mWindow.spreadSheetView.SetSettings(unvell.ReoGrid.WorkbookSettings.View_Default, true);
-            mWindow.spreadSheetView.SetSettings(unvell.ReoGrid.WorkbookSettings.Behaivor_Default, true);
+                mInterface.SendMessageToOutput("All R system components modules loaded.");
+                mInterface.SendMessageToOutput("Loading Curve Fitting modules and R interface...");
+
+            }
+            catch (Exception e)
+            {
+                failed = true;
+            }
 
             DefaultFieldsToGray();
         }
@@ -282,6 +290,8 @@ namespace BayesianModeling.ViewModel
         /// </summary>
         private void CalculateScores()
         {
+            if (failed) return;
+
             List<double> xRange = mWindow.ParseRange(Delays);
             List<double> yRange = mWindow.ParseRange(Values);
 
