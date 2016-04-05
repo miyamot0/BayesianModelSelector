@@ -11,6 +11,7 @@ using BayesianModeling.View;
 using RDotNet;
 using Small_N_Stats.Interface;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -169,6 +170,18 @@ namespace BayesianModeling.ViewModel
 
         private void ViewLoaded()
         {
+            if (Properties.Settings.Default.Updated)
+            {
+                IntroWindow introWindow = new IntroWindow();
+                introWindow.Owner = MainWindow;
+                introWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                introWindow.ShowDialog();
+
+                Properties.Settings.Default.Upgrade();
+                Properties.Settings.Default.Updated = false;
+                Properties.Settings.Default.Save();
+            }
+
             /* Interactive post for Reogrid */
 
             bool failed = false;
@@ -206,6 +219,7 @@ namespace BayesianModeling.ViewModel
                 SendMessageToOutput("Attempting to Load core binaries...");
 
                 engine.Initialize();
+                engine.AutoPrint = false;
 
                 if (engine.IsRunning)
                 {
@@ -320,7 +334,6 @@ namespace BayesianModeling.ViewModel
                     Thread.Sleep(3000);
                     MessageBox.Show("Error: R initialization failed. Please install R before proceeding!");
                 }, new object[] { null });
-
             }
         }
 
