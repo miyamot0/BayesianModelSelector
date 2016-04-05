@@ -120,7 +120,22 @@ namespace BayesianModeling.ViewModel
 
         private void ViewLoaded()
         {
+            /* Interactive post for Reogrid */
+
             SendMessageToOutput("Welcome to Bayesian Model Simulator!");
+            SendMessageToOutput("All view elements loaded");
+            SendMessageToOutput("Displaying Reogrid License:");
+            SendMessageToOutput("ReoGrid - .NET Spreadsheet Control");
+            SendMessageToOutput("https://reogrid.net/");
+            SendMessageToOutput("");
+            SendMessageToOutput("This code and information is provided 'as is' without warranty of any kind, either expressed or implied, ");
+            SendMessageToOutput("including but not limited to the implied warranties of merchantability and / or fitness for a particular purpose.");
+            SendMessageToOutput("ReoGrid - .NET Spreadsheet Control");
+            SendMessageToOutput("");
+            SendMessageToOutput("Copyright (c) 2012-2015 unvell.com, all rights reserved.");
+            SendMessageToOutput("for details select Information > Licenses > Reogrid.Net");
+            SendMessageToOutput("");
+
             SendMessageToOutput("Loading R interop libraries (R.Net.Community)");
 
             REngine.SetEnvironmentVariables();
