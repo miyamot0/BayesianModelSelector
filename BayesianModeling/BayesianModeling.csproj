@@ -27,9 +27,10 @@
     <MapFileExtensions>true</MapFileExtensions>
     <InstallUrl>http://www.smallnstats.com/bayesian_modeling/</InstallUrl>
     <SupportUrl>http://www.smallnstats.com</SupportUrl>
-    <ProductName>Bayesian Model Simulator</ProductName>
-    <PublisherName>Shawn P. Gilroy</PublisherName>
-    <SuiteName>Small n Stats</SuiteName>
+    <ProductName>Bayesian Simulator</ProductName>
+    <PublisherName>Shawn Gilroy</PublisherName>
+    <SuiteName>Discounting Model Simulator</SuiteName>
+    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <ApplicationRevision>2</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>

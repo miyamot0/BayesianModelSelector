@@ -1,3 +1,4 @@
+# Shawn Gilroy, 2016
 # Companion Script for BDS
 # params = BDS returns
 # output 1: Bar chart, proportions of wins using ggplot2
