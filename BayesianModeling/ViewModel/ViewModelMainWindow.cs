@@ -120,35 +120,83 @@ namespace BayesianModeling.ViewModel
 
         private void ViewLoaded()
         {
-            SendMessageToOutput("Attempting to link with R installation.");
-            SendMessageToOutput("Attempting to Load core binaries...");
+            SendMessageToOutput("Welcome to Bayesian Model Simulator!");
+            SendMessageToOutput("Loading R interop libraries (R.Net.Community)");
 
             REngine.SetEnvironmentVariables();
+
+            SendMessageToOutput("Displaying R.Net.Community License:");
+            SendMessageToOutput("");
+            SendMessageToOutput("R.Net.Community version 1.6.5, Copyright 2011-2014 RecycleBin, Copyright 2014-2015 CSIRO");
+            SendMessageToOutput("R.Net.Community comes with ABSOLUTELY NO WARRANTY; for details select Information > Licenses > R.Net");
+            SendMessageToOutput("This is free software, and you are welcome to redistribute it under certain conditions; see license for details.");
+            SendMessageToOutput("");
+            SendMessageToOutput("Attempting to link with R installation.");
+
             engine = REngine.GetInstance();
+
+            SendMessageToOutput("Attempting to Load core binaries...");
+
             engine.Initialize();
 
             if (engine.IsRunning)
             {
-                SendMessageToOutput("R is found and running");
                 SendMessageToOutput("");
+                SendMessageToOutput("R is found and running");
+                SendMessageToOutput("Linking to R (R Statistical Package)");
                 SendMessageToOutput("Displaying R License:");
                 SendMessageToOutput("");
+
+                /* Interactive post for R */
+
                 SendMessageToOutput("R Copyright (C) 2016 R Core Team");
                 SendMessageToOutput("This program comes with ABSOLUTELY NO WARRANTY;");
                 SendMessageToOutput("This is free software, and you are welcome to redistribute it");
-                SendMessageToOutput("under certain conditions.");
+                SendMessageToOutput("under certain conditions; for details select Information > Licenses > R.");
                 SendMessageToOutput("");
                 SendMessageToOutput("");
+
+                /* Loading R packages for analyses */
+
                 SendMessageToOutput("Checking for required packages: ");
                 engine.Evaluate("if (!require(ggplot2)) { install.packages('ggplot2', repos = 'http://cran.us.r-project.org') }");
+
+                /* Interactive post for ggplot2 package */
+
                 SendMessageToOutput("Package ggplot2 found/loaded");
+                SendMessageToOutput("Displaying ggplot2 License:");
+                SendMessageToOutput("ggplot2 Copyright (C) 2016 Hadley Wickham, Winston Chang");
+                SendMessageToOutput("This program comes with ABSOLUTELY NO WARRANTY;");
+                SendMessageToOutput("This is free software, and you are welcome to redistribute it");
+                SendMessageToOutput("under certain conditions; for details select Information > Licenses > ggplot2.");
                 SendMessageToOutput("");
+                SendMessageToOutput("");
+
+                /* Interactive post for reshape2 package */
+
                 engine.Evaluate("if (!require(reshape2)) { install.packages('reshape2', repos = 'http://cran.us.r-project.org') }");
                 SendMessageToOutput("Package reshape2 found/loaded");
+                SendMessageToOutput("Displaying reshape2 License:");
+                SendMessageToOutput("reshape2 Copyright 2008-2014 Hadley Wickham");
+                SendMessageToOutput("reshape2 is released under the MIT license.");
+                SendMessageToOutput("This program comes with ABSOLUTELY NO WARRANTY;");
+                SendMessageToOutput("This is free software, and you are welcome to redistribute it");
+                SendMessageToOutput("under certain conditions; for details select Information > Licenses > reshape2.");
                 SendMessageToOutput("");
+                SendMessageToOutput("");
+
+                /* Interactive post for reshape2 package */
+
                 engine.Evaluate("if (!require(gridExtra)) { install.packages('gridExtra', repos = 'http://cran.us.r-project.org') }");
                 SendMessageToOutput("Package gridExtra found/loaded");
+                SendMessageToOutput("Displaying gridExtra License:");
+                SendMessageToOutput("gridExtra Copyright (C) 2016 Baptiste Auguie, Anton Antonov");
+                SendMessageToOutput("This program comes with ABSOLUTELY NO WARRANTY;");
+                SendMessageToOutput("This is free software, and you are welcome to redistribute it");
+                SendMessageToOutput("under certain conditions; for details select Information > Licenses > gridExtra.");
                 SendMessageToOutput("");
+                SendMessageToOutput("");
+
                 SendMessageToOutput("All required packages have been found.  Ready to proceed.");
             }
             else
