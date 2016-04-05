@@ -2,6 +2,7 @@
  * Shawn Gilroy, 2016
  * Bayesian Model Selection Application
  * Based on conceptual work developed by Franck, C. T., Koffarnus, M. N., House, L. L. & Bickel, W. (2015)
+ * 
  */
 
 using BayesianModeling.Mathematics;

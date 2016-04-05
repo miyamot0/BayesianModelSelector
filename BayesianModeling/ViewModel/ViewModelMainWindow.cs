@@ -1,4 +1,11 @@
-﻿using BayesianModeling.Interfaces;
+﻿/*
+ * Shawn Gilroy, 2016
+ * Main View Model, initiates core methods, handles IO 
+ * and passes information to log viewer.
+ * 
+ */
+
+using BayesianModeling.Interfaces;
 using BayesianModeling.Utilities;
 using BayesianModeling.View;
 using RDotNet;
@@ -6,7 +13,6 @@ using Small_N_Stats.Interface;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
-using System;
 
 namespace BayesianModeling.ViewModel
 {

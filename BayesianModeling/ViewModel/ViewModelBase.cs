@@ -1,4 +1,11 @@
-﻿using System;
+﻿/*
+ * Shawn Gilroy, 2016
+ * Bayesian Model Selection Application
+ * Base view model class from which to inherit property update methods
+ * 
+ *  */
+
+using System;
 using System.ComponentModel;
 
 namespace BayesianModeling.ViewModel

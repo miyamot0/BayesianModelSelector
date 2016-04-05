@@ -1,4 +1,10 @@
-﻿namespace BayesianModeling.ViewModel
+﻿/*
+ * Shawn Gilroy, 2016
+ * View Model for re-displaying licenses from referenced works
+ * 
+ */
+
+namespace BayesianModeling.ViewModel
 {
     class ViewModelLicense : ViewModelBase
     {
@@ -24,9 +30,6 @@
             }
         }
 
-        public ViewModelLicense()
-        {
-
-        }
+        public ViewModelLicense() { }
     }
 }

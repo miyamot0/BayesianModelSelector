@@ -18,8 +18,8 @@ namespace BayesianModeling
         {
             base.OnStartup(e);
             /*
-             Deviation from MVVM
-             Hackish workaround to access Unveil's spreadsheet view
+             Demons ahead, deviation from MVVM
+             Hackish workaround to access Unveil's spreadsheet view via interface
             */
             MainWindow window = new MainWindow();
             window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
