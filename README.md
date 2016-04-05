@@ -26,11 +26,8 @@ The application itself is a ClickOnce application, enabling seamless updates as 
 Want to contribute? Great! Emails or PM's are welcome.
 
 ### Todos
- - Write Tests
- - Rethink Github Save
- - Add Code Comments
- - Add Night Mode
+ - Tests
 
 ### License
 ----
-GPL-V3
+GPL-Version 2
