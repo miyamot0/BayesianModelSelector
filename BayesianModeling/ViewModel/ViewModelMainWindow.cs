@@ -10,6 +10,7 @@ using BayesianModeling.Utilities;
 using BayesianModeling.View;
 using RDotNet;
 using Small_N_Stats.Interface;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -184,122 +185,130 @@ namespace BayesianModeling.ViewModel
 
             SendMessageToOutput("Loading R interop libraries (R.Net.Community)");
 
-            REngine.SetEnvironmentVariables();
-
-            SendMessageToOutput("Displaying R.Net.Community License:");
-            SendMessageToOutput("");
-            SendMessageToOutput("R.Net.Community version 1.6.5, Copyright 2011-2014 RecycleBin, Copyright 2014-2015 CSIRO");
-            SendMessageToOutput("R.Net.Community comes with ABSOLUTELY NO WARRANTY; for details select Information > Licenses > R.Net");
-            SendMessageToOutput("This is free software, and you are welcome to redistribute it under certain conditions; see license for details.");
-            SendMessageToOutput("");
-            SendMessageToOutput("Attempting to link with R installation.");
-
-            engine = REngine.GetInstance();
-
-            SendMessageToOutput("Attempting to Load core binaries...");
-
-            engine.Initialize();
-
-            if (engine.IsRunning)
+            try
             {
-                SendMessageToOutput("");
-                SendMessageToOutput("R is found and running");
-                SendMessageToOutput("Linking to R (R Statistical Package)");
-                SendMessageToOutput("Displaying R License:");
-                SendMessageToOutput("");
+                REngine.SetEnvironmentVariables();
 
-                /* Interactive post for R */
-
-                SendMessageToOutput("R Copyright (C) 2016 R Core Team");
-                SendMessageToOutput("This program comes with ABSOLUTELY NO WARRANTY;");
-                SendMessageToOutput("This is free software, and you are welcome to redistribute it");
-                SendMessageToOutput("under certain conditions; for details select Information > Licenses > R.");
+                SendMessageToOutput("Displaying R.Net.Community License:");
                 SendMessageToOutput("");
+                SendMessageToOutput("R.Net.Community version 1.6.5, Copyright 2011-2014 RecycleBin, Copyright 2014-2015 CSIRO");
+                SendMessageToOutput("R.Net.Community comes with ABSOLUTELY NO WARRANTY; for details select Information > Licenses > R.Net");
+                SendMessageToOutput("This is free software, and you are welcome to redistribute it under certain conditions; see license for details.");
                 SendMessageToOutput("");
+                SendMessageToOutput("Attempting to link with R installation.");
 
-                /* Loading R packages for analyses */
+                engine = REngine.GetInstance();
 
-                /* Interactive post for nls package */
+                SendMessageToOutput("Attempting to Load core binaries...");
 
-                SendMessageToOutput("Package nls found");
-                SendMessageToOutput("Displaying nls License:");
-                SendMessageToOutput("Copyright (C) 1999-1999 Saikat DebRoy, Douglas M. Bates, Jose C. Pinheiro, Copyright (C) 2000-7 The R Core Team");
-                SendMessageToOutput("# File src/library/stats/R/nls.R");
-                SendMessageToOutput("# Part of the R package, http://www.R-project.org");
-                SendMessageToOutput("#");
-                SendMessageToOutput("# Copyright (C) 1999-1999 Saikat DebRoy, Douglas M. Bates, Jose C. Pinheiro");
-                SendMessageToOutput("# Copyright (C) 2000-7    The R Core Team");
-                SendMessageToOutput("#");
-                SendMessageToOutput("# This program is free software; you can redistribute it and/or modify");
-                SendMessageToOutput("# it under the terms of the GNU General Public License as published by");
-                SendMessageToOutput("# the Free Software Foundation; either version 2 of the License, or");
-                SendMessageToOutput("#  (at your option) any later version.");
-                SendMessageToOutput("#");
-                SendMessageToOutput("# This program is distributed in the hope that it will be useful,");
-                SendMessageToOutput("# but WITHOUT ANY WARRANTY; without even the implied warranty of");
-                SendMessageToOutput("# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the");
-                SendMessageToOutput("# GNU General Public License for more details.");
-                SendMessageToOutput("#");
-                SendMessageToOutput("# A copy of the GNU General Public License is available at");
-                SendMessageToOutput("# http://www.r-project.org/Licenses/");
-                SendMessageToOutput("");
-                SendMessageToOutput("###");
-                SendMessageToOutput("###            Nonlinear least squares for R");
-                SendMessageToOutput("###");
-                SendMessageToOutput("For details select Information > Licenses > ggplot2.");
-                SendMessageToOutput("");
-                SendMessageToOutput("");
+                engine.Initialize();
 
-                SendMessageToOutput("Checking for required packages: ");
-                engine.Evaluate("if (!require(ggplot2)) { install.packages('ggplot2', repos = 'http://cran.us.r-project.org') }");
+                if (engine.IsRunning)
+                {
+                    SendMessageToOutput("");
+                    SendMessageToOutput("R is found and running");
+                    SendMessageToOutput("Linking to R (R Statistical Package)");
+                    SendMessageToOutput("Displaying R License:");
+                    SendMessageToOutput("");
 
-                /* Interactive post for ggplot2 package */
+                    /* Interactive post for R */
 
-                SendMessageToOutput("Package ggplot2 found/loaded");
-                SendMessageToOutput("Displaying ggplot2 License:");
-                SendMessageToOutput("ggplot2 Copyright (C) 2016 Hadley Wickham, Winston Chang");
-                SendMessageToOutput("This program comes with ABSOLUTELY NO WARRANTY;");
-                SendMessageToOutput("This is free software, and you are welcome to redistribute it");
-                SendMessageToOutput("under certain conditions; for details select Information > Licenses > ggplot2.");
-                SendMessageToOutput("");
-                SendMessageToOutput("");
+                    SendMessageToOutput("R Copyright (C) 2016 R Core Team");
+                    SendMessageToOutput("This program comes with ABSOLUTELY NO WARRANTY;");
+                    SendMessageToOutput("This is free software, and you are welcome to redistribute it");
+                    SendMessageToOutput("under certain conditions; for details select Information > Licenses > R.");
+                    SendMessageToOutput("");
+                    SendMessageToOutput("");
 
-                /* Interactive post for reshape2 package */
+                    /* Loading R packages for analyses */
 
-                engine.Evaluate("if (!require(reshape2)) { install.packages('reshape2', repos = 'http://cran.us.r-project.org') }");
-                SendMessageToOutput("Package reshape2 found/loaded");
-                SendMessageToOutput("Displaying reshape2 License:");
-                SendMessageToOutput("reshape2 Copyright 2008-2014 Hadley Wickham");
-                SendMessageToOutput("reshape2 is released under the MIT license.");
-                SendMessageToOutput("This program comes with ABSOLUTELY NO WARRANTY;");
-                SendMessageToOutput("This is free software, and you are welcome to redistribute it");
-                SendMessageToOutput("under certain conditions; for details select Information > Licenses > reshape2.");
-                SendMessageToOutput("");
-                SendMessageToOutput("");
+                    /* Interactive post for nls package */
 
-                /* Interactive post for gridExtra package */
+                    SendMessageToOutput("Package nls found");
+                    SendMessageToOutput("Displaying nls License:");
+                    SendMessageToOutput("Copyright (C) 1999-1999 Saikat DebRoy, Douglas M. Bates, Jose C. Pinheiro, Copyright (C) 2000-7 The R Core Team");
+                    SendMessageToOutput("# File src/library/stats/R/nls.R");
+                    SendMessageToOutput("# Part of the R package, http://www.R-project.org");
+                    SendMessageToOutput("#");
+                    SendMessageToOutput("# Copyright (C) 1999-1999 Saikat DebRoy, Douglas M. Bates, Jose C. Pinheiro");
+                    SendMessageToOutput("# Copyright (C) 2000-7    The R Core Team");
+                    SendMessageToOutput("#");
+                    SendMessageToOutput("# This program is free software; you can redistribute it and/or modify");
+                    SendMessageToOutput("# it under the terms of the GNU General Public License as published by");
+                    SendMessageToOutput("# the Free Software Foundation; either version 2 of the License, or");
+                    SendMessageToOutput("#  (at your option) any later version.");
+                    SendMessageToOutput("#");
+                    SendMessageToOutput("# This program is distributed in the hope that it will be useful,");
+                    SendMessageToOutput("# but WITHOUT ANY WARRANTY; without even the implied warranty of");
+                    SendMessageToOutput("# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the");
+                    SendMessageToOutput("# GNU General Public License for more details.");
+                    SendMessageToOutput("#");
+                    SendMessageToOutput("# A copy of the GNU General Public License is available at");
+                    SendMessageToOutput("# http://www.r-project.org/Licenses/");
+                    SendMessageToOutput("");
+                    SendMessageToOutput("###");
+                    SendMessageToOutput("###            Nonlinear least squares for R");
+                    SendMessageToOutput("###");
+                    SendMessageToOutput("For details select Information > Licenses > ggplot2.");
+                    SendMessageToOutput("");
+                    SendMessageToOutput("");
 
-                engine.Evaluate("if (!require(gridExtra)) { install.packages('gridExtra', repos = 'http://cran.us.r-project.org') }");
-                SendMessageToOutput("Package gridExtra found/loaded");
-                SendMessageToOutput("Displaying gridExtra License:");
-                SendMessageToOutput("gridExtra Copyright (C) 2016 Baptiste Auguie, Anton Antonov");
-                SendMessageToOutput("This program comes with ABSOLUTELY NO WARRANTY;");
-                SendMessageToOutput("This is free software, and you are welcome to redistribute it");
-                SendMessageToOutput("under certain conditions; for details select Information > Licenses > gridExtra.");
-                SendMessageToOutput("");
-                SendMessageToOutput("");
+                    SendMessageToOutput("Checking for required packages: ");
+                    engine.Evaluate("if (!require(ggplot2)) { install.packages('ggplot2', repos = 'http://cran.us.r-project.org') }");
 
-                SendMessageToOutput("All required packages have been found.  Ready to proceed.");
+                    /* Interactive post for ggplot2 package */
+
+                    SendMessageToOutput("Package ggplot2 found/loaded");
+                    SendMessageToOutput("Displaying ggplot2 License:");
+                    SendMessageToOutput("ggplot2 Copyright (C) 2016 Hadley Wickham, Winston Chang");
+                    SendMessageToOutput("This program comes with ABSOLUTELY NO WARRANTY;");
+                    SendMessageToOutput("This is free software, and you are welcome to redistribute it");
+                    SendMessageToOutput("under certain conditions; for details select Information > Licenses > ggplot2.");
+                    SendMessageToOutput("");
+                    SendMessageToOutput("");
+
+                    /* Interactive post for reshape2 package */
+
+                    engine.Evaluate("if (!require(reshape2)) { install.packages('reshape2', repos = 'http://cran.us.r-project.org') }");
+                    SendMessageToOutput("Package reshape2 found/loaded");
+                    SendMessageToOutput("Displaying reshape2 License:");
+                    SendMessageToOutput("reshape2 Copyright 2008-2014 Hadley Wickham");
+                    SendMessageToOutput("reshape2 is released under the MIT license.");
+                    SendMessageToOutput("This program comes with ABSOLUTELY NO WARRANTY;");
+                    SendMessageToOutput("This is free software, and you are welcome to redistribute it");
+                    SendMessageToOutput("under certain conditions; for details select Information > Licenses > reshape2.");
+                    SendMessageToOutput("");
+                    SendMessageToOutput("");
+
+                    /* Interactive post for gridExtra package */
+
+                    engine.Evaluate("if (!require(gridExtra)) { install.packages('gridExtra', repos = 'http://cran.us.r-project.org') }");
+                    SendMessageToOutput("Package gridExtra found/loaded");
+                    SendMessageToOutput("Displaying gridExtra License:");
+                    SendMessageToOutput("gridExtra Copyright (C) 2016 Baptiste Auguie, Anton Antonov");
+                    SendMessageToOutput("This program comes with ABSOLUTELY NO WARRANTY;");
+                    SendMessageToOutput("This is free software, and you are welcome to redistribute it");
+                    SendMessageToOutput("under certain conditions; for details select Information > Licenses > gridExtra.");
+                    SendMessageToOutput("");
+                    SendMessageToOutput("");
+
+                    SendMessageToOutput("All required packages have been found.  Ready to proceed.");
+                }
+                else
+                {
+                    SendMessageToOutput("R DLL's not found.");
+                    MessageBox.Show("Please download and install the R statistical package to continue.  This is required.");
+                }
+
+                SendMessageToOutput("A listing of all referenced software, with licensing, has been displayed above.");
+                SendMessageToOutput("License information is also provided in Information > Licenses > ... as well as");
+                SendMessageToOutput("in the install directory of this program (under Resources).");
             }
-            else
+            catch(Exception e)
             {
-                SendMessageToOutput("R DLL's not found.");
-                MessageBox.Show("Please download and install the R statistical package to continue.  This is required.");
+                MessageBox.Show("Error: R initialization failed. Please install R before proceeding!");
+                SendMessageToOutput("R failed to load.  Error code: " + e.ToString());
             }
-
-            SendMessageToOutput("A listing of all referenced software, with licensing, has been displayed above.");
-            SendMessageToOutput("License information is also provided in Information > Licenses > ... as well as");
-            SendMessageToOutput("in the install directory of this program (under Resources).");
         }
 
         private void ViewClosed()

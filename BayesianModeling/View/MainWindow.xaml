@@ -40,7 +40,7 @@
             Grid.RowSpan="3">
             
             <Menu DockPanel.Dock="Top"
-				Margin="5,0,5,0">
+				Margin="0,0,0,0">
 
                 <MenuItem Header="_File">
                     <MenuItem Header="_New" 
@@ -90,7 +90,7 @@
                     Name="spreadSheetView"
                     x:FieldModifier="public"
                     DockPanel.Dock="Left"
-                    Margin="10" 
+                    Margin="1,0,1,1" 
                     HorizontalAlignment="Stretch" 
                     VerticalAlignment="Stretch"/>
         </DockPanel>
