@@ -1,4 +1,10 @@
-﻿namespace BayesianModeling.Interfaces
+﻿/*
+ * Shawn Gilroy, 2016
+ * Bayesian Model Selection Application
+ * Interface between main view and child views ( Spreadsheet data <> business layer)
+ * 
+ *  */
+namespace BayesianModeling.Interfaces
 {
     public interface SpreadsheetInterface
     {
