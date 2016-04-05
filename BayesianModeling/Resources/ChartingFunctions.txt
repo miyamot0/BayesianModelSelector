@@ -1,3 +1,8 @@
+# Companion Script for BDS
+# params = BDS returns
+# output 1: Bar chart, proportions of wins using ggplot2
+# output 2: Semi-logged (x) discounting functions using ggplot2
+
 pieGraph = data.frame(Noise=output[[1]]['noise.prob'],
                       Hyperbolic=output[[2]]['Mazur.prob'],
                       Exponential=output[[3]]['exp.prob'],

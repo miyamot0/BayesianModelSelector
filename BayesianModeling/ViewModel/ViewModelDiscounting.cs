@@ -341,7 +341,7 @@ namespace BayesianModeling.ViewModel
 
                 engine.Evaluate(BayesianModelSelection.GetFranckFunction());
                 engine.Evaluate("datHack<-data.frame(X = mDelays, Y = mIndiffs, ses=mSes)");
-                engine.Evaluate("output <- BDS3(datHack)");
+                engine.Evaluate("output <- BDS(datHack)");
 
                 DataFrame output = engine.Evaluate("output").AsDataFrame();
 

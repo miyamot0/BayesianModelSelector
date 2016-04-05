@@ -1,4 +1,26 @@
-BDS3<-function(dat,Noise=1,Mazur=1,Exponential=1,Rachlin=1,GreenMyerson=1,BD=1){
+# Chris Franck
+#
+# Input is a data frame with $X for delay, $Y for indiff point, and $ses for session
+#
+# Arguments      value     purpose
+# Noise          binary    include noise model?
+# Mazur          binary    include Mazur model?
+# Exponential    binary    include Exponential model? 
+# Rachlin        binary    include Rachlin model?
+# GreenMyerson   binary    include Green-Myerson model?
+# BD             binary    include quasi-hyperboloid (aka betaq-delta) model?  
+#
+# Version history
+# v001 adapted from latest carilion day poster session
+# v002 is developmental code to include starting value grid search for each method
+# v003 incorprates a starting value grid search and outputs the selected starting values for each model and session
+# v004 is development code to choose most probable model and output parameters and ED50 for that model - currently puts most probable model out
+# v005 Is a starting value debug demo now and should not be used in batch mode
+# v006 replaces generic starting values with optimal grid values
+# v007 adds the beta-delta model option to the algorithm
+# v008 corrects a critical error in the computation of ED50 for the beta delta model
+
+BDS<-function(dat,Noise=1,Mazur=1,Exponential=1,Rachlin=1,GreenMyerson=1,BD=1){
   #Debug option
   #Noise=1;Mazur=1;Exponential=1;Rachlin=1;GreenMyerson=1
   #define values needed to make loop run
