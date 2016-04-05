@@ -67,7 +67,7 @@ for (delay in delaySeries)
   }
 }
 
-totalFrame = data.frame(Delays=log(delaySeries),
+totalFrame = data.frame(Delays=delaySeries,
                         Exponential=expSeries,
                         Hyperbolic=hypSeries,
                         QuasiHyperbolic=quaSeries,
@@ -76,7 +76,7 @@ totalFrame = data.frame(Delays=log(delaySeries),
 
 totalFrame.melt <- melt(totalFrame, id=c("Delays"))
 
-pointFrame <- data.frame(DelaysP=log(mDelays), ValuesP=mIndiff)
+pointFrame <- data.frame(DelaysP=mDelays, ValuesP=mIndiff)
 
 logChart <- ggplot() +
   geom_line(data=totalFrame.melt, aes(x=Delays, y=value, group=variable, colour = variable)) + 
@@ -86,6 +86,11 @@ logChart <- ggplot() +
   theme(panel.grid.minor = element_blank()) +
   ggtitle("Fitted Discounting Functions\n") +
   ylab("Value") +
+  scale_x_log10(
+    breaks = scales::trans_breaks("log10", function(x) 10^x),
+    labels = scales::trans_format("log10", scales::math_format(10^.x))
+  ) +  
+  annotation_logticks(sides = "b") +
   xlab("log(Delay)") +
   theme(legend.title = element_blank()) +
   theme(legend.position = "bottom") +
