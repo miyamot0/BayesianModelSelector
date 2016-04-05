@@ -61,7 +61,7 @@ namespace BayesianModeling
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("We weren't able to save.  Is the target file open or in use?");
+                    MessageBox.Show("We weren't able to open the file.  Is the target file open or in use?");
                     Console.WriteLine(e.ToString());
                 }
             }
