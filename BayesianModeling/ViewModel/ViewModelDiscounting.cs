@@ -17,6 +17,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System;
 using unvell.ReoGrid.Actions;
+using unvell.ReoGrid;
 
 namespace BayesianModeling.ViewModel
 {
@@ -158,22 +159,34 @@ namespace BayesianModeling.ViewModel
             REngine.SetEnvironmentVariables();
             engine = REngine.GetInstance();
             engine.Initialize();
+            engine.AutoPrint = false;
 
             mInterface.SendMessageToOutput("All R system components modules loaded.");
             mInterface.SendMessageToOutput("Loading Curve Fitting modules and R interface...");
 
             mWindow.spreadSheetView.SetSettings(unvell.ReoGrid.WorkbookSettings.View_Default, true);
             mWindow.spreadSheetView.SetSettings(unvell.ReoGrid.WorkbookSettings.Behaivor_Default, true);
+
+            DefaultFieldsToGray();
         }
 
         /// <summary>
         /// Function to update text field background.
         /// Text field background colors as RED indicates the field is actively waiting for select input
         /// </summary>
-        private void DefaultFieldsToWhite()
+        private void DefaultFieldsToGray()
         {
-            DelaysBrush = Brushes.White;
-            ValuesBrush = Brushes.White;
+            if (Values.Length < 1 || Values.ToLower().Contains("spreadsheet"))
+            {
+                ValuesBrush = Brushes.LightGray;
+                Values = string.Empty;
+            }
+
+            if (Delays.Length < 1 || Delays.ToLower().Contains("spreadsheet"))
+            {
+                DelaysBrush = Brushes.LightGray;
+                Delays = string.Empty;
+            }
         }
 
         /// <summary>
@@ -182,21 +195,39 @@ namespace BayesianModeling.ViewModel
         /// </summary>
         private void GetDelaysRange()
         {
-            DefaultFieldsToWhite();
+            DefaultFieldsToGray();
 
-            DelaysBrush = Brushes.Red;
-            Delays = string.Empty;
+            if (Delays.Length > 0 && !Delays.ToLower().Contains("spreadsheet"))
+            {
+                /* Restore past ranges to white */
+                mWindow.spreadSheetView.CurrentWorksheet.SetRangeStyles(mWindow.spreadSheetView.CurrentWorksheet.Ranges[Delays], new WorksheetRangeStyle
+                {
+                    Flag = PlainStyleFlag.BackColor,
+                    BackColor = System.Windows.Media.Colors.Transparent,
+                });
+            }
+
+            DelaysBrush = Brushes.Yellow;
+            Delays = "Select delays on spreadsheet";
 
             mWindow.spreadSheetView.PickRange((inst, range) =>
             {
+
                 if (range.Rows > 1 && range.Cols > 1)
                 {
+                    DefaultFieldsToGray();
                     MessageBox.Show("Please select single row or single column selections");
                     return true;
                 }
 
-                DelaysBrush = Brushes.White;
+                DelaysBrush = Brushes.LightBlue;
                 Delays = range.ToString();
+
+                mWindow.spreadSheetView.CurrentWorksheet.SetRangeStyles(range, new WorksheetRangeStyle
+                {
+                    Flag = PlainStyleFlag.BackColor,
+                    BackColor = System.Windows.Media.Colors.LightBlue,
+                });
 
                 return true;
             }, Cursors.Cross);
@@ -208,21 +239,38 @@ namespace BayesianModeling.ViewModel
         /// </summary>
         private void GetValuesRange()
         {
-            DefaultFieldsToWhite();
+            DefaultFieldsToGray();
 
-            ValuesBrush = Brushes.Red;
-            Values = string.Empty;
+            if (Values.Length > 0 && !Values.ToLower().Contains("spreadsheet"))
+            {
+                /* Restore past ranges to white */
+                mWindow.spreadSheetView.CurrentWorksheet.SetRangeStyles(mWindow.spreadSheetView.CurrentWorksheet.Ranges[Values], new WorksheetRangeStyle
+                {
+                    Flag = PlainStyleFlag.BackColor,
+                    BackColor = System.Windows.Media.Colors.Transparent,
+                });
+            }
+
+            ValuesBrush = Brushes.Yellow;
+            Values = "Select values on spreadsheet";
 
             mWindow.spreadSheetView.PickRange((inst, range) =>
             {
                 if (range.Rows > 1 && range.Cols > 1)
                 {
+                    DefaultFieldsToGray();
                     MessageBox.Show("Please select single row or single column selections");
                     return true;
                 }
 
-                ValuesBrush = Brushes.White;
+                ValuesBrush = Brushes.LightGreen;
                 Values = range.ToString();
+
+                mWindow.spreadSheetView.CurrentWorksheet.SetRangeStyles(range, new WorksheetRangeStyle
+                {
+                    Flag = PlainStyleFlag.BackColor,
+                    BackColor = System.Windows.Media.Colors.LightGreen,
+                });
 
                 return true;
             }, Cursors.Cross);

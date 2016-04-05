@@ -71,7 +71,6 @@
             Margin="10"
             Focusable="False"
             AcceptsTab="False"
-            IsEnabled="False"
             ToolTip="Click button to select delay points"
             Text="{Binding Delays}"
             Background="{Binding Path=DelaysBrush}">
@@ -94,7 +93,6 @@
             Margin="10"
             Focusable="False"
             AcceptsTab="False"
-            IsEnabled="False"
             ToolTip="Click button to select value points"
             Text="{Binding Values}"
             Background="{Binding Path=ValuesBrush}">
@@ -128,12 +126,14 @@
             <Label Content="Output Model Fits and figures?"></Label>
         </StackPanel>
 
-        <ToggleButton
+        <CheckBox
             Grid.Row="4"
             Grid.Column="2"
             Grid.ColumnSpan="2"
-            Margin="30,5,30,5"
-            Content="Output Figures">
+            Margin="15,0,0,0"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Left"
+            Content="">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="Checked">
                     <i:InvokeCommandAction Command="{Binding Path=FigureOutput}"/>
@@ -142,7 +142,7 @@
                     <i:InvokeCommandAction Command="{Binding Path=FigureOutput}"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
-        </ToggleButton>
+        </CheckBox>
 
         <StackPanel
             Orientation="Horizontal"
@@ -154,12 +154,14 @@
             <Label Content="Save results to workbook?"></Label>
         </StackPanel>
 
-        <ToggleButton
+        <CheckBox
             Grid.Row="5"
             Grid.Column="2"
             Grid.ColumnSpan="2"
-            Margin="30,5,30,5"
-            Content="Output Results">
+            Margin="15,0,0,0"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Left"
+            Content="">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="Checked">
                     <i:InvokeCommandAction Command="{Binding Path=WorkbookOutput}"/>
@@ -168,7 +170,7 @@
                     <i:InvokeCommandAction Command="{Binding Path=WorkbookOutput}"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
-        </ToggleButton>        
+        </CheckBox>        
         
         <Button Name="calculateButton" 
                 Grid.Row="7" 
