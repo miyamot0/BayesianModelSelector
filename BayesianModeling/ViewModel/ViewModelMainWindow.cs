@@ -179,6 +179,37 @@ namespace BayesianModeling.ViewModel
 
                 /* Loading R packages for analyses */
 
+                /* Interactive post for nls package */
+
+                SendMessageToOutput("Package nls found");
+                SendMessageToOutput("Displaying nls License:");
+                SendMessageToOutput("Copyright (C) 1999-1999 Saikat DebRoy, Douglas M. Bates, Jose C. Pinheiro, Copyright (C) 2000-7 The R Core Team");
+                SendMessageToOutput("# File src/library/stats/R/nls.R");
+                SendMessageToOutput("# Part of the R package, http://www.R-project.org");
+                SendMessageToOutput("#");
+                SendMessageToOutput("# Copyright (C) 1999-1999 Saikat DebRoy, Douglas M. Bates, Jose C. Pinheiro");
+                SendMessageToOutput("# Copyright (C) 2000-7    The R Core Team");
+                SendMessageToOutput("#");
+                SendMessageToOutput("# This program is free software; you can redistribute it and/or modify");
+                SendMessageToOutput("# it under the terms of the GNU General Public License as published by");
+                SendMessageToOutput("# the Free Software Foundation; either version 2 of the License, or");
+                SendMessageToOutput("#  (at your option) any later version.");
+                SendMessageToOutput("#");
+                SendMessageToOutput("# This program is distributed in the hope that it will be useful,");
+                SendMessageToOutput("# but WITHOUT ANY WARRANTY; without even the implied warranty of");
+                SendMessageToOutput("# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the");
+                SendMessageToOutput("# GNU General Public License for more details.");
+                SendMessageToOutput("#");
+                SendMessageToOutput("# A copy of the GNU General Public License is available at");
+                SendMessageToOutput("# http://www.r-project.org/Licenses/");
+                SendMessageToOutput("");
+                SendMessageToOutput("###");
+                SendMessageToOutput("###            Nonlinear least squares for R");
+                SendMessageToOutput("###");
+                SendMessageToOutput("For details select Information > Licenses > ggplot2.");
+                SendMessageToOutput("");
+                SendMessageToOutput("");
+
                 SendMessageToOutput("Checking for required packages: ");
                 engine.Evaluate("if (!require(ggplot2)) { install.packages('ggplot2', repos = 'http://cran.us.r-project.org') }");
 
