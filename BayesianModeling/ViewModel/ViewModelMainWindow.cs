@@ -11,9 +11,11 @@ using BayesianModeling.View;
 using RDotNet;
 using Small_N_Stats.Interface;
 using System;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Threading;
 
 namespace BayesianModeling.ViewModel
 {
@@ -169,6 +171,8 @@ namespace BayesianModeling.ViewModel
         {
             /* Interactive post for Reogrid */
 
+            bool failed = false;
+
             SendMessageToOutput("Welcome to Bayesian Model Simulator!");
             SendMessageToOutput("All view elements loaded");
             SendMessageToOutput("Displaying Reogrid License:");
@@ -306,8 +310,18 @@ namespace BayesianModeling.ViewModel
             }
             catch(Exception e)
             {
-                MessageBox.Show("Error: R initialization failed. Please install R before proceeding!");
                 SendMessageToOutput("R failed to load.  Error code: " + e.ToString());
+                failed = true;
+            }
+
+            if (failed)
+            {
+                MainWindow.Dispatcher.BeginInvoke((SendOrPostCallback)delegate
+                {
+                    Thread.Sleep(3000);
+                    MessageBox.Show("Error: R initialization failed. Please install R before proceeding!");
+                }, new object[] { null });
+
             }
         }
 
