@@ -148,7 +148,7 @@ namespace BayesianModeling.ViewModel
         {
             Properties.Settings.Default.Save();
         }
-
+        
         /// <summary>
         /// Command-based update of UI logic during open.
         /// Will re-check for R interactivity
@@ -156,7 +156,6 @@ namespace BayesianModeling.ViewModel
         private void ViewLoaded()
         {
             mInterface.SendMessageToOutput("---------------------------------------------------");
-
             failed = false;
 
             try
@@ -176,6 +175,7 @@ namespace BayesianModeling.ViewModel
                     mInterface.SendMessageToOutput("Connect to the internet and re-start the program");
                     mInterface.SendMessageToOutput("");
                     mInterface.SendMessageToOutput("");
+
                     MessageBox.Show("Modules for R were not found.  Please connect to the internet and restart the program.");
                 }
                 else

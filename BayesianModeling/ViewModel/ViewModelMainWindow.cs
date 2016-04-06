@@ -11,12 +11,14 @@ using BayesianModeling.View;
 using RDotNet;
 using Small_N_Stats.Interface;
 using System;
-using System.Linq;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
+using System.Net;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
-using System.Windows.Threading;
 
 namespace BayesianModeling.ViewModel
 {
@@ -63,6 +65,7 @@ namespace BayesianModeling.ViewModel
         bool haveFileLoaded = false;
         string title = "New File";
         string path = "";
+        int currPercent = 0;
 
         /* Math/Computation */
 
@@ -93,7 +96,7 @@ namespace BayesianModeling.ViewModel
 
         private void NlsLicenseInformationWindow()
         {
-            var window = new License();
+            var window = new View.License();
             window.DataContext = new ViewModelLicense
             {
                 licenseTitle = "License - NLS",
@@ -104,7 +107,7 @@ namespace BayesianModeling.ViewModel
 
         private void ReogridLicenseInformationWindow()
         {
-            var window = new License();
+            var window = new View.License();
             window.DataContext = new ViewModelLicense
             {
                 licenseTitle = "License - Reogrid",
@@ -115,7 +118,7 @@ namespace BayesianModeling.ViewModel
 
         private void RdotNetLicenseInformationWindow()
         {
-            var window = new License();
+            var window = new View.License();
             window.DataContext = new ViewModelLicense
             {
                 licenseTitle = "License - RdotNet",
@@ -126,7 +129,7 @@ namespace BayesianModeling.ViewModel
 
         private void RLicenseInformationWindow()
         {
-            var window = new License();
+            var window = new View.License();
             window.DataContext = new ViewModelLicense
             {
                 licenseTitle = "License - R",
@@ -137,7 +140,7 @@ namespace BayesianModeling.ViewModel
 
         private void Ggplot2LicenseInformationWindow()
         {
-            var window = new License();
+            var window = new View.License();
             window.DataContext = new ViewModelLicense
             {
                 licenseTitle = "License - ggplot2",
@@ -148,7 +151,7 @@ namespace BayesianModeling.ViewModel
 
         private void Reshape2LicenseInformationWindow()
         {
-            var window = new License();
+            var window = new View.License();
             window.DataContext = new ViewModelLicense
             {
                 licenseTitle = "MIT License - reshape2",
@@ -159,13 +162,44 @@ namespace BayesianModeling.ViewModel
 
         private void GridExtraLicenseInformationWindow()
         {
-            var window = new License();
+            var window = new View.License();
             window.DataContext = new ViewModelLicense
             {
                 licenseTitle = "License - gridExtra",
                 licenseText = Properties.Resources.License_gridExtra
             };
             window.Show();
+        }
+
+        private void OnDownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            if (currPercent != e.ProgressPercentage)
+            {
+                SendMessageToOutput(string.Format("'{0}' downloaded {1} of {2} bytes. {3}% complete", (string)e.UserState, e.BytesReceived, e.TotalBytesToReceive, e.ProgressPercentage));
+                currPercent = e.ProgressPercentage;
+            }
+        }
+
+        private void OnDownloadComplete(object sender, AsyncCompletedEventArgs e)
+        {
+            var client = (WebClient)sender;
+            client.DownloadProgressChanged -= OnDownloadProgressChanged;
+            client.DownloadFileCompleted -= OnDownloadComplete;
+
+            if (e.Error != null)
+                throw e.Error;
+
+            if (e.Cancelled)
+                Environment.Exit(1);
+
+            var downloadedFile = (string)e.UserState;
+            var processInfo = new ProcessStartInfo(downloadedFile);
+            processInfo.CreateNoWindow = false;
+
+            var installProcess = Process.Start(processInfo);
+            installProcess.WaitForExit();
+
+            //Environment.Exit(installProcess.ExitCode);
         }
 
         private void ViewLoaded()
@@ -332,7 +366,17 @@ namespace BayesianModeling.ViewModel
                 MainWindow.Dispatcher.BeginInvoke((SendOrPostCallback)delegate
                 {
                     Thread.Sleep(3000);
-                    MessageBox.Show("Error: R initialization failed. Please install R before proceeding!");
+                    if (MessageBox.Show("R was not found.  Do you want to download and install?", "R Not Found", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                    {
+                        var source = new Uri("https://cloud.r-project.org/bin/windows/base/old/3.2.3/R-3.2.3-win.exe");
+                        var dest = Path.Combine(Path.GetTempPath(), "R-3.2.3-win.exe");
+
+                        var client = new WebClient();
+                        client.DownloadProgressChanged += OnDownloadProgressChanged;
+                        client.DownloadFileCompleted += OnDownloadComplete;
+                        client.DownloadFileAsync(source, dest, dest);
+
+                    }
                 }, new object[] { null });
             }
         }
