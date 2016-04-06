@@ -255,6 +255,35 @@ namespace BayesianModeling.ViewModel
                 engine.Initialize();
                 engine.AutoPrint = false;
 
+            }
+            catch(Exception e)
+            {
+                SendMessageToOutput("R failed to load.  Error code: " + e.ToString());
+                failed = true;
+            }
+
+            // Let UI Load
+            Thread.Sleep(3000);
+
+            if (failed)
+            {
+                MainWindow.Dispatcher.BeginInvoke((SendOrPostCallback)delegate
+                {
+                    if (MessageBox.Show("R was not found.  Do you want to download and install?", "R Not Found", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                    {
+                        var source = new Uri("https://cloud.r-project.org/bin/windows/base/old/3.2.3/R-3.2.3-win.exe");
+                        var dest = Path.Combine(Path.GetTempPath(), "R-3.2.3-win.exe");
+
+                        var client = new WebClient();
+                        client.DownloadProgressChanged += OnDownloadProgressChanged;
+                        client.DownloadFileCompleted += OnDownloadComplete;
+                        client.DownloadFileAsync(source, dest, dest);
+
+                    }
+                }, new object[] { null });
+            }
+            else
+            {
                 if (engine.IsRunning)
                 {
                     SendMessageToOutput("");
@@ -354,30 +383,6 @@ namespace BayesianModeling.ViewModel
                 SendMessageToOutput("A listing of all referenced software, with licensing, has been displayed above.");
                 SendMessageToOutput("License information is also provided in Information > Licenses > ... as well as");
                 SendMessageToOutput("in the install directory of this program (under Resources).");
-            }
-            catch(Exception e)
-            {
-                SendMessageToOutput("R failed to load.  Error code: " + e.ToString());
-                failed = true;
-            }
-
-            if (failed)
-            {
-                MainWindow.Dispatcher.BeginInvoke((SendOrPostCallback)delegate
-                {
-                    Thread.Sleep(3000);
-                    if (MessageBox.Show("R was not found.  Do you want to download and install?", "R Not Found", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
-                    {
-                        var source = new Uri("https://cloud.r-project.org/bin/windows/base/old/3.2.3/R-3.2.3-win.exe");
-                        var dest = Path.Combine(Path.GetTempPath(), "R-3.2.3-win.exe");
-
-                        var client = new WebClient();
-                        client.DownloadProgressChanged += OnDownloadProgressChanged;
-                        client.DownloadFileCompleted += OnDownloadComplete;
-                        client.DownloadFileAsync(source, dest, dest);
-
-                    }
-                }, new object[] { null });
             }
         }
 
