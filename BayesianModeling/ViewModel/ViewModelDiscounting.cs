@@ -431,7 +431,15 @@ namespace BayesianModeling.ViewModel
             if (outputFigures)
             {
                 mInterface.SendMessageToOutput("Charting Started... Please wait... ");
-                engine.Evaluate(BayesianModelSelection.GetLogChartFunction());
+                try
+                {
+                    engine.Evaluate(BayesianModelSelection.GetLogChartFunction());
+                }
+                catch (Exception e)
+                {
+                    mInterface.SendMessageToOutput(e.ToString());
+                }
+
                 mInterface.SendMessageToOutput("Charting Completed!");
             }
 
