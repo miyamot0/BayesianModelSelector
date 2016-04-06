@@ -361,6 +361,11 @@ namespace BayesianModeling.ViewModel
                     SendMessageToOutput("");
                     SendMessageToOutput("");
 
+                    /* Interactive post for grid package */
+
+                    engine.Evaluate("if (!require(grid)) { install.packages('grid', repos = 'http://cran.us.r-project.org') }");
+                    SendMessageToOutput("Package grid found/loaded");
+
                     /* Interactive post for gridExtra package */
 
                     engine.Evaluate("if (!require(gridExtra)) { install.packages('gridExtra', repos = 'http://cran.us.r-project.org') }");
