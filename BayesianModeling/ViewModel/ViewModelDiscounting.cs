@@ -167,6 +167,7 @@ namespace BayesianModeling.ViewModel
             }
             catch (Exception e)
             {
+                mInterface.SendMessageToOutput(e.ToString());
                 failed = true;
             }
 
