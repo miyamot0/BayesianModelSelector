@@ -164,31 +164,28 @@ namespace BayesianModeling.ViewModel
                 engine = REngine.GetInstance();
                 engine.Initialize();
                 engine.AutoPrint = false;
-
-                if (!engine.Evaluate("require('ggplot2')").AsVector().First().ToString().Equals("True") ||
-                    !engine.Evaluate("require('reshape2')").AsVector().First().ToString().Equals("True") ||
-                    !engine.Evaluate("require('gridExtra')").AsVector().First().ToString().Equals("True"))
-                {
-                    failed = true;
-                    mInterface.SendMessageToOutput("R components modules were not found!");
-                    mInterface.SendMessageToOutput("Calculation cannot continue");
-                    mInterface.SendMessageToOutput("Connect to the internet and re-start the program");
-                    mInterface.SendMessageToOutput("");
-                    mInterface.SendMessageToOutput("");
-
-                    MessageBox.Show("Modules for R were not found.  Please connect to the internet and restart the program.");
-                }
-                else
-                {
-                    mInterface.SendMessageToOutput("All R system components modules loaded.");
-                    mInterface.SendMessageToOutput("Loading Curve Fitting modules and R interface...");
-                    mInterface.SendMessageToOutput("");
-                    mInterface.SendMessageToOutput("");
-                }
             }
             catch (Exception e)
             {
                 failed = true;
+            }
+
+            if (failed)
+            {
+                mInterface.SendMessageToOutput("R components modules were not found!");
+                mInterface.SendMessageToOutput("Calculation cannot continue");
+                mInterface.SendMessageToOutput("Connect to the internet and re-start the program");
+                mInterface.SendMessageToOutput("");
+                mInterface.SendMessageToOutput("");
+
+                MessageBox.Show("Modules for R were not found.  Please connect to the internet and restart the program.");
+            }
+            else
+            {
+                mInterface.SendMessageToOutput("All R system components modules loaded.");
+                mInterface.SendMessageToOutput("Loading Curve Fitting modules and R interface...");
+                mInterface.SendMessageToOutput("");
+                mInterface.SendMessageToOutput("");
             }
 
             DefaultFieldsToGray();
