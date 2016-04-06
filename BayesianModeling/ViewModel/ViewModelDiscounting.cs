@@ -329,7 +329,7 @@ namespace BayesianModeling.ViewModel
                 mInterface.SendMessageToOutput("Initial indifference point was <10% of A.  This is irregular, please inspect.  If this is accurate, disregard.");
             }
 
-            if (yRange[0] >= maxValueA)
+            if (yRange[0] > maxValueA)
             {
                 MessageBox.Show("There's a chance your max value is off (the initial value is greater than the max).  This shouldn't be possible.");
                 mInterface.SendMessageToOutput("Initial value is greater than A.  This shouldn't be possible.  Halting simulation.");
