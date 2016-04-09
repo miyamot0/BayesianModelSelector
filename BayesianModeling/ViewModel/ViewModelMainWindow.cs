@@ -220,7 +220,7 @@ namespace BayesianModeling.ViewModel
 
             bool failed = false;
 
-            SendMessageToOutput("Welcome to Bayesian Model Simulator!");
+            SendMessageToOutput("Welcome to Bayesian discounting model selector!");
             SendMessageToOutput("All view elements loaded");
             SendMessageToOutput("Displaying Reogrid License:");
             SendMessageToOutput("ReoGrid - .NET Spreadsheet Control");
