@@ -203,7 +203,7 @@ namespace BayesianModeling
         /// A method for submitting a string-encoded range and returning the value of the cells selected.
         /// </summary>
         /// <param name="range">
-        /// List of double values returned for use as delay or value points in simulation
+        /// List of double values returned for use as delay or value points in Computation
         /// </param>
         public List<double> ParseRange(string range)
         {

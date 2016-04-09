@@ -61,17 +61,18 @@ namespace BayesianModeling.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to pieGraph = data.frame(Noise=output[[1]][&apos;noise.prob&apos;],
+        ///   Looks up a localized string similar to # Shawn Gilroy, 2016
+        ///# Companion Script for BDS
+        ///# params = BDS returns
+        ///# output 1: Bar chart, proportions of wins using ggplot2
+        ///# output 2: Semi-logged (x) discounting functions using ggplot2
+        ///
+        ///pieGraph = data.frame(Noise=output[[1]][&apos;noise.prob&apos;],
         ///                      Hyperbolic=output[[2]][&apos;Mazur.prob&apos;],
         ///                      Exponential=output[[3]][&apos;exp.prob&apos;],
         ///                      Hyperboloid.M=output[[4]][&apos;MG.prob&apos;],
         ///                      Hyperboloid.R=output[[5]][&apos;Rachlin.prob&apos;],
-        ///                      QuasiHyperbolic=output[[9]][&apos;BD.prob&apos;])
-        ///
-        ///colnames(pieGraph)[1] &lt;- &quot;Noise&quot;
-        ///colnames(pieGraph)[2] &lt;- &quot;Hyperbolic&quot;
-        ///colnames(pieGraph)[3] &lt;- &quot;Exponential&quot;
-        ///colnames(pieGraph)[4] &lt;- &quot;Hype [rest of string was truncated]&quot;;.
+        ///          [rest of string was truncated]&quot;;.
         /// </summary>
         public static string ChartingFunctions {
             get {
@@ -80,23 +81,24 @@ namespace BayesianModeling.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to BDS3&lt;-function(dat,Noise=1,Mazur=1,Exponential=1,Rachlin=1,GreenMyerson=1,BD=1){
-        ///  #Debug option
-        ///  #Noise=1;Mazur=1;Exponential=1;Rachlin=1;GreenMyerson=1
-        ///  #define values needed to make loop run
-        ///  X&lt;-dat$X
-        ///  Y&lt;-dat$Y
-        ///
-        ///  nonvarry&lt;-rep(0,1)
-        ///  startstore&lt;-matrix(NA,1,8,dimnames= list(NULL,c(&apos;Mg.lnK&apos;,&apos;Mg.s&apos;,&apos;Rach.lnK&apos;,&apos;Rach.s&apos;,&apos;Mazur.lnK&apos;,&apos;exp.lnK&apos;,&apos;BD.beta&apos;,&apos;BD.delta&apos;)))
-        ///  
-        ///  
-        ///  noise.frame&lt;-data.frame(noise.mean=rep(NA,1),noise.RMSE=rep(NA,1),noise.BIC=rep(NA,1),
-        ///                          noise.B [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to # Chris Franck
+        ///#
+        ///# Input is a data frame with $X for delay, $Y for indiff point, and $ses for session
+        ///#
+        ///# Arguments      value     purpose
+        ///# Noise          binary    include noise model?
+        ///# Mazur          binary    include Mazur model?
+        ///# Exponential    binary    include Exponential model? 
+        ///# Rachlin        binary    include Rachlin model?
+        ///# GreenMyerson   binary    include Green-Myerson model?
+        ///# BD             binary    include quasi-hyperboloid (aka betaq-delta) model?  
+        ///#
+        ///# Version history
+        ///# v [rest of string was truncated]&quot;;.
         /// </summary>
-        public static string FranckSimulation {
+        public static string FranckComputation {
             get {
-                return ResourceManager.GetString("FranckSimulation", resourceCulture);
+                return ResourceManager.GetString("FranckComputation", resourceCulture);
             }
         }
         

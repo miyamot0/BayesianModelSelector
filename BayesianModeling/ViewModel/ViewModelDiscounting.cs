@@ -330,14 +330,14 @@ namespace BayesianModeling.ViewModel
             if (yRange[0] > maxValueA)
             {
                 MessageBox.Show("There's a chance your max value is off (the initial value is greater than the max).  This shouldn't be possible.");
-                mInterface.SendMessageToOutput("Initial value is greater than A.  This shouldn't be possible.  Halting simulation.");
+                mInterface.SendMessageToOutput("Initial value is greater than A.  This shouldn't be possible.  Halting Computation.");
                 return;
             }
 
             mInterface.SendMessageToOutput("Inputs passed verification.");
             mInterface.SendMessageToOutput("Figure output: " + outputFigures);
             mInterface.SendMessageToOutput("Workbook output: " + outputWorkbook);
-            mInterface.SendMessageToOutput("Beginning Bayesian Simulation...");
+            mInterface.SendMessageToOutput("Beginning Bayesian Computation...");
                
             try
             {
@@ -396,7 +396,7 @@ namespace BayesianModeling.ViewModel
                 Console.WriteLine(pe.ToString());
             }
 
-            mInterface.SendMessageToOutput("Simulation successful!");
+            mInterface.SendMessageToOutput("Computation successful!");
             mInterface.SendMessageToOutput(" ");
 
             double noiseProb = double.Parse(engine.Evaluate("as.numeric(output[[1]]['noise.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
@@ -425,7 +425,7 @@ namespace BayesianModeling.ViewModel
             }
 
             mInterface.SendMessageToOutput(" ");
-            mInterface.SendMessageToOutput("Simulation Completed");
+            mInterface.SendMessageToOutput("Computation Completed");
             mInterface.SendMessageToOutput("---------------------------------------------------");
 
             if (outputFigures)

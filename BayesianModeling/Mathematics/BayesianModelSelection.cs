@@ -4,7 +4,7 @@
     {
         public static string GetFranckFunction()
         {
-            return Properties.Resources.FranckSimulation;
+            return Properties.Resources.FranckComputation;
         }
 
         public static string GetLogChartFunction()
