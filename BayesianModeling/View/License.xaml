@@ -7,11 +7,14 @@
         mc:Ignorable="d"
         Title="{Binding LicenseTitle}" 
         Height="300" 
-        Width="450">
+        Width="525">
     <Grid>
-        <ScrollViewer>
+        <ScrollViewer
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Center"
+            Margin="25,0,0,0">
             <TextBlock Text="{Binding LicenseText}" 
-                       HorizontalAlignment="Center"
+                       HorizontalAlignment="Stretch"
                        TextWrapping="Wrap"
                        Padding="5"/>
         </ScrollViewer>
