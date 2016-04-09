@@ -64,7 +64,7 @@
                 </MenuItem>
 
                 <MenuItem Header="_Modeling">
-                    <MenuItem Header="_Discounting Modeling" x:Name="discounting" Command="{Binding DiscountingWindowCommand}"/>
+                    <MenuItem Header="_Bayesian discounting model selection" x:Name="discounting" Command="{Binding DiscountingWindowCommand}"/>
                 </MenuItem>
 
                 <MenuItem Header="_Logs">
