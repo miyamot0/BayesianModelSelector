@@ -1,4 +1,4 @@
-﻿<Window x:Class="BayesianModeling.View.DiscountingWindow"
+﻿<Window x:Class="BayesianModeling.View.BatchDiscountingWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,14 +7,14 @@
         xmlns:local="clr-namespace:BayesianModeling.View"
         xmlns:settings="clr-namespace:BayesianModeling.Properties"    
         ResizeMode="NoResize"
-        Icon="/Images/applications-science.png"
+        Icon="/Images/applications-other.png"
         mc:Ignorable="d"
-        Title="Discounting Analyses" 
         Height="400" 
         Width="400"
-        Top="{Binding Source={x:Static settings:Settings.Default}, Path=DiscountTop, Mode=TwoWay}" 
-        Left="{Binding Source={x:Static settings:Settings.Default}, Path=DiscountLeft, Mode=TwoWay}">
-    
+        Title="Batch Discounting Analyses"
+        Top="{Binding Source={x:Static settings:Settings.Default}, Path=BatchDiscountTop, Mode=TwoWay}" 
+        Left="{Binding Source={x:Static settings:Settings.Default}, Path=BatchDiscountLeft, Mode=TwoWay}">
+
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding ViewLoadedCommand}"/>
@@ -48,7 +48,7 @@
             Grid.Column="0"
             Grid.ColumnSpan="4"
             FontSize="18"
-            Text="Discounting Model Competition"
+            Text="Batch Discounting Model Competition"
             HorizontalAlignment="Center"
             VerticalAlignment="Center">
         </TextBlock>
@@ -76,13 +76,13 @@
             Text="{Binding Delays}"
             Background="{Binding Path=DelaysBrush}">
         </TextBox>
-        
+
         <Button Name="valuesButton" 
                 Grid.Row="2" 
                 Grid.Column="0"
                 Grid.ColumnSpan="3"
                 Margin="10"
-                Content="Click to Select Indifference Points Range"
+                Content="Click to Select Indifference Points Columns"
                 Command="{Binding GetValuesRangeCommand}">
         </Button>
 
@@ -112,67 +112,9 @@
             Grid.Column="3"
             Grid.ColumnSpan="1"
             Margin="10"
-            Text="{Binding MaxValue}">
+            Text="{Binding DelayedValue}">
         </TextBox>
 
-        <!-- Check Box Controls Left -->
-
-        <StackPanel
-            Orientation="Horizontal"
-            Grid.Row="4"
-            Grid.Column="0"
-            Grid.ColumnSpan="2"
-            VerticalAlignment="Center"
-            HorizontalAlignment="Right">
-            <Label Content="Output Model Fits and figures?"></Label>
-        </StackPanel>
-
-        <CheckBox
-            Grid.Row="4"
-            Grid.Column="2"
-            Grid.ColumnSpan="2"
-            Margin="15,0,0,0"
-            VerticalAlignment="Center"
-            HorizontalAlignment="Left"
-            Content="">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="Checked">
-                    <i:InvokeCommandAction Command="{Binding Path=FigureOutput}"/>
-                </i:EventTrigger>
-                <i:EventTrigger EventName="Unchecked">
-                    <i:InvokeCommandAction Command="{Binding Path=FigureOutput}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </CheckBox>
-
-        <StackPanel
-            Orientation="Horizontal"
-            Grid.Row="5"
-            Grid.Column="0"
-            Grid.ColumnSpan="2"
-            VerticalAlignment="Center"
-            HorizontalAlignment="Right">
-            <Label Content="Save results to workbook?"></Label>
-        </StackPanel>
-
-        <CheckBox
-            Grid.Row="5"
-            Grid.Column="2"
-            Grid.ColumnSpan="2"
-            Margin="15,0,0,0"
-            VerticalAlignment="Center"
-            HorizontalAlignment="Left"
-            Content="">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="Checked">
-                    <i:InvokeCommandAction Command="{Binding Path=WorkbookOutput}"/>
-                </i:EventTrigger>
-                <i:EventTrigger EventName="Unchecked">
-                    <i:InvokeCommandAction Command="{Binding Path=WorkbookOutput}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </CheckBox>        
-        
         <Button Name="calculateButton" 
                 Grid.Row="7" 
                 Grid.Column="0"
@@ -181,5 +123,7 @@
                 Content="Calculate"
                 Command="{Binding CalculateScoresCommand}">
         </Button>
+
+
     </Grid>
 </Window>

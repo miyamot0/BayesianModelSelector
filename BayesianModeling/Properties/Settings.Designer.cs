@@ -166,5 +166,29 @@ namespace BayesianModeling.Properties {
                 this["Updated"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public double BatchDiscountTop {
+            get {
+                return ((double)(this["BatchDiscountTop"]));
+            }
+            set {
+                this["BatchDiscountTop"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public double BatchDiscountLeft {
+            get {
+                return ((double)(this["BatchDiscountLeft"]));
+            }
+            set {
+                this["BatchDiscountLeft"] = value;
+            }
+        }
     }
 }

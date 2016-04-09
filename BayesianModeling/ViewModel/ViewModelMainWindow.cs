@@ -16,6 +16,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -44,6 +45,7 @@ namespace BayesianModeling.ViewModel
         /* Menu Commands */
 
         public RelayCommand DiscountingWindowCommand { get; set; }
+        public RelayCommand BatchDiscountingWindowCommand { get; set; }
         public RelayCommand InformationWindowCommand { get; set; }
 
         public RelayCommand RLicenseWindowCommand { get; set; }
@@ -53,6 +55,7 @@ namespace BayesianModeling.ViewModel
         public RelayCommand Ggplot2LicenseWindowCommand { get; set; }
         public RelayCommand Reshape2LicenseWindowCommand { get; set; }
         public RelayCommand GridExtraLicenseWindowCommand { get; set; }
+        public RelayCommand GnomeIconLicenseWindowCommand { get; set; }
 
         /* Output View */
 
@@ -82,6 +85,7 @@ namespace BayesianModeling.ViewModel
             ViewLoadedCommand = new RelayCommand(param => ViewLoaded(), param => true);
             ViewClosingCommand = new RelayCommand(param => ViewClosed(), param => true);
             DiscountingWindowCommand = new RelayCommand(param => OpenDiscountingWindow(), param => true);
+            BatchDiscountingWindowCommand = new RelayCommand(param => OpenBatchDiscountingWindow(), param => true);
             InformationWindowCommand = new RelayCommand(param => OpenInformationWindow(), param => true);
 
             RLicenseWindowCommand = new RelayCommand(param => RLicenseInformationWindow(), param => true);
@@ -92,6 +96,18 @@ namespace BayesianModeling.ViewModel
             Ggplot2LicenseWindowCommand = new RelayCommand(param => Ggplot2LicenseInformationWindow(), param => true);
             Reshape2LicenseWindowCommand = new RelayCommand(param => Reshape2LicenseInformationWindow(), param => true);
             GridExtraLicenseWindowCommand = new RelayCommand(param => GridExtraLicenseInformationWindow(), param => true);
+            GnomeIconLicenseWindowCommand = new RelayCommand(param => GnomeIconLicenseInformationWindow(), param => true);
+        }
+
+        private void GnomeIconLicenseInformationWindow()
+        {
+            var window = new View.License();
+            window.DataContext = new ViewModelLicense
+            {
+                licenseTitle = "License - Gnome Icons",
+                licenseText = Properties.Resources.License_Gnome_Icons
+            };
+            window.Show();
         }
 
         private void NlsLicenseInformationWindow()
@@ -202,8 +218,10 @@ namespace BayesianModeling.ViewModel
             //Environment.Exit(installProcess.ExitCode);
         }
 
-        private void ViewLoaded()
+        private async void ViewLoaded()
         {
+            await TaskEx.Delay(2000);
+
             if (Properties.Settings.Default.Updated)
             {
                 IntroWindow introWindow = new IntroWindow();
@@ -261,9 +279,6 @@ namespace BayesianModeling.ViewModel
                 SendMessageToOutput("R failed to load.  Error code: " + e.ToString());
                 failed = true;
             }
-
-            // Let UI Load
-            Thread.Sleep(3000);
 
             if (failed)
             {
@@ -402,6 +417,20 @@ namespace BayesianModeling.ViewModel
             mWin.Owner = MainWindow;
             mWin.Topmost = true;
             mWin.DataContext = new ViewModelDiscounting()
+            {
+                mWindow = MainWindow,
+                mInterface = this,
+                windowRef = mWin
+            };
+            mWin.Show();
+        }
+
+        private void OpenBatchDiscountingWindow()
+        {
+            var mWin = new BatchDiscountingWindow();
+            mWin.Owner = MainWindow;
+            mWin.Topmost = true;
+            mWin.DataContext = new ViewModelBatchDiscounting()
             {
                 mWindow = MainWindow,
                 mInterface = this,

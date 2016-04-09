@@ -18,6 +18,7 @@ using System.Windows.Media;
 using System;
 using unvell.ReoGrid.Actions;
 using unvell.ReoGrid;
+using System.Threading.Tasks;
 
 namespace BayesianModeling.ViewModel
 {
@@ -153,8 +154,10 @@ namespace BayesianModeling.ViewModel
         /// Command-based update of UI logic during open.
         /// Will re-check for R interactivity
         /// </summary>
-        private void ViewLoaded()
+        private async void ViewLoaded()
         {
+            await TaskEx.Delay(1000);
+
             mInterface.SendMessageToOutput("---------------------------------------------------");
             failed = false;
 

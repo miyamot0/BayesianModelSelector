@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="Information Window" 
         Height="600" 
+        Icon="/Images/x-office-address-book.png"
         ResizeMode="NoResize"
         Width="450">
     <Grid>

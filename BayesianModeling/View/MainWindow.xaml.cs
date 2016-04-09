@@ -231,6 +231,48 @@ namespace BayesianModeling
         }
 
         /// <summary>
+        /// A method for submitting a string-encoded range and returning the value of the cells selected.
+        /// </summary>
+        /// <param name="range">
+        /// List of double values returned for use as delay or value points in Computation
+        /// </param>
+        public double[,] ParseBulkRange(string range)
+        {
+            List<double> mReturned = new List<double>();
+            double[,] mDouble = null;
+
+            try
+            {
+                var rangeReturned = spreadSheetView.CurrentWorksheet.Ranges[range];
+
+                int mRows = rangeReturned.Rows;
+                int mCols = rangeReturned.Cols;
+
+                mDouble = new double[mCols, mRows];
+
+                int startCol = rangeReturned.StartPos.Col;
+                int startRow = rangeReturned.StartPos.Row;
+
+                spreadSheetView.CurrentWorksheet.IterateCells(rangeReturned, (row, col, cell) =>
+                {
+                    double num;
+                    if (double.TryParse(cell.Data.ToString(), out num))
+                    {
+                        mDouble[col-startCol, row-startRow] = num;
+                    }
+                    return true;
+                });
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+
+            return mDouble;
+        }
+
+        /// <summary>
         /// Code-behind to save the text output from logs to a .txt file, selected by user.
         /// </summary>
         private void saveLogs_Click(object sender, RoutedEventArgs e)

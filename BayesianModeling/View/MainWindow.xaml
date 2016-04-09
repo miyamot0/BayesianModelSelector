@@ -45,44 +45,135 @@
                 <MenuItem Header="_File">
                     <MenuItem Header="_New" 
 						x:Name="newMenuItem" 
-						Command="{Binding FileNewCommand}"/>
+						Command="{Binding FileNewCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="/Images/document-new.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
                     <Separator />
                     <MenuItem Header="_Open" 
 						x:Name="openMenuItem" 
-						Command="{Binding FileOpenCommand}"/>
+						Command="{Binding FileOpenCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="/Images/document-open.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
                     <Separator />
                     <MenuItem Header="_Save" 
 						x:Name="saveMenuItem" 
-						Command="{Binding FileSaveCommand}"/>
+						Command="{Binding FileSaveCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="/Images/document-save.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
                     <MenuItem Header="_Save As" 
 						x:Name="saveAsMenuItem" 
-						Command="{Binding FileSaveAsCommand}"/>
+						Command="{Binding FileSaveAsCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="/Images/document-save-as.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
                     <Separator />
                     <MenuItem Header="_Close" 
 						x:Name="closeMenuItem" 
-						Command="{Binding FileCloseCommand}"/>
+						Command="{Binding FileCloseCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="/Images/application-exit.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
                 </MenuItem>
 
                 <MenuItem Header="_Modeling">
-                    <MenuItem Header="_Bayesian discounting model selection" x:Name="discounting" Command="{Binding DiscountingWindowCommand}"/>
+                    <MenuItem Header="_Discounting Model Selection" 
+                              Command="{Binding DiscountingWindowCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="/Images/applications-science.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="_Batch Discounting Model Selection" 
+                              Command="{Binding BatchDiscountingWindowCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="/Images/applications-other.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
                 </MenuItem>
 
                 <MenuItem Header="_Logs">
-                    <MenuItem Header="_Save Log Output" x:Name="saveLogs" Click="saveLogs_Click"/>
-                    <MenuItem Header="_Clear Logs" x:Name="clearLogs" Click="clearLogs_Click"/>
+                    <MenuItem Header="_Save Log Output" 
+                              x:Name="saveLogs" 
+                              Click="saveLogs_Click">
+                        <MenuItem.Icon>
+                            <Image Source="/Images/edit-copy.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="_Clear Logs" 
+                              x:Name="clearLogs" 
+                              Click="clearLogs_Click">
+                        <MenuItem.Icon>
+                            <Image Source="/Images/edit-clear.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
                 </MenuItem>
 
                 <MenuItem Header="_Information">
                     <MenuItem Header="_Licenses">
-                        <MenuItem Header="R License" Command="{Binding RLicenseWindowCommand}"/>
-                        <MenuItem Header="R.Net License" Command="{Binding RdotNetLicenseWindowCommand}"/>
-                        <MenuItem Header="Reogrid (Unveil) License" Command="{Binding ReogridLicenseWindowCommand}"/>
-                        <MenuItem Header="nls (R Package) License" Command="{Binding NlsLicenseWindowCommand}"/>
-                        <MenuItem Header="ggplot2 (R Package) License" Command="{Binding Ggplot2LicenseWindowCommand}"/>
-                        <MenuItem Header="reshape2 (R Package) License" Command="{Binding Reshape2LicenseWindowCommand}"/>
-                        <MenuItem Header="gridExtra (R Package) License" Command="{Binding GridExtraLicenseWindowCommand}"/>
+                        <MenuItem.Icon>
+                            <Image Source="/Images/text-x-preview.png" />
+                        </MenuItem.Icon>
+                        <MenuItem Header="R License" 
+                                  Command="{Binding RLicenseWindowCommand}">
+                            <MenuItem.Icon>
+                                <Image Source="/Images/text-x-preview.png" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="R.Net License" 
+                                  Command="{Binding RdotNetLicenseWindowCommand}">
+                            <MenuItem.Icon>
+                                <Image Source="/Images/text-x-preview.png" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="Reogrid (Unveil) License" 
+                                  Command="{Binding ReogridLicenseWindowCommand}">
+                            <MenuItem.Icon>
+                                <Image Source="/Images/text-x-preview.png" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="nls (R Package) License" 
+                                  Command="{Binding NlsLicenseWindowCommand}">
+                            <MenuItem.Icon>
+                                <Image Source="/Images/text-x-preview.png" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="ggplot2 (R Package) License" 
+                                  Command="{Binding Ggplot2LicenseWindowCommand}">
+                            <MenuItem.Icon>
+                                <Image Source="/Images/text-x-preview.png" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="reshape2 (R Package) License" 
+                                  Command="{Binding Reshape2LicenseWindowCommand}">
+                            <MenuItem.Icon>
+                                <Image Source="/Images/text-x-preview.png" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="gridExtra (R Package) License" 
+                                  Command="{Binding GridExtraLicenseWindowCommand}">
+                            <MenuItem.Icon>
+                                <Image Source="/Images/text-x-preview.png" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="Gnome Icon Set License" 
+                                  Command="{Binding GnomeIconLicenseWindowCommand}">
+                            <MenuItem.Icon>
+                                <Image Source="/Images/text-x-preview.png" />
+                            </MenuItem.Icon>
+                        </MenuItem>
                     </MenuItem>
-                    <MenuItem Header="_Credits" x:Name="credits" Command="{Binding InformationWindowCommand}"/>
+                    <MenuItem Header="_Credits" x:Name="credits" Command="{Binding InformationWindowCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="/Images/x-office-address-book.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
                 </MenuItem>
             </Menu>
 

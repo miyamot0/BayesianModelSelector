@@ -125,7 +125,7 @@
     <value>..\Resources\FranckComputation.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="License_ggplot2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\License_ggplot2.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+    <value>..\Resources\License_ggplot2.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;iso-8859-1</value>
   </data>
   <data name="License_gridExtra" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\License_gridExtra.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
@@ -150,5 +150,8 @@
   </data>
   <data name="SNS1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SNS.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="License_Gnome_Icons" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\License_Gnome_Icons.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
 </root>

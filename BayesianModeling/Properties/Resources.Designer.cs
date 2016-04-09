@@ -81,7 +81,7 @@ namespace BayesianModeling.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to # Chris Franck
+        ///   Looks up a localized string similar to # Copyright Chris Franck, 2016
         ///#
         ///# Input is a data frame with $X for delay, $Y for indiff point, and $ses for session
         ///#
@@ -93,8 +93,7 @@ namespace BayesianModeling.Properties {
         ///# GreenMyerson   binary    include Green-Myerson model?
         ///# BD             binary    include quasi-hyperboloid (aka betaq-delta) model?  
         ///#
-        ///# Version history
-        ///# v [rest of string was truncated]&quot;;.
+        ///# Vers [rest of string was truncated]&quot;;.
         /// </summary>
         public static string FranckComputation {
             get {
@@ -120,6 +119,27 @@ namespace BayesianModeling.Properties {
         public static string License_ggplot2 {
             get {
                 return ResourceManager.GetString("License_ggplot2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 		    GNU GENERAL PUBLIC LICENSE
+        ///		       Version 2, June 1991
+        ///
+        /// Copyright (C) 1989, 1991 Free Software Foundation, Inc.
+        ///                       51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+        /// Everyone is permitted to copy and distribute verbatim copies
+        /// of this license document, but changing it is not allowed.
+        ///
+        ///			    Preamble
+        ///
+        ///  The licenses for most software are designed to take away your
+        ///freedom to share and change it.  By contrast, the GNU General Public
+        ///License is intended to guar [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string License_Gnome_Icons {
+            get {
+                return ResourceManager.GetString("License_Gnome_Icons", resourceCulture);
             }
         }
         
