@@ -57,16 +57,16 @@
         <Button Name="delaysButton" 
                 Grid.Row="1" 
                 Grid.Column="0"
-                Grid.ColumnSpan="2"
+                Grid.ColumnSpan="3"
                 Margin="10"
-                Content="Click to Select Delays Range"
+                Content="Click to Select Delay Points Range"
                 Command="{Binding GetDelaysRangeCommand}">
         </Button>
 
         <TextBox
             Grid.Row="1" 
-            Grid.Column="2"
-            Grid.ColumnSpan="2"
+            Grid.Column="3"
+            Grid.ColumnSpan="1"
             IsReadOnly="True"
             Margin="10"
             Focusable="False"
@@ -79,16 +79,16 @@
         <Button Name="valuesButton" 
                 Grid.Row="2" 
                 Grid.Column="0"
-                Grid.ColumnSpan="2"
+                Grid.ColumnSpan="3"
                 Margin="10"
-                Content="Click to Select Values Range"
+                Content="Click to Select Indifference Points Range"
                 Command="{Binding GetValuesRangeCommand}">
         </Button>
 
         <TextBox
             Grid.Row="2" 
-            Grid.Column="2"
-            Grid.ColumnSpan="2"
+            Grid.Column="3"
+            Grid.ColumnSpan="1"
             IsReadOnly="True"
             Margin="10"
             Focusable="False"
@@ -102,14 +102,14 @@
                Grid.Column="0"
                Grid.ColumnSpan="2"
                Margin="10"
-               Content="Enter Max Bound for Values (A)">
+               Content="Enter the Delayed Amount">
         </Label>
 
         <TextBox
             Name="maxValue"
             Grid.Row="3" 
-            Grid.Column="2"
-            Grid.ColumnSpan="2"
+            Grid.Column="3"
+            Grid.ColumnSpan="1"
             Margin="10"
             Text="{Binding MaxValue}">
         </TextBox>
