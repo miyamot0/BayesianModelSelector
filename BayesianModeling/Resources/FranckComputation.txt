@@ -1,4 +1,4 @@
-# Chris Franck
+# Copyright Chris Franck, 2016
 #
 # Input is a data frame with $X for delay, $Y for indiff point, and $ses for session
 #
