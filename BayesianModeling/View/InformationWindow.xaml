@@ -72,17 +72,6 @@
 
                     <ListItem>
                         <Paragraph>
-                            <Hyperlink NavigateUri="https://cran.r-project.org/web/packages/minpack.lm/index.html" 
-                       RequestNavigate="Hyperlink_RequestNavigate">Minpack.lm: : R Interface to the Levenberg-Marquardt Nonlinear 
-                                Least-Squares Algorithm Found in MINPACK, Plus Support for Bounds. Software developed by the 
-                                University of Chicago, as Operator of Argonne National Laboratory. Licensed under GPL-3.
-                            </Hyperlink>
-                            <LineBreak />
-                        </Paragraph>
-                    </ListItem>
-                    
-                    <ListItem>
-                        <Paragraph>
                             <Hyperlink NavigateUri="https://github.com/jmp75/rdotnet" 
                        RequestNavigate="Hyperlink_RequestNavigate">Rdotnet (R calls for to NLS package). R Programming language interop 
                                 library.  New BSD License.
