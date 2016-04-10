@@ -552,8 +552,12 @@ namespace BayesianModeling.ViewModel
             mWindow.spreadSheetView.AddWorksheet(sheet);
             mWindow.spreadSheetView.CurrentWorksheet = sheet;
 
-            var action = new SetColumnsWidthAction(0, wholeRange.GetLength(1), 250);
-            mWindow.spreadSheetView.DoAction(action);
+            mWindow.spreadSheetView.DoAction(new SetColumnsWidthAction(0, 1, 250));
+
+            for (int i=0; i<wholeRange.GetLength(0); i++)
+            {
+                mWindow.spreadSheetView.DoAction(new SetColumnsWidthAction(i + 1, 1, 250));
+            }
 
             mInterface.SendMessageToOutput("Final Calculations Completed!");
 

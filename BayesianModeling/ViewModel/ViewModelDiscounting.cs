@@ -350,6 +350,8 @@ namespace BayesianModeling.ViewModel
                
             try
             {
+                engine.Evaluate("rm(list = setdiff(ls(), lsf.str()))");
+
                 NumericVector delayValues = engine.CreateNumericVector(mWindow.ParseRange(Delays).ToArray());
                 engine.SetSymbol("mDelays", delayValues);
 
