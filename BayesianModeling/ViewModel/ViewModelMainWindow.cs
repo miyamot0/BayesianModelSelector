@@ -11,10 +11,7 @@ using BayesianModeling.View;
 using RDotNet;
 using Small_N_Stats.Interface;
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -187,37 +184,6 @@ namespace BayesianModeling.ViewModel
             window.Show();
         }
 
-        private void OnDownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
-        {
-            if (currPercent != e.ProgressPercentage)
-            {
-                SendMessageToOutput(string.Format("'{0}' downloaded {1} of {2} bytes. {3}% complete", (string)e.UserState, e.BytesReceived, e.TotalBytesToReceive, e.ProgressPercentage));
-                currPercent = e.ProgressPercentage;
-            }
-        }
-
-        private void OnDownloadComplete(object sender, AsyncCompletedEventArgs e)
-        {
-            var client = (WebClient)sender;
-            client.DownloadProgressChanged -= OnDownloadProgressChanged;
-            client.DownloadFileCompleted -= OnDownloadComplete;
-
-            if (e.Error != null)
-                throw e.Error;
-
-            if (e.Cancelled)
-                Environment.Exit(1);
-
-            var downloadedFile = (string)e.UserState;
-            var processInfo = new ProcessStartInfo(downloadedFile);
-            processInfo.CreateNoWindow = false;
-
-            var installProcess = Process.Start(processInfo);
-            installProcess.WaitForExit();
-
-            //Environment.Exit(installProcess.ExitCode);
-        }
-
         private async void ViewLoaded()
         {
             await TaskEx.Delay(2000);
@@ -286,14 +252,7 @@ namespace BayesianModeling.ViewModel
                 {
                     if (MessageBox.Show("R was not found.  Do you want to download and install?", "R Not Found", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                     {
-                        var source = new Uri("https://cloud.r-project.org/bin/windows/base/old/3.2.3/R-3.2.3-win.exe");
-                        var dest = Path.Combine(Path.GetTempPath(), "R-3.2.3-win.exe");
-
-                        var client = new WebClient();
-                        client.DownloadProgressChanged += OnDownloadProgressChanged;
-                        client.DownloadFileCompleted += OnDownloadComplete;
-                        client.DownloadFileAsync(source, dest, dest);
-
+                        Process.Start("https://www.r-project.org/");
                     }
                 }, new object[] { null });
             }
@@ -401,6 +360,19 @@ namespace BayesianModeling.ViewModel
                 }
 
                 SendMessageToOutput("A listing of all referenced software, with licensing, has been displayed above.");
+                SendMessageToOutput("TLDR: Bayesian Model Selector is made possible by the following software.");
+                SendMessageToOutput("");
+                SendMessageToOutput("R Statistical Package - GPLv2 Licensed. Copyright (C) 2000-16. The R Core Team");
+                SendMessageToOutput("nls R Package - GPLv2 Licensed. Copyright (C) 1999-1999 Saikat DebRoy, Douglas M. Bates, Jose C. Pinheiro.");
+                SendMessageToOutput("nls R Package - GPLv2 Licensed. Copyright (C) 2000-7. The R Core Team.");
+                SendMessageToOutput("ggplot2 R Package - GPLv2 Licensed. Copyright (c) 2016, Hadley Wickham.");
+                SendMessageToOutput("reshape2 R Package - MIT Licensed. Copyright (c) 2014, Hadley Wickham.");
+                SendMessageToOutput("gridExtra R Package - GPLv2 Licensed. Copyright (c) Baptiste Auguie.");
+                SendMessageToOutput("Gnome Icon Set - GPLv2 Licensed.");
+                SendMessageToOutput("RdotNet: Interface for the R Statistical Package - New BSD License(BSD). Copyright(c) 2010, RecycleBin. All rights reserved.");
+                SendMessageToOutput("Reogrid Spreadsheet View Control - Free Licensed.");
+                SendMessageToOutput("");
+
                 SendMessageToOutput("License information is also provided in Information > Licenses > ... as well as");
                 SendMessageToOutput("in the install directory of this program (under Resources).");
             }
@@ -409,6 +381,7 @@ namespace BayesianModeling.ViewModel
         private void ViewClosed()
         {
             Properties.Settings.Default.Save();
+            engine.Dispose();
         }
 
         private void OpenDiscountingWindow()

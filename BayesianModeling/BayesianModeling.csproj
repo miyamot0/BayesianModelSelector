@@ -27,12 +27,12 @@
     <MapFileExtensions>true</MapFileExtensions>
     <InstallUrl>http://www.smallnstats.com/bayesian_modeling/</InstallUrl>
     <SupportUrl>http://www.smallnstats.com</SupportUrl>
-    <ProductName>Bayesian Simulator</ProductName>
+    <ProductName>Bayesian Model Selector</ProductName>
     <PublisherName>Small n Stats</PublisherName>
-    <SuiteName>Discounting Model Simulator</SuiteName>
+    <SuiteName>Discounting Model Selector</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>index.html</WebPage>
-    <ApplicationRevision>13</ApplicationRevision>
+    <ApplicationRevision>15</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
