@@ -208,7 +208,6 @@ namespace BayesianModeling
         public List<double> ParseRange(string range)
         {
             List<double> mReturned = new List<double>();
-
             try
             {
                 var rangeReturned = spreadSheetView.CurrentWorksheet.Ranges[range];
@@ -225,6 +224,7 @@ namespace BayesianModeling
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                return null;
             }
 
             return mReturned;
@@ -238,7 +238,6 @@ namespace BayesianModeling
         /// </param>
         public double[,] ParseBulkRange(string range)
         {
-            List<double> mReturned = new List<double>();
             double[,] mDouble = null;
 
             try
@@ -260,13 +259,14 @@ namespace BayesianModeling
                     {
                         mDouble[col-startCol, row-startRow] = num;
                     }
+
                     return true;
                 });
-
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                return null;
             }
 
             return mDouble;

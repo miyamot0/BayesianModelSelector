@@ -358,17 +358,31 @@ namespace BayesianModeling.ViewModel
 
             List<double> yRange = new List<double>();
 
+            if (wholeRange == null)
+            {
+                mInterface.SendMessageToOutput("There were items that failed validation in the Indifference Point values.  Are any fields blank or not numeric?");
+                MessageBox.Show("There were items that failed validation in the Indifference Point values.");
+                return;
+            }
+
             for (int i = 0; i < wholeRange.GetLength(1); i++)
             {
+                /* Loading Initial Range*/
                 yRange.Add(wholeRange[0, i]);
             }
 
-            if (!double.TryParse(DelayedValue, out MaxValueA) || (xRange.Count != yRange.Count))
+            if (!double.TryParse(DelayedValue, out MaxValueA) || MaxValueA == 0)
+            {
+                mInterface.SendMessageToOutput("Error while validating the Delayed Amount.  Is this a non-zero number?");
+                MessageBox.Show("Please review the the Delayed Amount number.  This must be a non-zero number.");
+                return;
+            }
+
+            if (xRange.Count != yRange.Count)
             {
                 mInterface.SendMessageToOutput("Error while validating current ranges, Delay/Value ranges must be EQUAL in length for comparison.");
                 mInterface.SendMessageToOutput("Counts for Delays/Values were " + xRange.Count + " and " + yRange.Count + " respectively.");
-                mInterface.SendMessageToOutput("Reference for the maximum value was: " + MaxValueA);
-                MessageBox.Show("Please review the Delay/Value ranges and maximum value reference point.");
+                MessageBox.Show("Error while validating current ranges, Delay/Value ranges must be EQUAL in length for comparison.");
                 return;
             }
 
@@ -380,14 +394,14 @@ namespace BayesianModeling.ViewModel
 
             if (yRange[0] > MaxValueA)
             {
-                MessageBox.Show("There's a chance your max value is off (the initial value is greater than the max).  This shouldn't be possible.");
-                mInterface.SendMessageToOutput("Initial value is greater than A.  This shouldn't be possible.  Halting Computation.");
+                MessageBox.Show("Your Delayed Amount appears incorrect (the first Indifference Point is greater than the Delayed Amount).  This shouldn't be possible.");
+                mInterface.SendMessageToOutput("Initial indifference point is greater than Delayed Amount.  This shouldn't be possible.  Halting Computation.");
                 return;
             }
 
-            mInterface.SendMessageToOutput("Inputs passed verification.");
+            mInterface.SendMessageToOutput("All inputs passed verification.");
             mInterface.SendMessageToOutput("---------------------------------------------------");
-            mInterface.SendMessageToOutput("Beginning Batched Computations");
+            mInterface.SendMessageToOutput("Beginning Batched Computations...");
 
             var sheet = mWindow.spreadSheetView.CreateWorksheet();
 

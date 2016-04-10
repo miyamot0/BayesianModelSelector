@@ -238,10 +238,10 @@ namespace BayesianModeling.ViewModel
             mWindow.spreadSheetView.PickRange((inst, range) =>
             {
 
-                if (range.Rows > 1 && range.Cols > 1)
+                if (range.Cols > 1)
                 {
                     DefaultFieldsToGray();
-                    MessageBox.Show("Please select single row or single column selections");
+                    MessageBox.Show("Please select a single vertical column.  You can have many rows, but just one column of them.");
                     return true;
                 }
 
@@ -281,10 +281,10 @@ namespace BayesianModeling.ViewModel
 
             mWindow.spreadSheetView.PickRange((inst, range) =>
             {
-                if (range.Rows > 1 && range.Cols > 1)
+                if (range.Cols > 1)
                 {
                     DefaultFieldsToGray();
-                    MessageBox.Show("Please select single row or single column selections");
+                    MessageBox.Show("Please select a single vertical column.  You can have many rows, but just one column of them.");
                     return true;
                 }
 
@@ -315,12 +315,18 @@ namespace BayesianModeling.ViewModel
             mInterface.SendMessageToOutput("---------------------------------------------------");
             mInterface.SendMessageToOutput("Checking user-supplied ranges and reference points.");
 
-            if (!double.TryParse(MaxValue, out maxValueA) || (xRange.Count != yRange.Count))
+            if (!double.TryParse(MaxValue, out maxValueA) || maxValueA == 0)
+            {
+                mInterface.SendMessageToOutput("Error while validating the Delayed Amount.  Is this a non-zero number?");
+                MessageBox.Show("Please review the the Delayed Amount number.  This must be a non-zero number.");
+                return;
+            }
+
+            if (xRange.Count != yRange.Count)
             {
                 mInterface.SendMessageToOutput("Error while validating current ranges, Delay/Value ranges must be EQUAL in length for comparison.");
                 mInterface.SendMessageToOutput("Counts for Delays/Values were " + xRange.Count + " and " + yRange.Count + " respectively.");
-                mInterface.SendMessageToOutput("Reference for the maximum value was: " + maxValueA);
-                MessageBox.Show("Please review the Delay/Value ranges and maximum value reference point.");
+                MessageBox.Show("Error while validating current ranges, Delay/Value ranges must be EQUAL in length for comparison.");
                 return;
             }
 
