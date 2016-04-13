@@ -5,25 +5,62 @@
  * 
  */
 
-using BayesianModeling.Interfaces;
 using BayesianModeling.Utilities;
 using BayesianModeling.View;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
+using Microsoft.Win32;
 using RDotNet;
 using Small_N_Stats.Interface;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Threading;
-using System.Threading.Tasks;
+using System.IO;
+using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
+using static BayesianModeling.Events.PublishSubscribe;
 
 namespace BayesianModeling.ViewModel
 {
     class ViewModelMainWindow : ViewModelBase, OutputWindowInterface
     {
+        public event PubSubEventHandler<object> OutputEventHandler;
+        public event PubSubEventHandler<object> SaveLogsEventHandler;
+        public event PubSubEventHandler<object> ClearLogsEventHandler;
+        public event PubSubEventHandler<object> PromptForREventHandler;
+
         public MainWindow MainWindow { get; set; }
-        public SpreadsheetInterface _interface { get; set; }
+
+        #region Observable Bindings
+
+        public ObservableCollection<RowViewModel> RowViewModels { get; set; }
+
+        public string title = "Bayesian Model Selection - New File";
+        public string Title
+        {
+            get { return title; }
+            set
+            {
+                title = value;
+                OnPropertyChanged("Title");
+            }
+        }
+
+        public bool shuttingDown = false;
+        public bool ShuttingDown
+        {
+            get { return shuttingDown; }
+            set
+            {
+                shuttingDown = value;
+                OnPropertyChanged("ShuttingDown");
+            }
+        }
+
+        #endregion
+
+        #region Commands
 
         /* IO Commands */
 
@@ -54,22 +91,29 @@ namespace BayesianModeling.ViewModel
         public RelayCommand GridExtraLicenseWindowCommand { get; set; }
         public RelayCommand GnomeIconLicenseWindowCommand { get; set; }
 
-        /* Output View */
+        /* Misc Commands */
 
-        public RichTextBox mTextBox { get; set; }
-        private FlowDocument fd;
-        public ScrollViewer sv;
+        public RelayCommand SaveLogsWindowCommand { get; set; }
+        public RelayCommand ClearLogsWindowCommand { get; set; }
+
+        public RelayCommand DeleteSelectedCommand { get; set; }
+
+        #endregion Commands
+
+        #region Logic/Solving
 
         /* Logic */
 
         bool haveFileLoaded = false;
-        string title = "New File";
         string path = "";
-        int currPercent = 0;
+        public static int RowSpans = 50;
+        public static int ColSpans = 100;
 
-        /* Math/Computation */
+        /* Math / Computation */
 
         REngine engine;
+
+        #endregion
 
         public ViewModelMainWindow()
         {
@@ -79,6 +123,13 @@ namespace BayesianModeling.ViewModel
             FileSaveAsCommand = new RelayCommand(param => SaveFileAs(), param => true);
             FileCloseCommand = new RelayCommand(param => CloseProgram(), param => true);
             FileSaveNoDialogCommand = new RelayCommand(param => SaveFileWithoutDialog(), param => true);
+            
+            SaveLogsWindowCommand = new RelayCommand(param => SaveLogs(), param => true);
+            ClearLogsWindowCommand = new RelayCommand(param => ClearLogs(), param => true);
+
+
+            DeleteSelectedCommand = new RelayCommand(param => DeleteSelected(), param => true);
+
             ViewLoadedCommand = new RelayCommand(param => ViewLoaded(), param => true);
             ViewClosingCommand = new RelayCommand(param => ViewClosed(), param => true);
             DiscountingWindowCommand = new RelayCommand(param => OpenDiscountingWindow(), param => true);
@@ -94,7 +145,40 @@ namespace BayesianModeling.ViewModel
             Reshape2LicenseWindowCommand = new RelayCommand(param => Reshape2LicenseInformationWindow(), param => true);
             GridExtraLicenseWindowCommand = new RelayCommand(param => GridExtraLicenseInformationWindow(), param => true);
             GnomeIconLicenseWindowCommand = new RelayCommand(param => GnomeIconLicenseInformationWindow(), param => true);
+
+            RowViewModels = new ObservableCollection<RowViewModel>();
+
+            PubSub<object>.AddEvent("OutputEventHandler", OutputEventHandler);
+            PubSub<object>.AddEvent("SaveLogsEventHandler", SaveLogsEventHandler);
+            PubSub<object>.AddEvent("ClearLogsEventHandler", ClearLogsEventHandler);
+            PubSub<object>.AddEvent("PromptForREventHandler", PromptForREventHandler);
         }
+        
+        #region UI
+
+        public void UpdateTitle(string title)
+        {
+            Title = "Bayesian Model Selection - " + title;
+        }
+
+        // TODO MVVM this
+
+        private void DeleteSelected()
+        {
+            if (MainWindow.dataGrid.SelectedCells.Count > 0)
+            {
+                foreach (System.Windows.Controls.DataGridCellInfo obj in MainWindow.dataGrid.SelectedCells)
+                {
+                    int x = (RowViewModels.IndexOf((RowViewModel)obj.Item));
+                    RowViewModels[x].values[obj.Column.DisplayIndex] = "";
+                    RowViewModels[x].ForcePropertyUpdate(obj.Column.DisplayIndex);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Licenses
 
         private void GnomeIconLicenseInformationWindow()
         {
@@ -184,14 +268,24 @@ namespace BayesianModeling.ViewModel
             window.Show();
         }
 
-        private async void ViewLoaded()
+        #endregion Licences
+
+        #region Triggers
+
+        private void ViewLoaded()
         {
-            await TaskEx.Delay(2000);
+            ShuttingDown = false;
+
+            for (int i=0; i<RowSpans; i++)
+            {
+                RowViewModels.Add(new RowViewModel());
+            }
+
+            //await TaskEx.Delay(2000);
 
             if (Properties.Settings.Default.Updated)
             {
                 IntroWindow introWindow = new IntroWindow();
-                introWindow.Owner = MainWindow;
                 introWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                 introWindow.ShowDialog();
 
@@ -200,23 +294,11 @@ namespace BayesianModeling.ViewModel
                 Properties.Settings.Default.Save();
             }
 
-            /* Interactive post for Reogrid */
 
             bool failed = false;
 
             SendMessageToOutput("Welcome to Bayesian discounting model selector!");
             SendMessageToOutput("All view elements loaded");
-            SendMessageToOutput("Displaying Reogrid License:");
-            SendMessageToOutput("ReoGrid - .NET Spreadsheet Control");
-            SendMessageToOutput("https://reogrid.net/");
-            SendMessageToOutput("");
-            SendMessageToOutput("This code and information is provided 'as is' without warranty of any kind, either expressed or implied, ");
-            SendMessageToOutput("including but not limited to the implied warranties of merchantability and / or fitness for a particular purpose.");
-            SendMessageToOutput("ReoGrid - .NET Spreadsheet Control");
-            SendMessageToOutput("");
-            SendMessageToOutput("Copyright (c) 2012-2015 unvell.com, all rights reserved.");
-            SendMessageToOutput("for details select Information > Licenses > Reogrid.Net");
-            SendMessageToOutput("");
 
             SendMessageToOutput("Loading R interop libraries (R.Net.Community)");
 
@@ -240,7 +322,7 @@ namespace BayesianModeling.ViewModel
                 engine.AutoPrint = false;
 
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 SendMessageToOutput("R failed to load.  Error code: " + e.ToString());
                 failed = true;
@@ -248,13 +330,10 @@ namespace BayesianModeling.ViewModel
 
             if (failed)
             {
-                MainWindow.Dispatcher.BeginInvoke((SendOrPostCallback)delegate
+                if (MessageBox.Show("R was not found on your computer.  Do you want to be directed to the R web site for more information?", "R Not Found", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                 {
-                    if (MessageBox.Show("R was not found.  Do you want to download and install?", "R Not Found", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
-                    {
-                        Process.Start("https://www.r-project.org/");
-                    }
-                }, new object[] { null });
+                    Process.Start("https://www.r-project.org/");
+                }
             }
             else
             {
@@ -338,7 +417,6 @@ namespace BayesianModeling.ViewModel
                     /* Interactive post for grid package */
 
                     engine.Evaluate("if (!require(grid)) { install.packages('grid', repos = 'http://cran.us.r-project.org') }");
-                    SendMessageToOutput("Package grid found/loaded");
 
                     /* Interactive post for gridExtra package */
 
@@ -369,8 +447,7 @@ namespace BayesianModeling.ViewModel
                 SendMessageToOutput("reshape2 R Package - MIT Licensed. Copyright (c) 2014, Hadley Wickham.");
                 SendMessageToOutput("gridExtra R Package - GPLv2 Licensed. Copyright (c) Baptiste Auguie.");
                 SendMessageToOutput("Gnome Icon Set - GPLv2 Licensed.");
-                SendMessageToOutput("RdotNet: Interface for the R Statistical Package - New BSD License(BSD). Copyright(c) 2010, RecycleBin. All rights reserved.");
-                SendMessageToOutput("Reogrid Spreadsheet View Control - Free Licensed.");
+                SendMessageToOutput("RdotNet: Interface for the R Statistical Package - New BSD License (BSD 2-Clause). Copyright(c) 2010, RecycleBin. All rights reserved.");
                 SendMessageToOutput("");
 
                 SendMessageToOutput("License information is also provided in Information > Licenses > ... as well as");
@@ -384,10 +461,13 @@ namespace BayesianModeling.ViewModel
             engine.Dispose();
         }
 
+        #endregion Triggers
+
+        #region OpenWindows
+
         private void OpenDiscountingWindow()
         {
             var mWin = new DiscountingWindow();
-            mWin.Owner = MainWindow;
             mWin.Topmost = true;
             mWin.DataContext = new ViewModelDiscounting()
             {
@@ -401,7 +481,6 @@ namespace BayesianModeling.ViewModel
         private void OpenBatchDiscountingWindow()
         {
             var mWin = new BatchDiscountingWindow();
-            mWin.Owner = MainWindow;
             mWin.Topmost = true;
             mWin.DataContext = new ViewModelBatchDiscounting()
             {
@@ -415,16 +494,24 @@ namespace BayesianModeling.ViewModel
         private void OpenInformationWindow()
         {
             var mWin = new InformationWindow();
-            mWin.Owner = MainWindow;
             mWin.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             mWin.Topmost = true;
             mWin.Show();
         }
 
+        #endregion OpenWindows
+
+        #region FileIO
+
         private void CreateNewFile()
         {
-            title = "New File";
-            haveFileLoaded = _interface.NewFile();
+            RowViewModels.Clear();
+            for (int i = 0; i < RowSpans; i++)
+            {
+                RowViewModels.Add(new RowViewModel());
+            }
+
+            UpdateTitle("New File");
         }
 
         private void SaveFile()
@@ -435,23 +522,54 @@ namespace BayesianModeling.ViewModel
             }
             else
             {
-                title = _interface.SaveFileWithDialog(title);
+                SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+                saveFileDialog1.FileName = title;
+                saveFileDialog1.Filter = "Excel file (*.xlsx)|*.xlsx|All files (*.*)|*.*";
 
-                if (title != null)
+                if (saveFileDialog1.ShowDialog() == true)
                 {
-                    haveFileLoaded = true;
-                }
+                    try
+                    {
+                        OpenXMLHelper.ExportToExcel(new ObservableCollection<RowViewModel>(RowViewModels), saveFileDialog1.FileName);
 
+                        UpdateTitle(saveFileDialog1.SafeFileName);
+
+                        haveFileLoaded = true;
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show("We weren't able to save.  Is the target file open or in use?");
+                        Console.WriteLine(e.ToString());
+                    }
+                }
             }
         }
 
         private void SaveFileAs()
         {
-            title = _interface.SaveFileAs(title);
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
 
-            if (title != null)
+            saveFileDialog1.FileName = title;
+            saveFileDialog1.Filter = "Excel file (*.xlsx)|*.xlsx|All files (*.*)|*.*";
+
+            if (saveFileDialog1.ShowDialog() == true)
             {
-                haveFileLoaded = true;
+                try
+                {
+                    OpenXMLHelper.ExportToExcel(new ObservableCollection<RowViewModel>(RowViewModels), saveFileDialog1.FileName);
+
+                    UpdateTitle(saveFileDialog1.SafeFileName);
+
+                    haveFileLoaded = true;
+
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("We weren't able to save.  Is the target file open or in use?");
+                    Console.WriteLine(e.ToString());
+                    haveFileLoaded = false;
+                }
+
             }
         }
 
@@ -459,47 +577,114 @@ namespace BayesianModeling.ViewModel
         {
             if (haveFileLoaded)
             {
-                _interface.SaveFile(path, title);
+                try
+                {
+                    OpenXMLHelper.ExportToExcel(new ObservableCollection<RowViewModel>(RowViewModels), Path.Combine(path, title));
+
+                    UpdateTitle(title);
+
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("We weren't able to save.  Is the target file open or in use?");
+                    Console.WriteLine(e.ToString());
+                }
             }
         }
 
         private void OpenFile()
         {
-            string[] returned = _interface.OpenFile();
+            OpenFileDialog openFileDialog1 = new OpenFileDialog();
 
-            if (returned != null)
+            openFileDialog1.Filter = "xlsx Files|*.xlsx";
+            openFileDialog1.Title = "Select an Excel File";
+
+            if (openFileDialog1.ShowDialog() == true)
             {
-                title = returned[0];
-                path = returned[1];
+                try
+                {
+                    using (SpreadsheetDocument spreadSheetDocument = SpreadsheetDocument.Open(@openFileDialog1.FileName, false))
+                    {
+                        WorkbookPart workbookPart = spreadSheetDocument.WorkbookPart;
+                        IEnumerable<Sheet> sheets = spreadSheetDocument.WorkbookPart.Workbook.GetFirstChild<Sheets>().Elements<Sheet>();
+                        string relationshipId = sheets.First().Id.Value;
+                        WorksheetPart worksheetPart = (WorksheetPart)spreadSheetDocument.WorkbookPart.GetPartById(relationshipId);
+                        Worksheet workSheet = worksheetPart.Worksheet;
+                        SheetData sheetData = workSheet.GetFirstChild<SheetData>();
+                        IEnumerable<Row> rows = sheetData.Descendants<Row>();
 
-                haveFileLoaded = true;
+                        RowViewModels.Clear();
+
+                        foreach (Row row in rows)
+                        {
+                            RowViewModel mModel = new RowViewModel();
+                            //TODO fix hacky limit
+                            for (int i = 1; i < row.Descendants<Cell>().Count() && i < 100; i++)
+                            {
+                                mModel.values[i-1] = GetCellValue(spreadSheetDocument, row.Descendants<Cell>().ElementAt(i - 1));
+                            }
+
+                            RowViewModels.Add(mModel);
+
+                        }
+
+                        UpdateTitle(openFileDialog1.SafeFileName);
+                        haveFileLoaded = true;
+                    }
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("We weren't able to open the file.  Is the target file open or in use?");
+                    Console.WriteLine(e.ToString());
+                }
+            }
+        }
+
+        public static string GetCellValue(SpreadsheetDocument document, Cell cell)
+        {
+            SharedStringTablePart stringTablePart = document.WorkbookPart.SharedStringTablePart;
+            string value = cell.CellValue.InnerXml;
+
+            if (cell.DataType != null && cell.DataType.Value == CellValues.SharedString)
+            {
+                return stringTablePart.SharedStringTable.ChildElements[Int32.Parse(value)].InnerText;
+            }
+            else
+            {
+                return value;
             }
         }
 
         private void CloseProgram()
         {
-            _interface.ShutDown();
+            ShuttingDown = true;
         }
 
-        private void ParagraphReporting(Paragraph results)
-        {
-            fd = mTextBox.Document;
-            fd.Blocks.Add(results);
-            mTextBox.ScrollToEnd();
-            sv.ScrollToEnd();
-        }
+        #endregion FileIO
 
-        private void CallBack()
-        {
-            _interface.UpdateTitle(title);
-        }
+        #region Pub 'n Sub
 
         public void SendMessageToOutput(string message)
         {
-            Paragraph para = new Paragraph();
-            para.Inlines.Add(message);
-            ParagraphReporting(para);
+            PubSub<object>.RaiseEvent("OutputEventHandler", this, new PubSubEventArgs<object>(message));
         }
-        
+
+        private void SaveLogs()
+        {
+            PubSub<object>.RaiseEvent("SaveLogsEventHandler", this, new PubSubEventArgs<object>(""));
+        }
+
+        private void ClearLogs()
+        {
+            PubSub<object>.RaiseEvent("ClearLogsEventHandler", this, new PubSubEventArgs<object>(""));
+        }
+
+        private void PromptRNeeded()
+        {
+            PubSub<object>.RaiseEvent("PromptForREventHandler", this, new PubSubEventArgs<object>(""));
+        }
+
+        #endregion
+
     }
 }

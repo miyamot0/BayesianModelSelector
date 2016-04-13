@@ -16,9 +16,8 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System;
-using unvell.ReoGrid.Actions;
-using unvell.ReoGrid;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace BayesianModeling.ViewModel
 {
@@ -90,6 +89,16 @@ namespace BayesianModeling.ViewModel
             }
         }
 
+        int lowRowDelay = 0,
+            highRowDelay = 0,
+            lowColDelay = 0, 
+            highColDelay = 0;
+
+        int lowRowValue = 0,
+            highRowValue = 0,
+            lowColValue = 0,
+            highColValue = 0;
+
         /* Math/Computation */
 
         REngine engine;
@@ -154,9 +163,8 @@ namespace BayesianModeling.ViewModel
         /// Command-based update of UI logic during open.
         /// Will re-check for R interactivity
         /// </summary>
-        private async void ViewLoaded()
+        private void ViewLoaded()
         {
-            await TaskEx.Delay(1000);
 
             mInterface.SendMessageToOutput("---------------------------------------------------");
             failed = false;
@@ -214,6 +222,107 @@ namespace BayesianModeling.ViewModel
             }
         }
 
+        private void DataGrid_PreviewMouseUp_Delays(object sender, MouseButtonEventArgs e)
+        {
+            DataGrid grd = e.Source as DataGrid;
+            if (grd == null)
+                return;
+
+            List<DataGridCellInfo> cells = mWindow.dataGrid.SelectedCells.ToList();
+
+            lowRowDelay = cells.Min(i => DataGridHelper.GetRowIndex(mWindow.dataGrid, i));
+            highRowDelay = cells.Max(i => DataGridHelper.GetRowIndex(mWindow.dataGrid, i));
+
+            lowColDelay = cells.Min(i => i.Column.DisplayIndex);
+            highColDelay = cells.Max(i => i.Column.DisplayIndex);
+
+
+            if ((highColDelay - lowColDelay) > 0)
+            {
+                DefaultFieldsToGray();
+
+                mWindow.dataGrid.PreviewMouseUp -= DataGrid_PreviewMouseUp_Delays;
+
+                lowColDelay = -1;
+                lowRowDelay = -1;
+                highColDelay = -1;
+                highRowDelay = -1;
+                MessageBox.Show("Please select a single vertical column.  You can have many rows, but just one column of them.");
+
+                return;
+            }
+            
+            for (int i = lowRowDelay; i <= highRowDelay; i++)
+            {
+                DataGridCell mCell = DataGridHelper.GetCell(mWindow.dataGrid, DataGridHelper.GetRow(mWindow.dataGrid, i), lowColDelay);
+                mCell.Background = Brushes.LightBlue;
+                mCell = null;
+            }
+
+            mWindow.dataGrid.PreviewMouseUp -= DataGrid_PreviewMouseUp_Delays;
+
+            DelaysBrush = Brushes.LightBlue;
+            Delays = GetColumnName(lowColDelay) + lowRowDelay.ToString() + ":" + GetColumnName(highColDelay) + highRowDelay.ToString();
+        }
+
+        private void DataGrid_PreviewMouseUp_Values(object sender, MouseButtonEventArgs e)
+        {
+            DataGrid grd = e.Source as DataGrid;
+            if (grd == null)
+                return;
+
+
+            List<DataGridCellInfo> cells = mWindow.dataGrid.SelectedCells.ToList();
+
+            lowRowValue = cells.Min(i => DataGridHelper.GetRowIndex(mWindow.dataGrid, i));
+            highRowValue = cells.Max(i => DataGridHelper.GetRowIndex(mWindow.dataGrid, i));
+
+            lowColValue = cells.Min(i => i.Column.DisplayIndex);
+            highColValue = cells.Max(i => i.Column.DisplayIndex);
+
+
+            if ((highColValue - lowColValue) > 0)
+            {
+                DefaultFieldsToGray();
+
+                mWindow.dataGrid.PreviewMouseUp -= DataGrid_PreviewMouseUp_Values;
+
+                lowColValue = -1;
+                lowRowValue = -1;
+                highColValue = -1;
+                highRowValue = -1;
+                MessageBox.Show("Please select a single vertical column.  You can have many rows, but just one column of them.");
+
+                return;
+            }
+            
+            for (int i = lowRowValue; i <= highRowValue; i++)
+            {
+                DataGridCell mCell = DataGridHelper.GetCell(mWindow.dataGrid, DataGridHelper.GetRow(mWindow.dataGrid, i), lowColValue);
+                mCell.Background = Brushes.LightGreen;
+                mCell = null;
+            }
+
+            mWindow.dataGrid.PreviewMouseUp -= DataGrid_PreviewMouseUp_Values;
+
+            ValuesBrush = Brushes.LightGreen;
+            Values = GetColumnName(lowColValue) + lowRowValue.ToString() + ":" + GetColumnName(highColValue) + highRowValue.ToString();
+        }
+
+        public string GetColumnName(int index)
+        {
+            const string letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+            var value = "";
+
+            if (index >= letters.Length)
+                value += letters[index / letters.Length - 1];
+
+            value += letters[index % letters.Length];
+
+            return value;
+        }
+
         /// <summary>
         /// Call window reference (shameful deviation from MVVM) for Unveil's range PickRange function.
         /// Successful (or failing) selections result in a range string in respective text fields for later parsing.
@@ -224,38 +333,19 @@ namespace BayesianModeling.ViewModel
 
             if (Delays.Length > 0 && !Delays.ToLower().Contains("spreadsheet"))
             {
-                /* Restore past ranges to white */
-                mWindow.spreadSheetView.CurrentWorksheet.SetRangeStyles(mWindow.spreadSheetView.CurrentWorksheet.Ranges[Delays], new WorksheetRangeStyle
+                for (int i = lowRowDelay; i <= highRowDelay; i++)
                 {
-                    Flag = PlainStyleFlag.BackColor,
-                    BackColor = System.Windows.Media.Colors.Transparent,
-                });
+                    DataGridCell mCell = DataGridHelper.GetCell(mWindow.dataGrid, DataGridHelper.GetRow(mWindow.dataGrid, i), lowColDelay);
+                    mCell.Background = Brushes.Transparent;
+                    mCell = null;
+                }
             }
 
             DelaysBrush = Brushes.Yellow;
             Delays = "Select delays on spreadsheet";
 
-            mWindow.spreadSheetView.PickRange((inst, range) =>
-            {
+            mWindow.dataGrid.PreviewMouseUp += DataGrid_PreviewMouseUp_Delays;
 
-                if (range.Cols > 1)
-                {
-                    DefaultFieldsToGray();
-                    MessageBox.Show("Please select a single vertical column.  You can have many rows, but just one column of them.");
-                    return true;
-                }
-
-                DelaysBrush = Brushes.LightBlue;
-                Delays = range.ToString();
-
-                mWindow.spreadSheetView.CurrentWorksheet.SetRangeStyles(range, new WorksheetRangeStyle
-                {
-                    Flag = PlainStyleFlag.BackColor,
-                    BackColor = System.Windows.Media.Colors.LightBlue,
-                });
-
-                return true;
-            }, Cursors.Cross);
         }
 
         /// <summary>
@@ -268,37 +358,42 @@ namespace BayesianModeling.ViewModel
 
             if (Values.Length > 0 && !Values.ToLower().Contains("spreadsheet"))
             {
-                /* Restore past ranges to white */
-                mWindow.spreadSheetView.CurrentWorksheet.SetRangeStyles(mWindow.spreadSheetView.CurrentWorksheet.Ranges[Values], new WorksheetRangeStyle
+                for (int i = lowRowValue; i <= highRowValue; i++)
                 {
-                    Flag = PlainStyleFlag.BackColor,
-                    BackColor = System.Windows.Media.Colors.Transparent,
-                });
+                    DataGridCell mCell = DataGridHelper.GetCell(mWindow.dataGrid, DataGridHelper.GetRow(mWindow.dataGrid, i), lowColValue);
+                    mCell.Background = Brushes.Transparent;
+                    mCell = null;
+                }
             }
 
             ValuesBrush = Brushes.Yellow;
             Values = "Select values on spreadsheet";
 
-            mWindow.spreadSheetView.PickRange((inst, range) =>
+            mWindow.dataGrid.PreviewMouseUp += DataGrid_PreviewMouseUp_Values;
+        }
+
+        private List<double> GetRangedValues(int startRow, int endRow, int column)
+        {
+            List<double> mRange = new List<double>();
+
+            DataGridCell mCell;
+            double test;
+
+            for (int i = startRow; i <= endRow; i++)
             {
-                if (range.Cols > 1)
+                mCell = DataGridHelper.GetCell(mWindow.dataGrid, DataGridHelper.GetRow(mWindow.dataGrid, i), column);
+
+                if (!Double.TryParse((((TextBlock)mCell.Content)).Text.ToString(), out test))
                 {
-                    DefaultFieldsToGray();
-                    MessageBox.Show("Please select a single vertical column.  You can have many rows, but just one column of them.");
-                    return true;
+                    return null;
                 }
-
-                ValuesBrush = Brushes.LightGreen;
-                Values = range.ToString();
-
-                mWindow.spreadSheetView.CurrentWorksheet.SetRangeStyles(range, new WorksheetRangeStyle
+                else
                 {
-                    Flag = PlainStyleFlag.BackColor,
-                    BackColor = System.Windows.Media.Colors.LightGreen,
-                });
+                    mRange.Add(test);
+                }
+            }
 
-                return true;
-            }, Cursors.Cross);
+            return mRange;
         }
 
         /// <summary>
@@ -309,8 +404,13 @@ namespace BayesianModeling.ViewModel
         {
             if (failed) return;
 
-            List<double> xRange = mWindow.ParseRange(Delays);
-            List<double> yRange = mWindow.ParseRange(Values);
+            List<double> xRange = new List<double>();
+            List<double> yRange = new List<double>();
+
+            xRange = GetRangedValues(lowRowDelay, highRowDelay, lowColDelay);
+            yRange = GetRangedValues(lowRowValue, highRowValue, lowColValue);
+
+            if (xRange == null || yRange == null) return;
 
             mInterface.SendMessageToOutput("---------------------------------------------------");
             mInterface.SendMessageToOutput("Checking user-supplied ranges and reference points.");
@@ -347,15 +447,16 @@ namespace BayesianModeling.ViewModel
             mInterface.SendMessageToOutput("Figure output: " + outputFigures);
             mInterface.SendMessageToOutput("Workbook output: " + outputWorkbook);
             mInterface.SendMessageToOutput("Beginning Bayesian Computation...");
-               
+
             try
             {
                 engine.Evaluate("rm(list = setdiff(ls(), lsf.str()))");
 
-                NumericVector delayValues = engine.CreateNumericVector(mWindow.ParseRange(Delays).ToArray());
+                //NumericVector delayValues = engine.CreateNumericVector(mWindow.ParseRange(Delays).ToArray());
+                NumericVector delayValues = engine.CreateNumericVector(GetRangedValues(lowRowDelay, highRowDelay, lowColDelay).ToArray());
                 engine.SetSymbol("mDelays", delayValues);
 
-                List<double> yRangeMod = new List<double>(mWindow.ParseRange(Values));
+                List<double> yRangeMod = new List<double>(GetRangedValues(lowRowValue, highRowValue, lowColValue));
 
                 for (int i = 0; i < yRangeMod.Count; i++)
                 {
@@ -397,7 +498,7 @@ namespace BayesianModeling.ViewModel
 
                 engine.SetSymbol("mDelays", delayValues);
 
-                indiffValues = engine.CreateNumericVector(mWindow.ParseRange(Values));
+                indiffValues = engine.CreateNumericVector(GetRangedValues(lowRowValue, highRowValue, lowColValue));
                 engine.SetSymbol("mIndiff", indiffValues);
 
                 engine.Evaluate("endDelay <- max(mDelays)*10");
@@ -457,72 +558,74 @@ namespace BayesianModeling.ViewModel
             if (outputWorkbook)
             {
                 mInterface.SendMessageToOutput("Outputting to workbook Started... Please wait... ");
-                var sheet = mWindow.spreadSheetView.CreateWorksheet();
-                sheet.ColumnHeaders["A"].IsAutoWidth = true;
-                sheet.ColumnHeaders["B"].IsAutoWidth = true;
 
-                sheet["A22"] = "Model Competition (Best to Worst)";
+                var mWin = new ResultsWindow();
+                var mVM = new ResultsViewModel();
+                mWin.DataContext = mVM;
+
+                for (int i=0; i<35; i++)
+                {
+                    mVM.RowViewModels.Add(new RowViewModel());
+                }
+
+                mVM.RowViewModels[0].values[0] = "Results of Bayesian Model Selector";
+                mVM.RowViewModels[1].values[0] = "Delays";
+                mVM.RowViewModels[2].values[0] = "Values";
+
+                for (int i = 0; i < xRange.Count; i++)
+                {
+                    mVM.RowViewModels[1].values[1+i] = xRange[i].ToString();
+                    mVM.RowViewModels[2].values[1+i] = yRange[i].ToString();
+                }
+
+                mVM.RowViewModels[3].values[0] = "Delayed Value";
+                mVM.RowViewModels[3].values[1] = MaxValue;
+
+                mVM.RowViewModels[5].values[0] = "Results of Fittings:";
+
+                mVM.RowViewModels[7].values[0] = "Exponential - ln(k): ";
+                mVM.RowViewModels[7].values[1] = engine.Evaluate("as.numeric(output[[3]]['exp.lnk'])").AsVector().First().ToString();
+                mVM.RowViewModels[9].values[0] = "Hyperbolic - ln(k): ";
+                mVM.RowViewModels[9].values[1] = engine.Evaluate("as.numeric(output[[2]]['Mazur.lnk'])").AsVector().First().ToString();
+                mVM.RowViewModels[11].values[0] = "Quasi-Hyperbolic (beta): ";
+                mVM.RowViewModels[11].values[1] = engine.Evaluate("as.numeric(output[[9]]['BD.beta'])").AsVector().First().ToString();
+                mVM.RowViewModels[12].values[0] = "Quasi-Hyperbolic (delta): ";
+                mVM.RowViewModels[12].values[1] = engine.Evaluate("as.numeric(output[[9]]['BD.delta'])").AsVector().First().ToString();
+                mVM.RowViewModels[14].values[0] = "Myerson-Hyperboloid - ln(k): ";
+                mVM.RowViewModels[14].values[1] = engine.Evaluate("as.numeric(output[[4]]['MG.lnk'])").AsVector().First().ToString();
+                mVM.RowViewModels[15].values[0] = "Myerson-Hyperboloid (s): ";
+                mVM.RowViewModels[15].values[1] = engine.Evaluate("as.numeric(output[[4]]['MG.s'])").AsVector().First().ToString();
+                mVM.RowViewModels[17].values[0] = "Rachlin-Hyperboloid (k): ";
+                mVM.RowViewModels[17].values[1] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.lnk'])").AsVector().First().ToString();
+                mVM.RowViewModels[18].values[0] = "Rachlin-Hyperboloid (s): ";
+                mVM.RowViewModels[18].values[1] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.s'])").AsVector().First().ToString();
+
+                mVM.RowViewModels[21].values[0] = "Model Competition (Best to Worst)";
 
                 string left = string.Empty;
                 string right = string.Empty;
-                int row = 23;
+                int row = 22;
 
                 foreach (KeyValuePair<string, double> pair in items)
                 {
-                    left = "A" + row;
-                    right = "B" + row;
-                    sheet[left] = pair.Key;
-                    sheet[right] = pair.Value;
+                    mVM.RowViewModels[row].values[0] = pair.Key;
+                    mVM.RowViewModels[row].values[1] = pair.Value.ToString();
                     row++;
                 }
 
-                sheet["A2"] = "Delays: ";
-                sheet["A3"] = "Values: ";
-
-                for (int i=0; i< xRange.Count; i++)
-                {
-                    sheet[1 , 1 + i] = xRange[i].ToString();
-                    sheet[2 , 1 + i] = yRange[i].ToString();
-                }
-
-                sheet["A6"] = "Results of Fittings:";
-
-                sheet["A8"] = "Exponential - ln(k): ";
-                sheet["B8"] = engine.Evaluate("as.numeric(output[[3]]['exp.lnk'])").AsVector().First().ToString();
-                sheet["A10"] = "Hyperbolic - ln(k): ";
-                sheet["B10"] = engine.Evaluate("as.numeric(output[[2]]['Mazur.lnk'])").AsVector().First().ToString();
-                sheet["A12"] = "Quasi-Hyperbolic (beta): ";
-                sheet["B12"] = engine.Evaluate("as.numeric(output[[9]]['BD.beta'])").AsVector().First().ToString();
-                sheet["A13"] = "Quasi-Hyperbolic (delta): ";
-                sheet["B13"] = engine.Evaluate("as.numeric(output[[9]]['BD.delta'])").AsVector().First().ToString();
-                sheet["A15"] = "Myerson-Hyperboloid - ln(k): ";
-                sheet["B15"] = engine.Evaluate("as.numeric(output[[4]]['MG.lnk'])").AsVector().First().ToString();
-                sheet["A16"] = "Myerson-Hyperboloid (s): ";
-                sheet["B16"] = engine.Evaluate("as.numeric(output[[4]]['MG.s'])").AsVector().First().ToString();
-                sheet["A18"] = "Rachlin-Hyperboloid (k): ";
-                sheet["B18"] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.lnk'])").AsVector().First().ToString();
-                sheet["A19"] = "Rachlin-Hyperboloid (s): ";
-                sheet["B19"] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.s'])").AsVector().First().ToString();
-
-                sheet["A30"] = "Most competitive model: ";
-                sheet["B30"] = items.First().Key.ToString();
+                mVM.RowViewModels[29].values[0] = "Most competitive model: ";
+                mVM.RowViewModels[29].values[1] = items.First().Key.ToString();
 
                 double ed50Best = engine.Evaluate("as.numeric(output[[8]]['lnED50.mostprob'])").AsNumeric().First();
 
-                sheet["A31"] = "ED50 of Most Competitive Model - ln(x): ";
-                sheet["B31"] = ed50Best.ToString();
+                mVM.RowViewModels[30].values[0] = "ED50 of Most Competitive Model - ln(x): ";
+                mVM.RowViewModels[30].values[1] = ed50Best.ToString();
 
-
-                mWindow.spreadSheetView.AddWorksheet(sheet);
-                mWindow.spreadSheetView.CurrentWorksheet = sheet;
-
-                var action = new SetColumnsWidthAction(0, 1, 200);
-                mWindow.spreadSheetView.DoAction(action);
-                action = new SetColumnsWidthAction(1, 1, 200);
-                mWindow.spreadSheetView.DoAction(action);
+                mWin.Show();
 
                 mInterface.SendMessageToOutput("Output Completed!");
             }
+
         }
     }
 }

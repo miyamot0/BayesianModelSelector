@@ -1,18 +1,34 @@
-﻿using BayesianModeling.Interfaces;
+﻿/* 
+    Copyright 2016 Shawn Gilroy
+
+    This file is part of Bayesian Model Selector.
+
+    Bayesian Model Selector is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2.
+
+    Bayesian Model Selector is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Bayesian Model Selector.  If not, see <http://www.gnu.org/licenses/gpl-2.0.html>.
+
+ */
+
 using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Documents;
-using unvell.ReoGrid.IO;
+using static BayesianModeling.Events.PublishSubscribe;
 
 namespace BayesianModeling
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window, SpreadsheetInterface
+    public partial class MainWindow : Window
     {
         public MainWindow()
         {
@@ -20,262 +36,31 @@ namespace BayesianModeling
         }
 
         /// <summary>
-        /// Gain focus on startup.
+        ///  Subscribe - Attaches events for Pub-Sub until proper MVVM tools and binding are added
         /// </summary>
-        public void GainFocus()
+        public void Subscribe()
         {
-            spreadSheetView.Focus();
+            PubSub<object>.RegisterEvent("OutputEventHandler", OutputEvents);
+            PubSub<object>.RegisterEvent("SaveLogsEventHandler", SaveLogsEvent);
+            PubSub<object>.RegisterEvent("ClearLogsEventHandler", ClearLogsEvent);
         }
 
         /// <summary>
-        /// Clear current sheet.
+        ///  OutputEvents - Is passed a stirng value, subsequently passed to RichTextBox
         /// </summary>
-        public bool NewFile()
+        public void OutputEvents(object sender, PubSubEventArgs<object> args)
         {
-            spreadSheetView.Reset();
-            Title = "Bayesian Model Selection - " + "New File";
-            return false;
+            Paragraph para = new Paragraph();
+            para.Inlines.Add((string)args.Item);
+            outputWindow2.Document.Blocks.Add(para);
+            outputWindow2.ScrollToEnd();
+            Scroller2.ScrollToEnd();
         }
 
         /// <summary>
-        /// Open file from disk.  Method has includes an open file dialog (win32).
+        ///  SaveLogsEvent - Save contents of RichTextBox to .txt file
         /// </summary>
-        public string[] OpenFile()
-        {
-            OpenFileDialog openFileDialog1 = new OpenFileDialog();
-
-            openFileDialog1.Filter = "xlsx Files|*.xlsx";
-            openFileDialog1.Title = "Select an Excel File";
-
-            if (openFileDialog1.ShowDialog() == true)
-            {
-                try
-                {
-                    using (Stream myStream = openFileDialog1.OpenFile())
-                    {
-                        spreadSheetView.Load(myStream, FileFormat.Excel2007);
-                        Title = "Small n Stats - " + openFileDialog1.SafeFileName;
-                    }
-
-                    return new string[] { openFileDialog1.SafeFileName, Path.GetDirectoryName(openFileDialog1.FileName) };
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show("We weren't able to open the file.  Is the target file open or in use?");
-                    Console.WriteLine(e.ToString());
-                }
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Save file to disk.  Method has no dialog (CTRL+S option).
-        /// </summary>
-        /// <param name="path">
-        /// String referencing file path, for use in saving file
-        /// </param>
-        /// <param name="title">
-        /// String referencing file name, for use in saving file
-        /// </param>
-        public void SaveFile(string path, string title)
-        {
-            try
-            {
-                using (Stream myStream = new FileStream(Path.Combine(path, title), FileMode.Create))
-                {
-                    var workbook = spreadSheetView;
-                    workbook.Save(myStream, FileFormat.Excel2007);
-                    Title = "Small n Stats - " + title;
-                }
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show("We weren't able to save.  Is the target file open or in use?");
-                Console.WriteLine(e.ToString());
-            }
-        }
-
-        /// <summary>
-        /// Save file to disk.  Method includes a save file dialog (win32).
-        /// </summary>
-        /// <param name="title">
-        /// String referencing file name, for use in saving file
-        /// </param>
-        public string SaveFileWithDialog(string title)
-        {
-            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
-            saveFileDialog1.FileName = title;
-            saveFileDialog1.Filter = "Excel file (*.xlsx)|*.xlsx|All files (*.*)|*.*";
-
-            if (saveFileDialog1.ShowDialog() == true)
-            {
-                try
-                {
-                    using (Stream myStream = saveFileDialog1.OpenFile())
-                    {
-                        var workbook = spreadSheetView;
-                        workbook.Save(myStream, FileFormat.Excel2007);
-                        title = saveFileDialog1.SafeFileName;
-                        Title = "Small n Stats - " + saveFileDialog1.SafeFileName;
-                    }
-
-                    return saveFileDialog1.SafeFileName;
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show("We weren't able to save.  Is the target file open or in use?");
-                    Console.WriteLine(e.ToString());
-                    return null;
-                }
-
-
-            }
-            else
-            {
-                return null;
-            }
-
-        }
-
-        /// <summary>
-        /// Save file to disk.  Method for saving file specifically for different name.
-        /// </summary>
-        /// <param name="title">
-        /// String referencing file name, for use in saving file
-        /// </param>
-        public string SaveFileAs(string title)
-        {
-            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
-
-            saveFileDialog1.FileName = title;
-            saveFileDialog1.Filter = "Excel file (*.xlsx)|*.xlsx|All files (*.*)|*.*";
-
-            if (saveFileDialog1.ShowDialog() == true)
-            {
-                try
-                {
-                    using (Stream myStream = saveFileDialog1.OpenFile())
-                    {
-                        var workbook = spreadSheetView;
-                        workbook.Save(myStream, FileFormat.Excel2007);
-                        title = saveFileDialog1.SafeFileName;
-                        Title = "Small n Stats - " + saveFileDialog1.SafeFileName;
-                    }
-
-                    return title;
-                } 
-                catch (Exception e)
-                {
-                    MessageBox.Show("We weren't able to save.  Is the target file open or in use?");
-                    Console.WriteLine(e.ToString());
-                    return null;
-                }
-
-            }
-            else
-            {
-                return null;
-            }
-
-        }
-
-        /// <summary>
-        /// Method for closing application from menu.
-        /// </summary>
-        public void ShutDown()
-        {
-            Close();
-        }
-
-        /// <summary>
-        /// Update title to reflect current file in use.
-        /// </summary>
-        /// <param name="title">
-        /// String referencing file name, for use in title
-        /// </param>
-        public void UpdateTitle(string title)
-        {
-            Title = "Small n Stats - " + title;
-        }
-
-        /// <summary>
-        /// A method for submitting a string-encoded range and returning the value of the cells selected.
-        /// </summary>
-        /// <param name="range">
-        /// List of double values returned for use as delay or value points in Computation
-        /// </param>
-        public List<double> ParseRange(string range)
-        {
-            List<double> mReturned = new List<double>();
-            try
-            {
-                var rangeReturned = spreadSheetView.CurrentWorksheet.Ranges[range];
-                spreadSheetView.CurrentWorksheet.IterateCells(rangeReturned, (row, col, cell) =>
-                {
-                    double num;
-                    if (double.TryParse(cell.Data.ToString(), out num))
-                    {
-                        mReturned.Add(num);
-                    }
-                    return true;
-                });
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-                return null;
-            }
-
-            return mReturned;
-        }
-
-        /// <summary>
-        /// A method for submitting a string-encoded range and returning the value of the cells selected.
-        /// </summary>
-        /// <param name="range">
-        /// List of double values returned for use as delay or value points in Computation
-        /// </param>
-        public double[,] ParseBulkRange(string range)
-        {
-            double[,] mDouble = null;
-
-            try
-            {
-                var rangeReturned = spreadSheetView.CurrentWorksheet.Ranges[range];
-
-                int mRows = rangeReturned.Rows;
-                int mCols = rangeReturned.Cols;
-
-                mDouble = new double[mCols, mRows];
-
-                int startCol = rangeReturned.StartPos.Col;
-                int startRow = rangeReturned.StartPos.Row;
-
-                spreadSheetView.CurrentWorksheet.IterateCells(rangeReturned, (row, col, cell) =>
-                {
-                    double num;
-                    if (double.TryParse(cell.Data.ToString(), out num))
-                    {
-                        mDouble[col-startCol, row-startRow] = num;
-                    }
-
-                    return true;
-                });
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-                return null;
-            }
-
-            return mDouble;
-        }
-
-        /// <summary>
-        /// Code-behind to save the text output from logs to a .txt file, selected by user.
-        /// </summary>
-        private void saveLogs_Click(object sender, RoutedEventArgs e)
+        public void SaveLogsEvent(object sender, PubSubEventArgs<object> args)
         {
             SaveFileDialog sd = new SaveFileDialog();
             sd.FileName = "Logs";
@@ -292,11 +77,12 @@ namespace BayesianModeling
         }
 
         /// <summary>
-        /// Code-behind call to flow document, clearing the current content.
+        ///  ClearLogsEvent - Clear contents of RichTextBox
         /// </summary>
-        private void clearLogs_Click(object sender, RoutedEventArgs e)
+        public void ClearLogsEvent(object sender, PubSubEventArgs<object> args)
         {
             outputWindow2.Document.Blocks.Clear();
         }
+
     }
 }

@@ -23,13 +23,13 @@ namespace BayesianModeling
             */
             MainWindow window = new MainWindow();
             window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            window.DataContext = new ViewModelMainWindow
+            ViewModelMainWindow mainVM = new ViewModelMainWindow
             {
-                _interface = window,
-                MainWindow = window,
-                mTextBox = window.outputWindow2,
-                sv = window.Scroller2
+                MainWindow = window
             };
+            window.DataContext = mainVM;
+            window.Subscribe();
+
             window.Show();
         }
     }

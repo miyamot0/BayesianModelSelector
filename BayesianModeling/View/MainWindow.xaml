@@ -3,17 +3,22 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BayesianModeling"
-        xmlns:settings="clr-namespace:BayesianModeling.Properties"    
-        xmlns:ReoGrid="clr-namespace:unvell.ReoGrid;assembly=unvell.ReoGrid" 
+        xmlns:settings="clr-namespace:BayesianModeling.Properties"
+        xmlns:custom="clr-namespace:BayesianModeling.Utilities"
+        xmlns:bx="clr-namespace:BayesianModeling.Behaviors"
         x:Class="BayesianModeling.MainWindow"
         mc:Ignorable="d"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-        Title="{Binding Source={x:Static settings:Settings.Default}, Path=ApplicationTitle}" 
+        Title="{Binding Title}"         
         Height="{Binding Source={x:Static settings:Settings.Default}, Path=MainHeight, Mode=TwoWay}"
         Width="{Binding Source={x:Static settings:Settings.Default}, Path=MainWidth, Mode=TwoWay}"
         Top="{Binding Source={x:Static settings:Settings.Default}, Path=MainTop, Mode=TwoWay}" 
         Left="{Binding Source={x:Static settings:Settings.Default}, Path=MainLeft, Mode=TwoWay}">
 
+    <i:Interaction.Behaviors>
+        <bx:ShutDownBehavior CloseTrigger="{Binding ShuttingDown}" />
+    </i:Interaction.Behaviors>
+    
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding ViewLoadedCommand}"/>
@@ -100,15 +105,13 @@
 
                 <MenuItem Header="_Logs">
                     <MenuItem Header="_Save Log Output" 
-                              x:Name="saveLogs" 
-                              Click="saveLogs_Click">
+                              Command="{Binding SaveLogsWindowCommand}">
                         <MenuItem.Icon>
                             <Image Source="/Images/edit-copy.png" />
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Header="_Clear Logs" 
-                              x:Name="clearLogs" 
-                              Click="clearLogs_Click">
+                              Command="{Binding ClearLogsWindowCommand}">
                         <MenuItem.Icon>
                             <Image Source="/Images/edit-clear.png" />
                         </MenuItem.Icon>
@@ -128,12 +131,6 @@
                         </MenuItem>
                         <MenuItem Header="R.Net License" 
                                   Command="{Binding RdotNetLicenseWindowCommand}">
-                            <MenuItem.Icon>
-                                <Image Source="/Images/text-x-preview.png" />
-                            </MenuItem.Icon>
-                        </MenuItem>
-                        <MenuItem Header="Reogrid (Unveil) License" 
-                                  Command="{Binding ReogridLicenseWindowCommand}">
                             <MenuItem.Icon>
                                 <Image Source="/Images/text-x-preview.png" />
                             </MenuItem.Icon>
@@ -177,16 +174,54 @@
                 </MenuItem>
             </Menu>
 
-            <ReoGrid:ReoGridControl 
-                    Name="spreadSheetView"
-                    x:FieldModifier="public"
-                    DockPanel.Dock="Left"
-                    Margin="1,0,1,1" 
-                    HorizontalAlignment="Stretch" 
-                    VerticalAlignment="Stretch"/>
+            <custom:CustomDataGrid x:Name="dataGrid" 
+                                    HorizontalAlignment="Stretch" 
+                                    VerticalContentAlignment="Stretch"
+                                    SelectionUnit="Cell"
+                                    SelectionMode="Extended"
+                                    Grid.Row="0"
+                                    Grid.RowSpan="4"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="1"
+                                    CanUserReorderColumns="False"
+                                    CanUserSortColumns="False"
+                                    CanUserAddRows="True"
+                                    CanUserPasteToNewRows="True"
+                                    EnableRowVirtualization="False"
+                                    RowDetailsVisibilityMode="Visible"
+                                    ClipboardCopyMode="ExcludeHeader"
+                                    ItemsSource="{Binding RowViewModels}"
+                                    bx:DataGridBehavior.DisplayRowNumber="True"
+                                    BorderThickness="0"
+                                    VerticalAlignment="Stretch">
+                <DataGrid.ColumnHeaderStyle>
+                    <Style TargetType="{x:Type DataGridColumnHeader}">
+                        <Setter Property="FontWeight"  Value="Bold" />
+                        <Setter Property="HorizontalAlignment" Value="Stretch" />
+                        <Setter Property="HorizontalContentAlignment" Value="Center" />
+                        <Setter Property="MinWidth" Value="100" />
+                    </Style>
+                </DataGrid.ColumnHeaderStyle>
+                <DataGrid.CellStyle>
+                    <Style TargetType="{x:Type DataGridCell}">
+                        <Setter Property="Background" Value="White"></Setter>
+                    </Style>
+                </DataGrid.CellStyle>
+                <DataGrid.InputBindings>
+                    <KeyBinding Key="Delete" Command="{Binding DeleteSelectedCommand}" />
+                </DataGrid.InputBindings>
+                <DataGrid.Resources>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Green"/>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent"/>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black" />
+                    <SolidColorBrush x:Key="{x:Static SystemColors.ControlTextBrushKey}" Color="Black" />
+                </DataGrid.Resources>
+            </custom:CustomDataGrid>
+                    
         </DockPanel>
-
+        
         <ScrollViewer 
+                    Margin="0,5,0,0"
                     HorizontalScrollBarVisibility="Auto" 
                     VerticalScrollBarVisibility="Auto" 
                     x:Name="Scroller2"
