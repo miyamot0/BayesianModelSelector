@@ -1,142 +1,148 @@
-﻿using System.Collections.Generic;
+﻿/* 
+    Copyright 2016 Shawn Gilroy
+
+    This file is part of Bayesian Model Selector.
+
+    Bayesian Model Selector is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2.
+
+    Bayesian Model Selector is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Bayesian Model Selector.  If not, see <http://www.gnu.org/licenses/gpl-2.0.html>.
+
+*/
+
+using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows;
 using System.ComponentModel;
 using System.Windows.Data;
-using System.Reflection;
-using System.Collections;
+using System;
+using System.Windows.Controls.Primitives;
 
 namespace BayesianModeling.Utilities
 {
     public class CustomDataGrid : DataGrid
     {
-        static CustomDataGrid()
+        public CustomDataGrid()
         {
-            CommandManager.RegisterClassCommandBinding(
-                typeof(CustomDataGrid),
+            CommandManager.RegisterClassCommandBinding(typeof(CustomDataGrid), 
                 new CommandBinding(ApplicationCommands.Paste,
-                    new ExecutedRoutedEventHandler(OnExecutedPaste),
-                    new CanExecuteRoutedEventHandler(OnCanExecutePaste)));
+                new ExecutedRoutedEventHandler(OnExecutedPaste),
+                new CanExecuteRoutedEventHandler(OnCanExecutePaste)));
         }
 
-        #region Clipboard Paste
+        public static DependencyProperty RowNumber =
+        DependencyProperty.RegisterAttached("DisplayRowNumber",
+            typeof(bool),
+            typeof(CustomDataGrid),
+            new FrameworkPropertyMetadata(false, ChangeRowNumberEvent));
 
-        private static void OnCanExecutePaste(object target, CanExecuteRoutedEventArgs args)
+        public static bool GetDisplayRowNumber(DependencyObject sender)
         {
-            ((CustomDataGrid)target).OnCanExecutePaste(args);
+            return ((bool)sender.GetValue(RowNumber));
         }
 
-        /// <summary>
-        /// This virtual method is called when ApplicationCommands.Paste command query its state.
-        /// </summary>
-        /// <param name="args"></param>
-        protected virtual void OnCanExecutePaste(CanExecuteRoutedEventArgs args)
+        public static void SetDisplayRowNumber(DependencyObject sender, bool value)
         {
-            args.CanExecute = CurrentCell != null;
-            args.Handled = true;
+            sender.SetValue(RowNumber, value);
         }
 
-        private static void OnExecutedPaste(object target, ExecutedRoutedEventArgs args)
+        private static void ChangeRowNumberEvent(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            ((CustomDataGrid)target).OnExecutedPaste(args);
-        }
-
-        /// <summary>
-        /// This virtual method is called when ApplicationCommands.Paste command is executed.
-        /// </summary>
-        /// <param name="args"></param>
-        protected virtual void OnExecutedPaste(ExecutedRoutedEventArgs args)
-        {
-            // parse the clipboard data            
-            List<string[]> rowData = ClipboardHelper.ParseClipboardData();
-
-            bool hasAddedNewRow = false;
-
-            // call OnPastingCellClipboardContent for each cell
-            int minRowIndex = Items.IndexOf(CurrentItem);
-            int maxRowIndex = Items.Count - 1;
-            int minColumnDisplayIndex = (SelectionUnit != DataGridSelectionUnit.FullRow) ? Columns.IndexOf(CurrentColumn) : 0;
-            int maxColumnDisplayIndex = Columns.Count - 1;
-            int rowDataIndex = 0;
-            for (int i = minRowIndex; i <= maxRowIndex && rowDataIndex < rowData.Count; i++, rowDataIndex++)
+            DataGrid dataGrid = sender as DataGrid;
+            if ((bool)e.NewValue == true)
             {
-                if (CanUserAddRows && i == maxRowIndex)
+                EventHandler<DataGridRowEventArgs> loadedRowHandler = null;
+                loadedRowHandler = (object target, DataGridRowEventArgs ea) =>
                 {
-                    // add a new row to be pasted to
-                    ICollectionView cv = CollectionViewSource.GetDefaultView(Items);
-                    IEditableCollectionView iecv = cv as IEditableCollectionView;
-                    if (iecv != null)
+                    if (GetDisplayRowNumber(dataGrid) == false)
                     {
-                        hasAddedNewRow = true;
-                        iecv.AddNew();
-                        if (rowDataIndex + 1 < rowData.Count)
-                        {
-                            // still has more items to paste, update the maxRowIndex
-                            maxRowIndex = Items.Count - 1;
-                        }
+                        dataGrid.LoadingRow -= loadedRowHandler;
+                        return;
                     }
-                }
-                else if (i == maxRowIndex)
-                {
-                    continue;
-                }
+                    ea.Row.Header = ea.Row.GetIndex();
+                };
+                dataGrid.LoadingRow += loadedRowHandler;
 
-                int columnDataIndex = 0;
-                for (int j = minColumnDisplayIndex; j < maxColumnDisplayIndex && columnDataIndex < rowData[rowDataIndex].Length; j++, columnDataIndex++)
+                ItemsChangedEventHandler itemsChangedHandler = null;
+                itemsChangedHandler = (object target, ItemsChangedEventArgs ea) =>
                 {
-                    DataGridColumn column = ColumnFromDisplayIndex(j);
-                    string propertyName = ((column as DataGridBoundColumn).Binding as Binding).Path.Path;
-                    object item = Items[i];
-                    object value = rowData[rowDataIndex][columnDataIndex];
-                    PropertyInfo pi = item.GetType().GetProperty(propertyName);
-                    if (pi != null)
+                    if (GetDisplayRowNumber(dataGrid) == false)
                     {
-                        object convertedValue = System.Convert.ChangeType(value, pi.PropertyType);
-                        item.GetType().GetProperty(propertyName).SetValue(item, convertedValue, null);
+                        dataGrid.ItemContainerGenerator.ItemsChanged -= itemsChangedHandler;
+                        return;
                     }
-                    //column.OnPastingCellClipboardContent(item, rowData[rowDataIndex][columnDataIndex]);
-                }
-            }
+                };
 
-            // update selection
-            if (hasAddedNewRow)
-            {
-                UnselectAll();
-                UnselectAllCells();
-
-                CurrentItem = Items[minRowIndex];
-
-                if (SelectionUnit == DataGridSelectionUnit.FullRow)
-                {
-                    SelectedItem = Items[minRowIndex];
-                }
-                else if (SelectionUnit == DataGridSelectionUnit.CellOrRowHeader ||
-                         SelectionUnit == DataGridSelectionUnit.Cell)
-                {
-                    SelectedCells.Add(new DataGridCellInfo(Items[minRowIndex], Columns[minColumnDisplayIndex]));
-
-                }
+                dataGrid.ItemContainerGenerator.ItemsChanged += itemsChangedHandler;
             }
         }
 
-        /// <summary>
-        ///     Whether the end-user can add new rows to the ItemsSource.
-        /// </summary>
-        public bool CanUserPasteToNewRows
+        private static void OnCanExecutePaste(object sender, CanExecuteRoutedEventArgs paras)
         {
-            get { return (bool)GetValue(CanUserPasteToNewRowsProperty); }
-            set { SetValue(CanUserPasteToNewRowsProperty, value); }
+            ((CustomDataGrid)sender).OnCanExecutePaste(paras);
         }
 
-        /// <summary>
-        ///     DependencyProperty for CanUserAddRows.
-        /// </summary>
-        public static readonly DependencyProperty CanUserPasteToNewRowsProperty =
-            DependencyProperty.Register("CanUserPasteToNewRows",
-                                        typeof(bool), typeof(CustomDataGrid),
-                                        new FrameworkPropertyMetadata(true, null, null));
+        protected virtual void OnCanExecutePaste(CanExecuteRoutedEventArgs paras)
+        {
+            paras.CanExecute = (CurrentCell != null);
+            paras.Handled = true;
+        }
 
-        #endregion Clipboard Paste
+        private static void OnExecutedPaste(object sender, ExecutedRoutedEventArgs paras)
+        {
+            ((CustomDataGrid)sender).OnExecutedPaste(paras);
+        }
+
+        protected virtual void OnExecutedPaste(ExecutedRoutedEventArgs paras)
+        {
+            List<string[]> rowData = ClipboardTools.ReadAndParseClipboardData();
+
+            int lowRow = Items.IndexOf(CurrentItem),
+                highRow = Items.Count - 1,
+                lowCol = Columns.IndexOf(CurrentColumn),
+                highCol = Columns.Count - 1;
+
+            int pasteContentRowIterator = 0,
+                pasteContentColumnIterator = 0;
+
+            for (int i = lowRow; (i <= highRow) && (pasteContentRowIterator < rowData.Count); i++)
+            {
+                if (i == highRow)
+                {
+                    (CollectionViewSource.GetDefaultView(Items) as IEditableCollectionView).AddNew();
+                    if (pasteContentRowIterator + 1 < rowData.Count)
+                    {
+                        highRow = Items.Count - 1;
+                    }
+                }
+
+                pasteContentColumnIterator = 0;
+
+                for (int j = lowCol; (j < highCol) && (pasteContentColumnIterator < rowData[pasteContentRowIterator].Length); j++)
+                {
+                    string propertyName = ((ColumnFromDisplayIndex(j) as DataGridBoundColumn).Binding as Binding).Path.Path;
+
+                    if ((Items[i].GetType().GetProperty(propertyName)) != null)
+                    {
+                        object convertedValue = Convert.ChangeType(rowData[pasteContentRowIterator][pasteContentColumnIterator],
+                            (Items[i].GetType().GetProperty(propertyName)).PropertyType);
+
+                        Items[i].GetType().GetProperty(propertyName).SetValue(Items[i], convertedValue, null);
+                    }
+
+                    pasteContentColumnIterator++;
+                }
+
+                pasteContentRowIterator++;
+            }
+        }
     }
 }

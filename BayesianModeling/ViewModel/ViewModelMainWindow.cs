@@ -1,8 +1,20 @@
-﻿/*
- * Shawn Gilroy, 2016
- * Main View Model, initiates core methods, handles IO 
- * and passes information to log viewer.
- * 
+﻿/* 
+    Copyright 2016 Shawn Gilroy
+
+    This file is part of Bayesian Model Selector.
+
+    Bayesian Model Selector is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2.
+
+    Bayesian Model Selector is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Bayesian Model Selector.  If not, see <http://www.gnu.org/licenses/gpl-2.0.html>.
+
  */
 
 using BayesianModeling.Utilities;
@@ -11,7 +23,6 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.Win32;
 using RDotNet;
-using Small_N_Stats.Interface;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -19,16 +30,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows;
-using static BayesianModeling.Events.PublishSubscribe;
 
 namespace BayesianModeling.ViewModel
 {
-    class ViewModelMainWindow : ViewModelBase, OutputWindowInterface
+    class ViewModelMainWindow : ViewModelBase
     {
-        public event PubSubEventHandler<object> OutputEventHandler;
-        public event PubSubEventHandler<object> SaveLogsEventHandler;
-        public event PubSubEventHandler<object> ClearLogsEventHandler;
-        public event PubSubEventHandler<object> PromptForREventHandler;
 
         public MainWindow MainWindow { get; set; }
 
@@ -148,10 +154,6 @@ namespace BayesianModeling.ViewModel
 
             RowViewModels = new ObservableCollection<RowViewModel>();
 
-            PubSub<object>.AddEvent("OutputEventHandler", OutputEventHandler);
-            PubSub<object>.AddEvent("SaveLogsEventHandler", SaveLogsEventHandler);
-            PubSub<object>.AddEvent("ClearLogsEventHandler", ClearLogsEventHandler);
-            PubSub<object>.AddEvent("PromptForREventHandler", PromptForREventHandler);
         }
         
         #region UI
@@ -322,7 +324,7 @@ namespace BayesianModeling.ViewModel
                 engine.AutoPrint = false;
 
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
                 SendMessageToOutput("R failed to load.  Error code: " + e.ToString());
                 failed = true;
@@ -472,7 +474,6 @@ namespace BayesianModeling.ViewModel
             mWin.DataContext = new ViewModelDiscounting()
             {
                 mWindow = MainWindow,
-                mInterface = this,
                 windowRef = mWin
             };
             mWin.Show();
@@ -485,7 +486,6 @@ namespace BayesianModeling.ViewModel
             mWin.DataContext = new ViewModelBatchDiscounting()
             {
                 mWindow = MainWindow,
-                mInterface = this,
                 windowRef = mWin
             };
             mWin.Show();
@@ -647,7 +647,7 @@ namespace BayesianModeling.ViewModel
 
             if (cell.DataType != null && cell.DataType.Value == CellValues.SharedString)
             {
-                return stringTablePart.SharedStringTable.ChildElements[Int32.Parse(value)].InnerText;
+                return stringTablePart.SharedStringTable.ChildElements[System.Int32.Parse(value)].InnerText;
             }
             else
             {
@@ -666,22 +666,17 @@ namespace BayesianModeling.ViewModel
 
         public void SendMessageToOutput(string message)
         {
-            PubSub<object>.RaiseEvent("OutputEventHandler", this, new PubSubEventArgs<object>(message));
+            MainWindow.OutputEvents(message);
         }
 
         private void SaveLogs()
         {
-            PubSub<object>.RaiseEvent("SaveLogsEventHandler", this, new PubSubEventArgs<object>(""));
+            MainWindow.SaveLogs();
         }
 
         private void ClearLogs()
         {
-            PubSub<object>.RaiseEvent("ClearLogsEventHandler", this, new PubSubEventArgs<object>(""));
-        }
-
-        private void PromptRNeeded()
-        {
-            PubSub<object>.RaiseEvent("PromptForREventHandler", this, new PubSubEventArgs<object>(""));
+            MainWindow.ClearLogs();
         }
 
         #endregion

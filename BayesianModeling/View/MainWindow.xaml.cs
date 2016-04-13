@@ -21,7 +21,6 @@ using Microsoft.Win32;
 using System.IO;
 using System.Windows;
 using System.Windows.Documents;
-using static BayesianModeling.Events.PublishSubscribe;
 
 namespace BayesianModeling
 {
@@ -36,22 +35,12 @@ namespace BayesianModeling
         }
 
         /// <summary>
-        ///  Subscribe - Attaches events for Pub-Sub until proper MVVM tools and binding are added
-        /// </summary>
-        public void Subscribe()
-        {
-            PubSub<object>.RegisterEvent("OutputEventHandler", OutputEvents);
-            PubSub<object>.RegisterEvent("SaveLogsEventHandler", SaveLogsEvent);
-            PubSub<object>.RegisterEvent("ClearLogsEventHandler", ClearLogsEvent);
-        }
-
-        /// <summary>
         ///  OutputEvents - Is passed a stirng value, subsequently passed to RichTextBox
         /// </summary>
-        public void OutputEvents(object sender, PubSubEventArgs<object> args)
+        public void OutputEvents(string output)
         {
             Paragraph para = new Paragraph();
-            para.Inlines.Add((string)args.Item);
+            para.Inlines.Add(output);
             outputWindow2.Document.Blocks.Add(para);
             outputWindow2.ScrollToEnd();
             Scroller2.ScrollToEnd();
@@ -60,7 +49,7 @@ namespace BayesianModeling
         /// <summary>
         ///  SaveLogsEvent - Save contents of RichTextBox to .txt file
         /// </summary>
-        public void SaveLogsEvent(object sender, PubSubEventArgs<object> args)
+        public void SaveLogs()
         {
             SaveFileDialog sd = new SaveFileDialog();
             sd.FileName = "Logs";
@@ -79,7 +68,7 @@ namespace BayesianModeling
         /// <summary>
         ///  ClearLogsEvent - Clear contents of RichTextBox
         /// </summary>
-        public void ClearLogsEvent(object sender, PubSubEventArgs<object> args)
+        public void ClearLogs()
         {
             outputWindow2.Document.Blocks.Clear();
         }

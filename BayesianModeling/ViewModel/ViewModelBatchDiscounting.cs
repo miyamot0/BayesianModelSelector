@@ -1,15 +1,26 @@
-﻿/*
- * Shawn Gilroy, 2016
- * Bayesian Model Selection Application
- * Based on conceptual work developed by Franck, C. T., Koffarnus, M. N., House, L. L. & Bickel, W. (2015)
- * 
+﻿/* 
+    Copyright 2016 Shawn Gilroy
+
+    This file is part of Bayesian Model Selector.
+
+    Bayesian Model Selector is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2.
+
+    Bayesian Model Selector is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Bayesian Model Selector.  If not, see <http://www.gnu.org/licenses/gpl-2.0.html>.
+
  */
 
 using BayesianModeling.Mathematics;
 using BayesianModeling.Utilities;
 using BayesianModeling.View;
 using RDotNet;
-using Small_N_Stats.Interface;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -28,8 +39,6 @@ namespace BayesianModeling.ViewModel
     {
         public MainWindow mWindow { get; set; }
         public BatchDiscountingWindow windowRef { get; set; }
-
-        internal OutputWindowInterface mInterface;
 
         private string delays = "";
         public string Delays
@@ -158,7 +167,7 @@ namespace BayesianModeling.ViewModel
         {
             DelayedValue = "1";
 
-            mInterface.SendMessageToOutput("---------------------------------------------------");
+            mWindow.OutputEvents("---------------------------------------------------");
             failed = false;
 
             try
@@ -170,26 +179,26 @@ namespace BayesianModeling.ViewModel
             }
             catch (Exception e)
             {
-                mInterface.SendMessageToOutput(e.ToString());
+                mWindow.OutputEvents(e.ToString());
                 failed = true;
             }
 
             if (failed)
             {
-                mInterface.SendMessageToOutput("R components modules were not found!");
-                mInterface.SendMessageToOutput("Calculation cannot continue");
-                mInterface.SendMessageToOutput("Connect to the internet and re-start the program");
-                mInterface.SendMessageToOutput("");
-                mInterface.SendMessageToOutput("");
+                mWindow.OutputEvents("R components modules were not found!");
+                mWindow.OutputEvents("Calculation cannot continue");
+                mWindow.OutputEvents("Connect to the internet and re-start the program");
+                mWindow.OutputEvents("");
+                mWindow.OutputEvents("");
 
                 MessageBox.Show("Modules for R were not found.  Please connect to the internet and restart the program.");
             }
             else
             {
-                mInterface.SendMessageToOutput("All R system components modules loaded.");
-                mInterface.SendMessageToOutput("Loading Curve Fitting modules and R interface...");
-                mInterface.SendMessageToOutput("");
-                mInterface.SendMessageToOutput("");
+                mWindow.OutputEvents("All R system components modules loaded.");
+                mWindow.OutputEvents("Loading Curve Fitting modules and R interface...");
+                mWindow.OutputEvents("");
+                mWindow.OutputEvents("");
             }
 
             DefaultFieldsToGray();
@@ -228,8 +237,8 @@ namespace BayesianModeling.ViewModel
 
             List<DataGridCellInfo> cells = mWindow.dataGrid.SelectedCells.ToList();
 
-            lowRowDelay = cells.Min(i => DataGridHelper.GetRowIndex(mWindow.dataGrid, i));
-            highRowDelay = cells.Max(i => DataGridHelper.GetRowIndex(mWindow.dataGrid, i));
+            lowRowDelay = cells.Min(i => DataGridTools.GetDataGridRowIndex(mWindow.dataGrid, i));
+            highRowDelay = cells.Max(i => DataGridTools.GetDataGridRowIndex(mWindow.dataGrid, i));
 
             lowColDelay = cells.Min(i => i.Column.DisplayIndex);
             highColDelay = cells.Max(i => i.Column.DisplayIndex);
@@ -252,7 +261,7 @@ namespace BayesianModeling.ViewModel
 
             for (int i = lowRowDelay; i <= highRowDelay; i++)
             {
-                DataGridCell mCell = DataGridHelper.GetCell(mWindow.dataGrid, DataGridHelper.GetRow(mWindow.dataGrid, i), lowColDelay);
+                DataGridCell mCell = DataGridTools.GetDataGridCell(mWindow.dataGrid, DataGridTools.GetDataGridRow(mWindow.dataGrid, i), lowColDelay);
                 mCell.Background = Brushes.LightBlue;
                 mCell = null;
             }
@@ -289,7 +298,7 @@ namespace BayesianModeling.ViewModel
             {
                 for (int i = lowRowDelay; i <= highRowDelay; i++)
                 {
-                    DataGridCell mCell = DataGridHelper.GetCell(mWindow.dataGrid, DataGridHelper.GetRow(mWindow.dataGrid, i), lowColDelay);
+                    DataGridCell mCell = DataGridTools.GetDataGridCell(mWindow.dataGrid, DataGridTools.GetDataGridRow(mWindow.dataGrid, i), lowColDelay);
                     mCell.Background = Brushes.Transparent;
                     mCell = null;
                 }
@@ -310,8 +319,8 @@ namespace BayesianModeling.ViewModel
 
             List<DataGridCellInfo> cells = mWindow.dataGrid.SelectedCells.ToList();
 
-            lowRowValue = cells.Min(i => DataGridHelper.GetRowIndex(mWindow.dataGrid, i));
-            highRowValue = cells.Max(i => DataGridHelper.GetRowIndex(mWindow.dataGrid, i));
+            lowRowValue = cells.Min(i => DataGridTools.GetDataGridRowIndex(mWindow.dataGrid, i));
+            highRowValue = cells.Max(i => DataGridTools.GetDataGridRowIndex(mWindow.dataGrid, i));
 
             lowColValue = cells.Min(i => i.Column.DisplayIndex);
             highColValue = cells.Max(i => i.Column.DisplayIndex);
@@ -336,7 +345,7 @@ namespace BayesianModeling.ViewModel
             {
                 for (int j = lowColValue; j <= highColValue; j++)
                 {
-                    DataGridCell mCell = DataGridHelper.GetCell(mWindow.dataGrid, DataGridHelper.GetRow(mWindow.dataGrid, i), j);
+                    DataGridCell mCell = DataGridTools.GetDataGridCell(mWindow.dataGrid, DataGridTools.GetDataGridRow(mWindow.dataGrid, i), j);
                     mCell.Background = Brushes.LightGreen;
                     mCell = null;
                 }
@@ -362,7 +371,7 @@ namespace BayesianModeling.ViewModel
                 {
                     for (int j = lowColValue; j <= highColValue; j++)
                     {
-                        DataGridCell mCell = DataGridHelper.GetCell(mWindow.dataGrid, DataGridHelper.GetRow(mWindow.dataGrid, i), j);
+                        DataGridCell mCell = DataGridTools.GetDataGridCell(mWindow.dataGrid, DataGridTools.GetDataGridRow(mWindow.dataGrid, i), j);
                         mCell.Background = Brushes.Transparent;
                         mCell.Style = null;
                         mCell = null;
@@ -385,7 +394,7 @@ namespace BayesianModeling.ViewModel
 
             for (int i = startRow; i <= endRow; i++)
             {
-                mCell = DataGridHelper.GetCell(mWindow.dataGrid, DataGridHelper.GetRow(mWindow.dataGrid, i), column);
+                mCell = DataGridTools.GetDataGridCell(mWindow.dataGrid, DataGridTools.GetDataGridRow(mWindow.dataGrid, i), column);
 
                 if (!Double.TryParse((((TextBlock)mCell.Content)).Text.ToString(), out test))
                 {
@@ -425,7 +434,7 @@ namespace BayesianModeling.ViewModel
 
                     for (int j = lowColValue; j <= highColValue; j++)
                     {
-                        mCell = DataGridHelper.GetCell(mWindow.dataGrid, DataGridHelper.GetRow(mWindow.dataGrid, i), j);
+                        mCell = DataGridTools.GetDataGridCell(mWindow.dataGrid, DataGridTools.GetDataGridRow(mWindow.dataGrid, i), j);
 
                         if (!Double.TryParse((((TextBlock)mCell.Content)).Text.ToString(), out test))
                         {
@@ -458,8 +467,8 @@ namespace BayesianModeling.ViewModel
             List<double> xRange = new List<double>();
 
 
-            mInterface.SendMessageToOutput("---------------------------------------------------");
-            mInterface.SendMessageToOutput("Checking user-supplied ranges and reference points.");
+            mWindow.OutputEvents("---------------------------------------------------");
+            mWindow.OutputEvents("Checking user-supplied ranges and reference points.");
 
             xRange = GetRangedValues(lowRowDelay, highRowDelay, lowColDelay);
 
@@ -469,7 +478,7 @@ namespace BayesianModeling.ViewModel
 
             if (wholeRange == null)
             {
-                mInterface.SendMessageToOutput("There were items that failed validation in the Indifference Point values.  Are any fields blank or not numeric?");
+                mWindow.OutputEvents("There were items that failed validation in the Indifference Point values.  Are any fields blank or not numeric?");
                 MessageBox.Show("There were items that failed validation in the Indifference Point values.");
                 return;
             }
@@ -481,15 +490,15 @@ namespace BayesianModeling.ViewModel
 
             if (!double.TryParse(DelayedValue, out MaxValueA) || MaxValueA == 0)
             {
-                mInterface.SendMessageToOutput("Error while validating the Delayed Amount.  Is this a non-zero number?");
+                mWindow.OutputEvents("Error while validating the Delayed Amount.  Is this a non-zero number?");
                 MessageBox.Show("Please review the the Delayed Amount number.  This must be a non-zero number.");
                 return;
             }
 
             if (xRange.Count != yRange.Count)
             {
-                mInterface.SendMessageToOutput("Error while validating current ranges, Delay/Value ranges must be EQUAL in length for comparison.");
-                mInterface.SendMessageToOutput("Counts for Delays/Values were " + xRange.Count + " and " + yRange.Count + " respectively.");
+                mWindow.OutputEvents("Error while validating current ranges, Delay/Value ranges must be EQUAL in length for comparison.");
+                mWindow.OutputEvents("Counts for Delays/Values were " + xRange.Count + " and " + yRange.Count + " respectively.");
                 MessageBox.Show("Error while validating current ranges, Delay/Value ranges must be EQUAL in length for comparison.");
                 return;
             }
@@ -497,19 +506,19 @@ namespace BayesianModeling.ViewModel
             if ((yRange[0] / MaxValueA) <= 0.1)
             {
                 MessageBox.Show("There's a chance your max value is off (the initial value is <10% of the max already).  If this is expected, please disregard.");
-                mInterface.SendMessageToOutput("Initial indifference point was <10% of A.  This is irregular, please inspect.  If this is accurate, disregard.");
+                mWindow.OutputEvents("Initial indifference point was <10% of A.  This is irregular, please inspect.  If this is accurate, disregard.");
             }
 
             if (yRange[0] > MaxValueA)
             {
                 MessageBox.Show("Your Delayed Amount appears incorrect (the first Indifference Point is greater than the Delayed Amount).  This shouldn't be possible.");
-                mInterface.SendMessageToOutput("Initial indifference point is greater than Delayed Amount.  This shouldn't be possible.  Halting Computation.");
+                mWindow.OutputEvents("Initial indifference point is greater than Delayed Amount.  This shouldn't be possible.  Halting Computation.");
                 return;
             }
 
-            mInterface.SendMessageToOutput("All inputs passed verification.");
-            mInterface.SendMessageToOutput("---------------------------------------------------");
-            mInterface.SendMessageToOutput("Beginning Batched Computations...");
+            mWindow.OutputEvents("All inputs passed verification.");
+            mWindow.OutputEvents("---------------------------------------------------");
+            mWindow.OutputEvents("Beginning Batched Computations...");
 
             var mWin = new ResultsWindow();
             var mVM = new ResultsViewModel();
@@ -668,11 +677,11 @@ namespace BayesianModeling.ViewModel
                 double ed50Best = engine.Evaluate("as.numeric(output[[8]]['lnED50.mostprob'])").AsNumeric().First();
 
                 mVM.RowViewModels[26].values[mIndex + 1] = ed50Best.ToString();
-                mInterface.SendMessageToOutput("Computation #" + ((int)mIndex + (int)1) + " of " + wholeRange.GetLength(0) + " Completed!");
+                mWindow.OutputEvents("Computation #" + ((int)mIndex + (int)1) + " of " + wholeRange.GetLength(0) + " Completed!");
 
             }
 
-            mInterface.SendMessageToOutput("Final Calculations Completed!");
+            mWindow.OutputEvents("Final Calculations Completed!");
 
             mWin.Show();
 
