@@ -91,14 +91,6 @@
                             <LineBreak/>
                         </Paragraph>
                     </ListItem>
-                    <ListItem>
-                        <Paragraph>
-                            <Hyperlink NavigateUri="https://reogrid.net/license/">
-                                <Run Text="Reogrid (Spreadsheet Views). Copyright (c) 2012-2015 unvell.com, all rights reserved. BSD License for free (current) version."/>
-                            </Hyperlink>
-                            <LineBreak/>
-                        </Paragraph>
-                    </ListItem>
                 </List>
 
             </FlowDocument>

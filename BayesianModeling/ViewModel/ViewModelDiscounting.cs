@@ -233,10 +233,6 @@ namespace BayesianModeling.ViewModel
 
         private void DataGrid_PreviewMouseUp_Delays(object sender, MouseButtonEventArgs e)
         {
-            DataGrid grd = e.Source as DataGrid;
-            if (grd == null)
-                return;
-
             List<DataGridCellInfo> cells = mWindow.dataGrid.SelectedCells.ToList();
 
             lowRowDelay = cells.Min(i => DataGridTools.GetDataGridRowIndex(mWindow.dataGrid, i));
@@ -244,7 +240,6 @@ namespace BayesianModeling.ViewModel
 
             lowColDelay = cells.Min(i => i.Column.DisplayIndex);
             highColDelay = cells.Max(i => i.Column.DisplayIndex);
-
 
             if ((highColDelay - lowColDelay) > 0)
             {
@@ -260,12 +255,13 @@ namespace BayesianModeling.ViewModel
 
                 return;
             }
-            
-            for (int i = lowRowDelay; i <= highRowDelay; i++)
+
+            if (mWindow.dataGrid.SelectedCells.Count > 0)
             {
-                DataGridCell mCell = DataGridTools.GetDataGridCell(mWindow.dataGrid, DataGridTools.GetDataGridRow(mWindow.dataGrid, i), lowColDelay);
-                mCell.Background = Brushes.LightBlue;
-                mCell = null;
+                foreach (System.Windows.Controls.DataGridCellInfo obj in mWindow.dataGrid.SelectedCells)
+                {
+                    ((DataGridCell)obj.Column.GetCellContent(obj.Item).Parent).Background = Brushes.LightBlue;
+                }
             }
 
             mWindow.dataGrid.PreviewMouseUp -= DataGrid_PreviewMouseUp_Delays;
@@ -275,12 +271,7 @@ namespace BayesianModeling.ViewModel
         }
 
         private void DataGrid_PreviewMouseUp_Values(object sender, MouseButtonEventArgs e)
-        {
-            DataGrid grd = e.Source as DataGrid;
-            if (grd == null)
-                return;
-
-
+        {            
             List<DataGridCellInfo> cells = mWindow.dataGrid.SelectedCells.ToList();
 
             lowRowValue = cells.Min(i => DataGridTools.GetDataGridRowIndex(mWindow.dataGrid, i));
@@ -288,8 +279,7 @@ namespace BayesianModeling.ViewModel
 
             lowColValue = cells.Min(i => i.Column.DisplayIndex);
             highColValue = cells.Max(i => i.Column.DisplayIndex);
-
-
+            
             if ((highColValue - lowColValue) > 0)
             {
                 DefaultFieldsToGray();
@@ -304,12 +294,13 @@ namespace BayesianModeling.ViewModel
 
                 return;
             }
-            
-            for (int i = lowRowValue; i <= highRowValue; i++)
+
+            if (mWindow.dataGrid.SelectedCells.Count > 0)
             {
-                DataGridCell mCell = DataGridTools.GetDataGridCell(mWindow.dataGrid, DataGridTools.GetDataGridRow(mWindow.dataGrid, i), lowColValue);
-                mCell.Background = Brushes.LightGreen;
-                mCell = null;
+                foreach (System.Windows.Controls.DataGridCellInfo obj in mWindow.dataGrid.SelectedCells)
+                {
+                    ((DataGridCell) obj.Column.GetCellContent(obj.Item).Parent).Background = Brushes.LightGreen;
+                }
             }
 
             mWindow.dataGrid.PreviewMouseUp -= DataGrid_PreviewMouseUp_Values;
@@ -318,16 +309,18 @@ namespace BayesianModeling.ViewModel
             Values = GetColumnName(lowColValue) + lowRowValue.ToString() + ":" + GetColumnName(highColValue) + highRowValue.ToString();
         }
 
-        public string GetColumnName(int index)
+        private static string GetColumnName(int index)
         {
-            const string letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            string letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
             var value = "";
 
             if (index >= letters.Length)
-                value += letters[index / letters.Length - 1];
+            {
+                value = value + letters[index / letters.Length - 1];
+            }
 
-            value += letters[index % letters.Length];
+            value = value + letters[index % letters.Length];
 
             return value;
         }

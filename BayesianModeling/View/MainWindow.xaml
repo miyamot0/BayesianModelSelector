@@ -210,6 +210,10 @@
                                     DisplayRowNumber="True"
                                     BorderThickness="0"
                                     VerticalAlignment="Stretch">
+                <DataGrid.InputBindings>
+                    <KeyBinding Key="Delete" Command="{Binding DeleteSelectedCommand}" />
+                </DataGrid.InputBindings>
+                
                 <DataGrid.ColumnHeaderStyle>
                     <Style TargetType="{x:Type DataGridColumnHeader}">
                         <Setter Property="FontWeight"  Value="Bold" />
@@ -218,22 +222,25 @@
                         <Setter Property="MinWidth" Value="100" />
                     </Style>
                 </DataGrid.ColumnHeaderStyle>
+                
                 <DataGrid.CellStyle>
                     <Style TargetType="{x:Type DataGridCell}">
                         <Setter Property="Background" Value="White"></Setter>
                     </Style>
                 </DataGrid.CellStyle>
-                <DataGrid.InputBindings>
-                    <KeyBinding Key="Delete" Command="{Binding DeleteSelectedCommand}" />
-                </DataGrid.InputBindings>
+
                 <DataGrid.Resources>
-                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Blue"/>
-                    <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent"/>
                     <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black" />
-                    <SolidColorBrush x:Key="{x:Static SystemColors.ControlTextBrushKey}" Color="Black" />
                 </DataGrid.Resources>
             </custom:CustomDataGrid>
-                    
+                
+            <!--
+                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Blue"/>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent"/>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.ControlTextBrushKey}" Color="Black" />
+            
+            -->
+            
         </DockPanel>
         
         <ScrollViewer 

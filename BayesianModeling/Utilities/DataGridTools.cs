@@ -27,6 +27,22 @@ namespace BayesianModeling.Utilities
 {
     public class DataGridTools
     {
+        static string letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+        public static string GetColumnName(int index)
+        {
+            var value = "";
+
+            if (index >= letters.Length)
+            {
+                value = value + letters[index / letters.Length - 1];
+            }
+
+            value = value + letters[index % letters.Length];
+
+            return value;
+        }
+
         public static int GetDataGridRowIndex(DataGrid dataGrid, DataGridCellInfo dataGridCellInfo)
         {
             object rawRow = dataGrid.ItemContainerGenerator.ContainerFromItem(dataGridCellInfo.Item);
