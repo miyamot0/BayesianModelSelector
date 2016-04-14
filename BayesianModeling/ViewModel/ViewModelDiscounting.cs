@@ -461,7 +461,6 @@ namespace BayesianModeling.ViewModel
             {
                 engine.Evaluate("rm(list = setdiff(ls(), lsf.str()))");
 
-                //NumericVector delayValues = engine.CreateNumericVector(mWindow.ParseRange(Delays).ToArray());
                 NumericVector delayValues = engine.CreateNumericVector(GetRangedValues(lowRowDelay, highRowDelay, lowColDelay).ToArray());
                 engine.SetSymbol("mDelays", delayValues);
 
@@ -571,6 +570,8 @@ namespace BayesianModeling.ViewModel
                 var mWin = new ResultsWindow();
                 var mVM = new ResultsViewModel();
                 mWin.DataContext = mVM;
+                mWin.Owner = windowRef;
+                mWin.Topmost = true;
 
                 for (int i=0; i<35; i++)
                 {

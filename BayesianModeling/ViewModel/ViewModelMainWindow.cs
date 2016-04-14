@@ -21,6 +21,7 @@ using BayesianModeling.Utilities;
 using BayesianModeling.View;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
+using Microsoft.VisualBasic.FileIO;
 using Microsoft.Win32;
 using RDotNet;
 using System;
@@ -133,7 +134,6 @@ namespace BayesianModeling.ViewModel
             SaveLogsWindowCommand = new RelayCommand(param => SaveLogs(), param => true);
             ClearLogsWindowCommand = new RelayCommand(param => ClearLogs(), param => true);
 
-
             DeleteSelectedCommand = new RelayCommand(param => DeleteSelected(), param => true);
 
             ViewLoadedCommand = new RelayCommand(param => ViewLoaded(), param => true);
@@ -154,8 +154,19 @@ namespace BayesianModeling.ViewModel
 
             RowViewModels = new ObservableCollection<RowViewModel>();
 
+            ObservableCollection<RowViewModel> temp = new ObservableCollection<RowViewModel>();
+
+            for (int i = 0; i < RowSpans; i++)
+            {
+                temp.Add(new RowViewModel());
+            }
+
+            /* Minor speedup, avoids many UI update calls */
+
+            RowViewModels = new ObservableCollection<RowViewModel>(temp);
+
         }
-        
+
         #region UI
 
         public void UpdateTitle(string title)
@@ -278,24 +289,10 @@ namespace BayesianModeling.ViewModel
         {
             ShuttingDown = false;
 
-            for (int i=0; i<RowSpans; i++)
-            {
-                RowViewModels.Add(new RowViewModel());
-            }
-
-            //await TaskEx.Delay(2000);
-
-            if (Properties.Settings.Default.Updated)
-            {
-                IntroWindow introWindow = new IntroWindow();
-                introWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-                introWindow.ShowDialog();
-
-                Properties.Settings.Default.Upgrade();
-                Properties.Settings.Default.Updated = false;
-                Properties.Settings.Default.Save();
-            }
-
+            IntroWindow introWindow = new IntroWindow();
+            introWindow.Owner = MainWindow;
+            introWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            introWindow.Show();
 
             bool failed = false;
 
@@ -471,6 +468,7 @@ namespace BayesianModeling.ViewModel
         {
             var mWin = new DiscountingWindow();
             mWin.Topmost = true;
+            mWin.Owner = MainWindow;
             mWin.DataContext = new ViewModelDiscounting()
             {
                 mWindow = MainWindow,
@@ -483,6 +481,7 @@ namespace BayesianModeling.ViewModel
         {
             var mWin = new BatchDiscountingWindow();
             mWin.Topmost = true;
+            mWin.Owner = MainWindow;
             mWin.DataContext = new ViewModelBatchDiscounting()
             {
                 mWindow = MainWindow,
@@ -580,7 +579,6 @@ namespace BayesianModeling.ViewModel
                 try
                 {
                     OpenXMLHelper.ExportToExcel(new ObservableCollection<RowViewModel>(RowViewModels), Path.Combine(path, title));
-
                     UpdateTitle(title);
 
                 }
@@ -596,40 +594,73 @@ namespace BayesianModeling.ViewModel
         {
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
 
-            openFileDialog1.Filter = "xlsx Files|*.xlsx";
+            openFileDialog1.Filter = "Spreadsheet Files (XLSX, CSV)|*.xlsx;*.csv";
             openFileDialog1.Title = "Select an Excel File";
 
             if (openFileDialog1.ShowDialog() == true)
             {
+                string mExt = Path.GetExtension(openFileDialog1.FileName);
+
                 try
                 {
-                    using (SpreadsheetDocument spreadSheetDocument = SpreadsheetDocument.Open(@openFileDialog1.FileName, false))
+                    if (mExt.Equals(".xlsx"))
                     {
-                        WorkbookPart workbookPart = spreadSheetDocument.WorkbookPart;
-                        IEnumerable<Sheet> sheets = spreadSheetDocument.WorkbookPart.Workbook.GetFirstChild<Sheets>().Elements<Sheet>();
-                        string relationshipId = sheets.First().Id.Value;
-                        WorksheetPart worksheetPart = (WorksheetPart)spreadSheetDocument.WorkbookPart.GetPartById(relationshipId);
-                        Worksheet workSheet = worksheetPart.Worksheet;
-                        SheetData sheetData = workSheet.GetFirstChild<SheetData>();
-                        IEnumerable<Row> rows = sheetData.Descendants<Row>();
-
-                        RowViewModels.Clear();
-
-                        foreach (Row row in rows)
+                        using (SpreadsheetDocument spreadSheetDocument = SpreadsheetDocument.Open(@openFileDialog1.FileName, false))
                         {
-                            RowViewModel mModel = new RowViewModel();
-                            //TODO fix hacky limit
-                            for (int i = 1; i < row.Descendants<Cell>().Count() && i < 100; i++)
+                            WorkbookPart workbookPart = spreadSheetDocument.WorkbookPart;
+                            IEnumerable<Sheet> sheets = spreadSheetDocument.WorkbookPart.Workbook.GetFirstChild<Sheets>().Elements<Sheet>();
+                            string relationshipId = sheets.First().Id.Value;
+                            WorksheetPart worksheetPart = (WorksheetPart)spreadSheetDocument.WorkbookPart.GetPartById(relationshipId);
+                            Worksheet workSheet = worksheetPart.Worksheet;
+                            SheetData sheetData = workSheet.GetFirstChild<SheetData>();
+                            IEnumerable<Row> rows = sheetData.Descendants<Row>();
+
+                            RowViewModels.Clear();
+
+                            foreach (Row row in rows)
                             {
-                                mModel.values[i-1] = GetCellValue(spreadSheetDocument, row.Descendants<Cell>().ElementAt(i - 1));
+                                RowViewModel mModel = new RowViewModel();
+                                //TODO fix hacky limit
+                                for (int i = 1; i < row.Descendants<Cell>().Count() && i < 100; i++)
+                                {
+                                    mModel.values[i - 1] = GetCellValue(spreadSheetDocument, row.Descendants<Cell>().ElementAt(i - 1));
+                                }
+
+                                RowViewModels.Add(mModel);
+
                             }
 
-                            RowViewModels.Add(mModel);
-
+                            UpdateTitle(openFileDialog1.SafeFileName);
+                            haveFileLoaded = true;
                         }
+                    }
+                    else if (mExt.Equals(".csv"))
+                    {
+                        using (TextFieldParser parser = new TextFieldParser(@openFileDialog1.FileName))
+                        {
+                            parser.TextFieldType = FieldType.Delimited;
+                            parser.SetDelimiters(",");
 
-                        UpdateTitle(openFileDialog1.SafeFileName);
-                        haveFileLoaded = true;
+                            RowViewModels.Clear();
+
+                            while (!parser.EndOfData)
+                            {
+                                string[] fields = parser.ReadFields();
+
+                                RowViewModel mModel = new RowViewModel();
+                                //TODO fix hacky limit
+                                for (int i = 0; i < fields.Length && i < 100; i++)
+                                {
+                                    mModel.values[i] = fields[i];
+                                }
+
+                                RowViewModels.Add(mModel);
+
+                            }
+
+                            UpdateTitle(openFileDialog1.SafeFileName);
+                            haveFileLoaded = true;
+                        }
                     }
                 }
                 catch (Exception e)
@@ -662,8 +693,6 @@ namespace BayesianModeling.ViewModel
 
         #endregion FileIO
 
-        #region Pub 'n Sub
-
         public void SendMessageToOutput(string message)
         {
             MainWindow.OutputEvents(message);
@@ -678,8 +707,6 @@ namespace BayesianModeling.ViewModel
         {
             MainWindow.ClearLogs();
         }
-
-        #endregion
 
     }
 }

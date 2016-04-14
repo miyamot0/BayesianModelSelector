@@ -26,11 +26,12 @@
         Icon="/Images/text-x-preview.png"
         Title="Introduction Window" 
         ResizeMode="NoResize"
-        Height="475" 
+        Height="625" 
         Width="450"
         Loaded="Window_Loaded">
     <Grid>
-        <FlowDocumentScrollViewer>
+        <FlowDocumentScrollViewer VerticalScrollBarVisibility="Disabled"
+                                  Focusable="False">
             <FlowDocument>
                 <Paragraph>
                     <Image Source="/Resources/SNS.png" Width="90" Height="90" Margin="0,0,30,0" />
@@ -41,11 +42,16 @@
                 <Paragraph>
                     The
                     <Bold>Bayesian Model Selector</Bold>
-                    is a tool designed to aid in the selection of models of
-                    temporal discounting.
+                    is a tool designed to aid in the selection of models in
+                    temporal discounting.  Bayesian Model Selection itself is 
+                    available as a script runnable in R alone and the 
+                    <Bold>Bayesian Model Selector</Bold>
+                    serves as an easy bridge for accessing these methods in 
+                    familiar, spreadsheet-based interface.
                 </Paragraph>
                 <Paragraph>
-                    In order to use this program to function, you need the following:
+                    In order to use this program to function, you will need 
+                    the following:
                 </Paragraph>
                 <List>
                     <ListItem>
@@ -62,10 +68,14 @@
                     </ListItem>
                     <ListItem>
                         <Paragraph>
-                            Initial internet access (to install several R packages).
+                            Initial internet access (to make sure several R packages are installed/updated).
                         </Paragraph>
                     </ListItem>
                 </List>
+                <Paragraph>
+                    This is an open-sourced project and all source material (including R scripts for direct use) 
+                    are available in the application install directory.
+                </Paragraph>                
                 <Paragraph>
                     Questions, feedback and bug reports can be submitted to shawn (dot) gilroy (at) temple.edu.
                 </Paragraph>

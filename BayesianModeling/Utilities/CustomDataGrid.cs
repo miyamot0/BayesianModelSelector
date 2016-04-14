@@ -38,8 +38,7 @@ namespace BayesianModeling.Utilities
                 new CanExecuteRoutedEventHandler(OnCanExecutePaste)));
         }
 
-        public static DependencyProperty RowNumber =
-        DependencyProperty.RegisterAttached("DisplayRowNumber",
+        public static DependencyProperty RowNumber = DependencyProperty.RegisterAttached("DisplayRowNumber",
             typeof(bool),
             typeof(CustomDataGrid),
             new FrameworkPropertyMetadata(false, ChangeRowNumberEvent));
@@ -57,6 +56,7 @@ namespace BayesianModeling.Utilities
         private static void ChangeRowNumberEvent(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
             DataGrid dataGrid = sender as DataGrid;
+
             if ((bool)e.NewValue == true)
             {
                 EventHandler<DataGridRowEventArgs> loadedRowHandler = null;

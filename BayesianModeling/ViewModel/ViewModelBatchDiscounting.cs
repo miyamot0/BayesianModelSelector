@@ -466,7 +466,6 @@ namespace BayesianModeling.ViewModel
 
             List<double> xRange = new List<double>();
 
-
             mWindow.OutputEvents("---------------------------------------------------");
             mWindow.OutputEvents("Checking user-supplied ranges and reference points.");
 
@@ -523,6 +522,8 @@ namespace BayesianModeling.ViewModel
             var mWin = new ResultsWindow();
             var mVM = new ResultsViewModel();
             mWin.DataContext = mVM;
+            mWin.Owner = windowRef;
+            mWin.Topmost = true;
 
             for (int i = 0; i < 35; i++)
             {
