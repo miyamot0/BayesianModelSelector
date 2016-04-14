@@ -590,17 +590,17 @@ namespace BayesianModeling.ViewModel
                 mVM.RowViewModels[7].values[1] = engine.Evaluate("as.numeric(output[[3]]['exp.lnk'])").AsVector().First().ToString();
                 mVM.RowViewModels[9].values[0] = "Hyperbolic - ln(k): ";
                 mVM.RowViewModels[9].values[1] = engine.Evaluate("as.numeric(output[[2]]['Mazur.lnk'])").AsVector().First().ToString();
-                mVM.RowViewModels[11].values[0] = "Quasi-Hyperbolic (beta): ";
+                mVM.RowViewModels[11].values[0] = "Quasi-Hyperbolic - beta: ";
                 mVM.RowViewModels[11].values[1] = engine.Evaluate("as.numeric(output[[9]]['BD.beta'])").AsVector().First().ToString();
-                mVM.RowViewModels[12].values[0] = "Quasi-Hyperbolic (delta): ";
+                mVM.RowViewModels[12].values[0] = "Quasi-Hyperbolic - delta: ";
                 mVM.RowViewModels[12].values[1] = engine.Evaluate("as.numeric(output[[9]]['BD.delta'])").AsVector().First().ToString();
                 mVM.RowViewModels[14].values[0] = "Myerson-Hyperboloid - ln(k): ";
                 mVM.RowViewModels[14].values[1] = engine.Evaluate("as.numeric(output[[4]]['MG.lnk'])").AsVector().First().ToString();
-                mVM.RowViewModels[15].values[0] = "Myerson-Hyperboloid (s): ";
+                mVM.RowViewModels[15].values[0] = "Myerson-Hyperboloid - s: ";
                 mVM.RowViewModels[15].values[1] = engine.Evaluate("as.numeric(output[[4]]['MG.s'])").AsVector().First().ToString();
-                mVM.RowViewModels[17].values[0] = "Rachlin-Hyperboloid (k): ";
+                mVM.RowViewModels[17].values[0] = "Rachlin-Hyperboloid - ln(k): ";
                 mVM.RowViewModels[17].values[1] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.lnk'])").AsVector().First().ToString();
-                mVM.RowViewModels[18].values[0] = "Rachlin-Hyperboloid (s): ";
+                mVM.RowViewModels[18].values[0] = "Rachlin-Hyperboloid - s: ";
                 mVM.RowViewModels[18].values[1] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.s'])").AsVector().First().ToString();
 
                 mVM.RowViewModels[21].values[0] = "Model Competition (Best to Worst)";

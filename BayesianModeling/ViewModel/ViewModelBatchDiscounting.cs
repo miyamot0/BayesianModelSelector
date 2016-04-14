@@ -639,12 +639,12 @@ namespace BayesianModeling.ViewModel
                     mVM.RowViewModels[1].values[0] = "Results of Fittings:";
                     mVM.RowViewModels[3].values[0] = "Exponential - ln(k): ";
                     mVM.RowViewModels[5].values[0] = "Hyperbolic - ln(k): ";
-                    mVM.RowViewModels[7].values[0] = "Quasi-Hyperbolic (beta): ";
-                    mVM.RowViewModels[8].values[0] = "Quasi-Hyperbolic (delta): ";
+                    mVM.RowViewModels[7].values[0] = "Quasi-Hyperbolic - beta: ";
+                    mVM.RowViewModels[8].values[0] = "Quasi-Hyperbolic - delta: ";
                     mVM.RowViewModels[10].values[0] = "Myerson-Hyperboloid - ln(k): ";
-                    mVM.RowViewModels[11].values[0] = "Myerson-Hyperboloid (s): ";
-                    mVM.RowViewModels[13].values[0] = "Rachlin-Hyperboloid (k): ";
-                    mVM.RowViewModels[14].values[0] = "Rachlin-Hyperboloid (s): ";
+                    mVM.RowViewModels[11].values[0] = "Myerson-Hyperboloid - s: ";
+                    mVM.RowViewModels[13].values[0] = "Rachlin-Hyperboloid - ln(k): ";
+                    mVM.RowViewModels[14].values[0] = "Rachlin-Hyperboloid - s): ";
 
                     mVM.RowViewModels[18].values[0] = "Model Competition (#1)";
                     mVM.RowViewModels[19].values[0] = "#2";
