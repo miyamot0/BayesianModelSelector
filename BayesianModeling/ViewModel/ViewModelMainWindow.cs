@@ -27,9 +27,12 @@ using RDotNet;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace BayesianModeling.ViewModel
@@ -117,6 +120,10 @@ namespace BayesianModeling.ViewModel
 
         REngine engine;
 
+        /* Worker */
+
+        private readonly BackgroundWorker worker = new BackgroundWorker();
+
         #endregion
 
         public ViewModelMainWindow()
@@ -160,7 +167,6 @@ namespace BayesianModeling.ViewModel
             /* Minor speedup, avoids many UI update calls */
 
             RowViewModels = new ObservableCollection<RowViewModel>(temp);
-
         }
 
         #region UI
@@ -489,6 +495,11 @@ namespace BayesianModeling.ViewModel
 
         private void CreateNewFile()
         {
+            var window = new ProgressDialog("Creating new sheet", "New File Operation");
+            window.Owner = MainWindow;
+            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            window.Show();
+
             RowViewModels.Clear();
             for (int i = 0; i < RowSpans; i++)
             {
@@ -496,6 +507,8 @@ namespace BayesianModeling.ViewModel
             }
 
             UpdateTitle("New File");
+
+            window.FinishedWithLoad();
         }
 
         private void SaveFile()
@@ -512,6 +525,11 @@ namespace BayesianModeling.ViewModel
 
                 if (saveFileDialog1.ShowDialog() == true)
                 {
+                    var window = new ProgressDialog("Saving sheet", "Save File Operation");
+                    window.Owner = MainWindow;
+                    window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                    window.Show();
+
                     try
                     {
                         OpenXMLHelper.ExportToExcel(new ObservableCollection<RowViewModel>(RowViewModels), saveFileDialog1.FileName);
@@ -525,6 +543,8 @@ namespace BayesianModeling.ViewModel
                         MessageBox.Show("We weren't able to save.  Is the target file open or in use?");
                         Console.WriteLine(e.ToString());
                     }
+
+                    window.FinishedWithLoad();
                 }
             }
         }
@@ -538,6 +558,11 @@ namespace BayesianModeling.ViewModel
 
             if (saveFileDialog1.ShowDialog() == true)
             {
+                var window = new ProgressDialog("Saving sheet", "Save File Operation");
+                window.Owner = MainWindow;
+                window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                window.Show();
+
                 try
                 {
                     OpenXMLHelper.ExportToExcel(new ObservableCollection<RowViewModel>(RowViewModels), saveFileDialog1.FileName);
@@ -554,6 +579,8 @@ namespace BayesianModeling.ViewModel
                     haveFileLoaded = false;
                 }
 
+                window.FinishedWithLoad();
+
             }
         }
 
@@ -561,6 +588,11 @@ namespace BayesianModeling.ViewModel
         {
             if (haveFileLoaded)
             {
+                var window = new ProgressDialog("Saving sheet", "Save File Operation");
+                window.Owner = MainWindow;
+                window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                window.Show();
+
                 try
                 {
                     OpenXMLHelper.ExportToExcel(new ObservableCollection<RowViewModel>(RowViewModels), Path.Combine(path, title));
@@ -572,6 +604,8 @@ namespace BayesianModeling.ViewModel
                     MessageBox.Show("We weren't able to save.  Is the target file open or in use?");
                     Console.WriteLine(e.ToString());
                 }
+
+                window.FinishedWithLoad();
             }
         }
 
@@ -584,6 +618,11 @@ namespace BayesianModeling.ViewModel
 
             if (openFileDialog1.ShowDialog() == true)
             {
+                var window = new ProgressDialog("Opening sheet", "Open File Operation");
+                window.Owner = MainWindow;
+                window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                window.Show();
+
                 string mExt = Path.GetExtension(openFileDialog1.FileName);
 
                 try
@@ -618,6 +657,7 @@ namespace BayesianModeling.ViewModel
                             UpdateTitle(openFileDialog1.SafeFileName);
                             haveFileLoaded = true;
                         }
+
                     }
                     else if (mExt.Equals(".csv"))
                     {
@@ -646,6 +686,7 @@ namespace BayesianModeling.ViewModel
                             UpdateTitle(openFileDialog1.SafeFileName);
                             haveFileLoaded = true;
                         }
+
                     }
                 }
                 catch (Exception e)
@@ -653,6 +694,8 @@ namespace BayesianModeling.ViewModel
                     MessageBox.Show("We weren't able to open the file.  Is the target file open or in use?");
                     Console.WriteLine(e.ToString());
                 }
+
+                window.FinishedWithLoad();
             }
         }
 

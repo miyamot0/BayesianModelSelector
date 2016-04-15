@@ -128,7 +128,6 @@ namespace BayesianModeling.ViewModel
         public RelayCommand ViewClosingCommand { get; set; }
         public RelayCommand GetDelaysRangeCommand { get; set; }
         public RelayCommand GetValuesRangeCommand { get; set; }
-//        public RelayCommand GetDelayedValuesRangeCommand { get; set; }
         public RelayCommand CalculateScoresCommand { get; set; }
         public RelayCommand FigureOutput { get; set; }
         public RelayCommand WorkbookOutput { get; set; }
@@ -146,7 +145,6 @@ namespace BayesianModeling.ViewModel
             ViewClosingCommand = new RelayCommand(param => ViewClosed(), param => true);
             GetDelaysRangeCommand = new RelayCommand(param => GetDelaysRange(), param => true);
             GetValuesRangeCommand = new RelayCommand(param => GetValuesRange(), param => true);
-//            GetDelayedValuesRangeCommand = new RelayCommand(param => GetDelayedValuesRange(), param => true);
             CalculateScoresCommand = new RelayCommand(param => CalculateScores(), param => true);            
         }
 
@@ -173,8 +171,6 @@ namespace BayesianModeling.ViewModel
         /// </summary>
         private void ViewLoaded()
         {
-            DelayedValue = "1";
-
             mWindow.OutputEvents("---------------------------------------------------");
             failed = false;
 
