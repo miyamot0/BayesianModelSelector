@@ -31,8 +31,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace BayesianModeling.ViewModel
@@ -719,13 +717,6 @@ namespace BayesianModeling.ViewModel
             ShuttingDown = true;
         }
 
-        #endregion FileIO
-
-        public void SendMessageToOutput(string message)
-        {
-            MainWindow.OutputEvents(message);
-        }
-
         private void SaveLogs()
         {
             MainWindow.SaveLogs();
@@ -734,6 +725,13 @@ namespace BayesianModeling.ViewModel
         private void ClearLogs()
         {
             MainWindow.ClearLogs();
+        }
+
+        #endregion FileIO
+
+        public void SendMessageToOutput(string message)
+        {
+            MainWindow.OutputEvents(message);
         }
 
     }
