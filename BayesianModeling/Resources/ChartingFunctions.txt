@@ -17,30 +17,29 @@
 #
 #
 #
-
 # Companion Script for BDS
 # params = BDS returns
 # output 1: Bar chart, proportions of wins using ggplot2
 # output 2: Semi-logged (x) discounting functions using ggplot2
 
-pieGraph = data.frame(Noise=output[[1]]['noise.prob'],
+barGraph = data.frame(Noise=output[[1]]['noise.prob'],
                       Hyperbolic=output[[2]]['Mazur.prob'],
                       Exponential=output[[3]]['exp.prob'],
                       Hyperboloid.M=output[[4]]['MG.prob'],
                       Hyperboloid.R=output[[5]]['Rachlin.prob'],
                       QuasiHyperbolic=output[[9]]['BD.prob'])
 
-colnames(pieGraph)[1] <- "Noise"
-colnames(pieGraph)[2] <- "Hyperbolic"
-colnames(pieGraph)[3] <- "Exponential"
-colnames(pieGraph)[4] <- "Hyperboloid.M"
-colnames(pieGraph)[5] <- "Hyperboloid.R"
-colnames(pieGraph)[6] <- "QuasiHyperbolic"
+colnames(barGraph)[1] <- "Noise"
+colnames(barGraph)[2] <- "Hyperbolic"
+colnames(barGraph)[3] <- "Exponential"
+colnames(barGraph)[4] <- "Hyperboloid.M"
+colnames(barGraph)[5] <- "Hyperboloid.R"
+colnames(barGraph)[6] <- "QuasiHyperbolic"
 
-pieGraph <- pieGraph[colSums(!is.na(pieGraph)) > 0]
-pieGraph.melt <- melt(pieGraph)
+barGraph <- barGraph[colSums(!is.na(barGraph)) > 0]
+barGraph.melt <- melt(barGraph)
 
-ggBar <- ggplot(pieGraph.melt, aes(x = factor(variable), y=value)) +
+ggBar <- ggplot(barGraph.melt, aes(x = factor(variable), y=value)) +
   geom_bar(stat="identity") + 
   ggtitle("Model Competition Results\n") +
   ylab("Competition (higher is better)") +

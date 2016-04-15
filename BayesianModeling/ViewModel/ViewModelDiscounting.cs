@@ -398,6 +398,41 @@ namespace BayesianModeling.ViewModel
             return mRange;
         }
 
+        private List<double>[] GetRangedValues(int startRowDelay, int endRowDelay, int columnDelay, int startRowValue, int endRowValue, int columnValue)
+        {
+            List<double>[] array = new List<double>[2];
+            array[0] = new List<double>();
+            array[1] = new List<double>();
+
+            DataGridCell mCellDelay, 
+                         mCellValue;
+
+            double testDelay = -1, 
+                   testValue = -1;
+
+            int i = startRowDelay,
+                j = startRowValue;
+
+            for (; i <= endRowDelay && j <= endRowValue; )
+            {
+                mCellDelay = DataGridTools.GetDataGridCell(mWindow.dataGrid, DataGridTools.GetDataGridRow(mWindow.dataGrid, i), columnDelay);
+                mCellValue = DataGridTools.GetDataGridCell(mWindow.dataGrid, DataGridTools.GetDataGridRow(mWindow.dataGrid, j), columnValue);
+
+                if (Double.TryParse((((TextBlock)mCellDelay.Content)).Text.ToString(), out testDelay) &&
+                    Double.TryParse((((TextBlock)mCellValue.Content)).Text.ToString(), out testValue))
+                {
+                    array[0].Add(testDelay);
+                    array[1].Add(testValue);
+
+                }
+
+                i++;
+                j++;
+            }
+
+            return array;
+        }
+
         /// <summary>
         /// Command-call to calculate based on supplied ranges and reference values (max value).
         /// Will reference user-selected options (figures, outputs, etc.) throughout calls to R
@@ -406,11 +441,9 @@ namespace BayesianModeling.ViewModel
         {
             if (failed) return;
 
-            List<double> xRange = new List<double>();
-            List<double> yRange = new List<double>();
-
-            xRange = GetRangedValues(lowRowDelay, highRowDelay, lowColDelay);
-            yRange = GetRangedValues(lowRowValue, highRowValue, lowColValue);
+            List<double>[] array = GetRangedValues(lowRowDelay, highRowDelay, lowColDelay, lowRowValue, highRowValue, lowColValue);
+            List<double> xRange = array[0];
+            List<double> yRange = array[1];
 
             if (xRange == null || yRange == null) return;
 
@@ -454,10 +487,14 @@ namespace BayesianModeling.ViewModel
             {
                 engine.Evaluate("rm(list = setdiff(ls(), lsf.str()))");
 
-                NumericVector delayValues = engine.CreateNumericVector(GetRangedValues(lowRowDelay, highRowDelay, lowColDelay).ToArray());
+                List<double>[] arrayNew = GetRangedValues(lowRowDelay, highRowDelay, lowColDelay, lowRowValue, highRowValue, lowColValue);
+                List<double> xRangeNew = arrayNew[0];
+                List<double> yRangeNew = arrayNew[1];
+
+                NumericVector delayValues = engine.CreateNumericVector(xRangeNew.ToArray());
                 engine.SetSymbol("mDelays", delayValues);
 
-                List<double> yRangeMod = new List<double>(GetRangedValues(lowRowValue, highRowValue, lowColValue));
+                List<double> yRangeMod = new List<double>(yRangeNew);
 
                 for (int i = 0; i < yRangeMod.Count; i++)
                 {
@@ -482,9 +519,6 @@ namespace BayesianModeling.ViewModel
 
                 DataFrame output = engine.Evaluate("output").AsDataFrame();
 
-                engine.Evaluate("library(ggplot2)");
-                engine.Evaluate("library(reshape2)");
-                engine.Evaluate("library(gridExtra)");
                 engine.Evaluate("ainslieK <- as.numeric(output[[2]]['Mazur.lnk'])");
                 engine.Evaluate("samuelsonK <- as.numeric(output[[3]]['exp.lnk'])");
                 engine.Evaluate("beta <- as.numeric(output[[9]]['BD.beta'])");
@@ -499,7 +533,7 @@ namespace BayesianModeling.ViewModel
 
                 engine.SetSymbol("mDelays", delayValues);
 
-                indiffValues = engine.CreateNumericVector(GetRangedValues(lowRowValue, highRowValue, lowColValue));
+                indiffValues = engine.CreateNumericVector(yRangeNew);
                 engine.SetSymbol("mIndiff", indiffValues);
 
                 engine.Evaluate("endDelay <- max(mDelays)*10");
@@ -544,8 +578,13 @@ namespace BayesianModeling.ViewModel
             if (outputFigures)
             {
                 mWindow.OutputEvents("Charting Started... Please wait... ");
+
                 try
                 {
+                    engine.Evaluate("library(ggplot2)");
+                    engine.Evaluate("library(reshape2)");
+                    engine.Evaluate("library(gridExtra)");
+
                     engine.Evaluate(BayesianModelSelection.GetLogChartFunction());
                 }
                 catch (Exception e)

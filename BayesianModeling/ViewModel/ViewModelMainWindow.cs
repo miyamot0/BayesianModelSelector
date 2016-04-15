@@ -36,7 +36,6 @@ namespace BayesianModeling.ViewModel
 {
     class ViewModelMainWindow : ViewModelBase
     {
-
         public MainWindow MainWindow { get; set; }
 
         #region Observable Bindings
@@ -91,7 +90,6 @@ namespace BayesianModeling.ViewModel
 
         public RelayCommand RLicenseWindowCommand { get; set; }
         public RelayCommand RdotNetLicenseWindowCommand { get; set; }
-        public RelayCommand ReogridLicenseWindowCommand { get; set; }
         public RelayCommand NlsLicenseWindowCommand { get; set; }
         public RelayCommand Ggplot2LicenseWindowCommand { get; set; }
         public RelayCommand Reshape2LicenseWindowCommand { get; set; }
@@ -102,7 +100,6 @@ namespace BayesianModeling.ViewModel
 
         public RelayCommand SaveLogsWindowCommand { get; set; }
         public RelayCommand ClearLogsWindowCommand { get; set; }
-
         public RelayCommand DeleteSelectedCommand { get; set; }
 
         #endregion Commands
@@ -144,7 +141,6 @@ namespace BayesianModeling.ViewModel
 
             RLicenseWindowCommand = new RelayCommand(param => RLicenseInformationWindow(), param => true);
             RdotNetLicenseWindowCommand = new RelayCommand(param => RdotNetLicenseInformationWindow(), param => true);
-            ReogridLicenseWindowCommand = new RelayCommand(param => ReogridLicenseInformationWindow(), param => true);
             NlsLicenseWindowCommand = new RelayCommand(param => NlsLicenseInformationWindow(), param => true);
 
             Ggplot2LicenseWindowCommand = new RelayCommand(param => Ggplot2LicenseInformationWindow(), param => true);
@@ -211,17 +207,6 @@ namespace BayesianModeling.ViewModel
             {
                 licenseTitle = "License - NLS",
                 licenseText = Properties.Resources.License_NLS
-            };
-            window.Show();
-        }
-
-        private void ReogridLicenseInformationWindow()
-        {
-            var window = new View.License();
-            window.DataContext = new ViewModelLicense
-            {
-                licenseTitle = "License - Reogrid",
-                licenseText = Properties.Resources.License_ReogridSpreadsheet
             };
             window.Show();
         }

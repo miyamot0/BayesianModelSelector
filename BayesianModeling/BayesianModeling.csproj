@@ -30,9 +30,7 @@
     <ProductName>Bayesian Model Selector</ProductName>
     <PublisherName>Small n Stats</PublisherName>
     <SuiteName>Discounting Model Selector</SuiteName>
-    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
-    <WebPage>index.html</WebPage>
-    <ApplicationRevision>19</ApplicationRevision>
+    <ApplicationRevision>20</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -265,11 +263,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\License_NLS.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\License_ReogridSpreadsheet.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>

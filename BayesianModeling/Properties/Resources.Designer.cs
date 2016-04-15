@@ -61,18 +61,18 @@ namespace BayesianModeling.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to # Shawn Gilroy, 2016
-        ///# Companion Script for BDS
-        ///# params = BDS returns
-        ///# output 1: Bar chart, proportions of wins using ggplot2
-        ///# output 2: Semi-logged (x) discounting functions using ggplot2
-        ///
-        ///pieGraph = data.frame(Noise=output[[1]][&apos;noise.prob&apos;],
-        ///                      Hyperbolic=output[[2]][&apos;Mazur.prob&apos;],
-        ///                      Exponential=output[[3]][&apos;exp.prob&apos;],
-        ///                      Hyperboloid.M=output[[4]][&apos;MG.prob&apos;],
-        ///                      Hyperboloid.R=output[[5]][&apos;Rachlin.prob&apos;],
-        ///          [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to # 
+        ///#    Copyright 2016 Shawn Gilroy
+        ///#
+        ///#    This file is part of Bayesian Model Selector.
+        ///#
+        ///#    Bayesian Model Selector is free software: you can redistribute it and/or modify
+        ///#    it under the terms of the GNU General Public License as published by
+        ///#    the Free Software Foundation, version 2.
+        ///#
+        ///#    Bayesian Model Selector is distributed in the hope that it will be useful,
+        ///#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+        ///#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOS [rest of string was truncated]&quot;;.
         /// </summary>
         public static string ChartingFunctions {
             get {
@@ -81,19 +81,17 @@ namespace BayesianModeling.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to # Copyright Chris Franck, 2016
+        ///   Looks up a localized string similar to #    Copyright 2016 Chris Franck
         ///#
-        ///# Input is a data frame with $X for delay, $Y for indiff point, and $ses for session
+        ///#    This file is part of Bayesian Model Selector.
         ///#
-        ///# Arguments      value     purpose
-        ///# Noise          binary    include noise model?
-        ///# Mazur          binary    include Mazur model?
-        ///# Exponential    binary    include Exponential model? 
-        ///# Rachlin        binary    include Rachlin model?
-        ///# GreenMyerson   binary    include Green-Myerson model?
-        ///# BD             binary    include quasi-hyperboloid (aka betaq-delta) model?  
+        ///#    Bayesian Model Selector is free software: you can redistribute it and/or modify
+        ///#    it under the terms of the GNU General Public License as published by
+        ///#    the Free Software Foundation, version 2.
         ///#
-        ///# Vers [rest of string was truncated]&quot;;.
+        ///#    Bayesian Model Selector is distributed in the hope that it will be useful,
+        ///#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+        ///#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.   [rest of string was truncated]&quot;;.
         /// </summary>
         public static string FranckComputation {
             get {
@@ -219,23 +217,6 @@ namespace BayesianModeling.Properties {
         public static string License_RdotNet {
             get {
                 return ResourceManager.GetString("License_RdotNet", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to ReoGrid - .NET Spreadsheet Control
-        ///https://reogrid.net/
-        ///
-        ///This code and information is provided &quot;as is&quot; without warranty of any
-        ///kind, either expressed or implied, including but not limited to the
-        ///implied warranties of merchantability and/or fitness for a particular
-        ///purpose.
-        ///
-        ///Copyright (c) 2012-2015 unvell.com, all rights reserved..
-        /// </summary>
-        public static string License_ReogridSpreadsheet {
-            get {
-                return ResourceManager.GetString("License_ReogridSpreadsheet", resourceCulture);
             }
         }
         

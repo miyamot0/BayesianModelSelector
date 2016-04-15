@@ -139,9 +139,6 @@
   <data name="License_RdotNet" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\License-RdotNet.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
-  <data name="License_ReogridSpreadsheet" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\License_ReogridSpreadsheet.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
   <data name="License_reshape2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\License_reshape2.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>

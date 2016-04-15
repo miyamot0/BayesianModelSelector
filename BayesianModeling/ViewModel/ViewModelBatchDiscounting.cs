@@ -457,35 +457,67 @@ namespace BayesianModeling.ViewModel
         }
 
         /// <summary>
+        /// A method for submitting a string-encoded range and returning the value of the cells selected.
+        /// </summary>
+        /// <param name="range">
+        /// List of double values returned for use as delay or value points in Computation
+        /// </param>
+        public string[,] ParseBulkRangeStrings(int lowRowValue, int highRowValue, int lowColValue, int highColValue)
+        {
+            string[,] mDouble = null;
+            DataGridCell mCell;
+
+            int mRows = (highRowValue - lowRowValue) + 1;
+            int mCols = (highColValue - lowColValue) + 1;
+
+            mDouble = new string[mCols, mRows];
+
+            try
+            {
+
+                for (int i = lowRowValue; i <= highRowValue; i++)
+                {
+
+                    for (int j = lowColValue; j <= highColValue; j++)
+                    {
+                        mCell = DataGridTools.GetDataGridCell(mWindow.dataGrid, DataGridTools.GetDataGridRow(mWindow.dataGrid, i), j);
+                        mDouble[j - lowColValue, i - lowRowValue] = (((TextBlock)mCell.Content)).Text.ToString();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return null;
+            }
+
+            return mDouble;
+        }
+
+        /// <summary>
         /// Command-call to calculate based on supplied ranges and reference values (max value).
         /// Will reference user-selected options (figures, outputs, etc.) throughout calls to R
         /// </summary>
         private void CalculateScores()
         {
-            if (failed) return;
 
-            List<double> xRange = new List<double>();
+            /*
+             
+            if (xRange.Count != yRange.Count)
+            {
+                mWindow.OutputEvents("Error while validating current ranges, Delay/Value ranges must be EQUAL in length for comparison.");
+                mWindow.OutputEvents("Counts for Delays/Values were " + xRange.Count + " and " + yRange.Count + " respectively.");
+                MessageBox.Show("Error while validating current ranges, Delay/Value ranges must be EQUAL in length for comparison.");
+                return;
+            }
+             
+             */
+
+
+            if (failed) return;
 
             mWindow.OutputEvents("---------------------------------------------------");
             mWindow.OutputEvents("Checking user-supplied ranges and reference points.");
-
-            xRange = GetRangedValues(lowRowDelay, highRowDelay, lowColDelay);
-
-            double[,] wholeRange = ParseBulkRange(lowRowValue, highRowValue, lowColValue, highColValue);
-
-            List<double> yRange = new List<double>();
-
-            if (wholeRange == null)
-            {
-                mWindow.OutputEvents("There were items that failed validation in the Indifference Point values.  Are any fields blank or not numeric?");
-                MessageBox.Show("There were items that failed validation in the Indifference Point values.");
-                return;
-            }
-
-            for (int i = 0; i < wholeRange.GetLength(1); i++)
-            {
-                yRange.Add(wholeRange[0, i]);
-            }
 
             if (!double.TryParse(DelayedValue, out MaxValueA) || MaxValueA == 0)
             {
@@ -494,12 +526,40 @@ namespace BayesianModeling.ViewModel
                 return;
             }
 
-            if (xRange.Count != yRange.Count)
+            List<double> xRange = new List<double>();
+            xRange = GetRangedValues(lowRowDelay, highRowDelay, lowColDelay);
+
+            if (xRange == null)
             {
-                mWindow.OutputEvents("Error while validating current ranges, Delay/Value ranges must be EQUAL in length for comparison.");
-                mWindow.OutputEvents("Counts for Delays/Values were " + xRange.Count + " and " + yRange.Count + " respectively.");
-                MessageBox.Show("Error while validating current ranges, Delay/Value ranges must be EQUAL in length for comparison.");
+                mWindow.OutputEvents("Error while validating the Delays.  There cannot be any blank, null or non-numeric fields.");
+                MessageBox.Show("Please review the the Delays column.  There cannot be any blank, null or non-numeric fields.");
                 return;
+            }
+
+            List<double> yRange = new List<double>();
+
+            string[,] wholeRange = ParseBulkRangeStrings(lowRowValue, highRowValue, lowColValue, highColValue);
+
+            if (wholeRange == null)
+            {
+                mWindow.OutputEvents("There were items that failed validation in the Indifference Point values.  Are any fields blank or not numeric?");
+                MessageBox.Show("There were items that failed validation in the Indifference Point values.");
+                return;
+            }
+
+            List<double> xRangeShadow = new List<double>();
+            double holder;
+
+            yRange.Clear();
+            xRangeShadow.Clear();
+
+            for (int i = 0; i < wholeRange.GetLength(1); i++)
+            {
+                if (double.TryParse(wholeRange[0, i], out holder))
+                {
+                    yRange.Add(holder);
+                    xRangeShadow.Add(xRange[i]);
+                }
             }
 
             if ((yRange[0] / MaxValueA) <= 0.1)
@@ -535,33 +595,36 @@ namespace BayesianModeling.ViewModel
                 engine.Evaluate("rm(list = setdiff(ls(), lsf.str()))");
 
                 yRange.Clear();
+                xRangeShadow.Clear();
 
                 for (int i = 0; i < wholeRange.GetLength(1); i++)
                 {
-                    yRange.Add(wholeRange[mIndex, i]);
+
+                    if (double.TryParse(wholeRange[mIndex, i], out holder))
+                    {
+                        yRange.Add(holder);
+                        xRangeShadow.Add(xRange[i]);
+                    }
                 }
 
                 try
                 {
-                    NumericVector delayValues = engine.CreateNumericVector(xRange.ToArray());
+                    NumericVector delayValues = engine.CreateNumericVector(xRangeShadow.ToArray());
                     engine.SetSymbol("mDelays", delayValues);
 
-                    List<double> yRangeMod = new List<double>();
-
-                    for (int i = 0; i < wholeRange.GetLength(1); i++)
-                    {
-                        yRangeMod.Add(wholeRange[mIndex, i]);
-                    }
+                    List<double> yRangeMod = new List<double>(yRange);
 
                     for (int i = 0; i < yRangeMod.Count; i++)
                     {
                         yRangeMod[i] = yRange[i] /= MaxValueA;
                     }
 
+
                     NumericVector indiffValues = engine.CreateNumericVector(yRangeMod.ToArray());
                     engine.SetSymbol("mIndiffs", indiffValues);
 
                     List<double> sValues = new List<double>();
+
                     foreach (double y in yRange)
                     {
                         sValues.Add(1);
@@ -577,12 +640,6 @@ namespace BayesianModeling.ViewModel
 
                     engine.Evaluate("datHack<-data.frame(X = mDelays, Y = mIndiffs, ses=mSes)");
                     engine.Evaluate("output <- BDS(datHack)");
-
-                    DataFrame output = engine.Evaluate("output").AsDataFrame();
-
-                    engine.Evaluate("library(ggplot2)");
-                    engine.Evaluate("library(reshape2)");
-                    engine.Evaluate("library(gridExtra)");
                     engine.Evaluate("ainslieK <- as.numeric(output[[2]]['Mazur.lnk'])");
                     engine.Evaluate("samuelsonK <- as.numeric(output[[3]]['exp.lnk'])");
                     engine.Evaluate("beta <- as.numeric(output[[9]]['BD.beta'])");
@@ -592,22 +649,6 @@ namespace BayesianModeling.ViewModel
                     engine.Evaluate("rachlinK <- as.numeric(output[[5]]['Rachlin.lnk'])");
                     engine.Evaluate("rachlinS <- as.numeric(output[[5]]['Rachlin.s'])");
 
-                    NumericVector aSymbol = engine.Evaluate(MaxValueA.ToString()).AsNumeric();
-                    engine.SetSymbol("A", aSymbol);
-
-                    engine.SetSymbol("mDelays", delayValues);
-
-                    yRange.Clear();
-
-                    for (int i = 0; i < wholeRange.GetLength(1); i++)
-                    {
-                        yRange.Add(wholeRange[mIndex, i]);
-                    }
-
-                    indiffValues = engine.CreateNumericVector(yRange.ToArray());
-                    engine.SetSymbol("mIndiff", indiffValues);
-
-                    engine.Evaluate("endDelay <- max(mDelays)*10");
                 }
                 catch (ParseException pe)
                 {
@@ -630,8 +671,7 @@ namespace BayesianModeling.ViewModel
                 dictionary.Add("Hyperboloid (Rachlin) Model", rachProb);
 
                 var items = from pair in dictionary orderby pair.Value descending select pair;
-
-
+                
                 mVM.RowViewModels[0].values[mIndex+1] = "Series #" + (int)(mIndex + 1);
 
                 if (mIndex == 0)
@@ -645,14 +685,12 @@ namespace BayesianModeling.ViewModel
                     mVM.RowViewModels[11].values[0] = "Myerson-Hyperboloid - s: ";
                     mVM.RowViewModels[13].values[0] = "Rachlin-Hyperboloid - ln(k): ";
                     mVM.RowViewModels[14].values[0] = "Rachlin-Hyperboloid - s): ";
-
                     mVM.RowViewModels[18].values[0] = "Model Competition (#1)";
                     mVM.RowViewModels[19].values[0] = "#2";
                     mVM.RowViewModels[20].values[0] = "#3";
                     mVM.RowViewModels[21].values[0] = "#4";
                     mVM.RowViewModels[22].values[0] = "#5";
                     mVM.RowViewModels[23].values[0] = "#6";
-
                     mVM.RowViewModels[25].values[0] = "Most competitive model: ";
                     mVM.RowViewModels[26].values[0] = "ED50 of Most Competitive Model - ln(x): ";
                 }
@@ -673,20 +711,17 @@ namespace BayesianModeling.ViewModel
                 mVM.RowViewModels[13].values[mIndex + 1] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.lnk'])").AsVector().First().ToString();
                 mVM.RowViewModels[14].values[mIndex + 1] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.s'])").AsVector().First().ToString();
 
-                mVM.RowViewModels[25].values[mIndex + 1] = items.First().Key.ToString();
-
                 double ed50Best = engine.Evaluate("as.numeric(output[[8]]['lnED50.mostprob'])").AsNumeric().First();
 
+                mVM.RowViewModels[25].values[mIndex + 1] = items.First().Key.ToString();
                 mVM.RowViewModels[26].values[mIndex + 1] = ed50Best.ToString();
+
                 mWindow.OutputEvents("Computation #" + ((int)mIndex + (int)1) + " of " + wholeRange.GetLength(0) + " Completed!");
 
             }
 
             mWindow.OutputEvents("Final Calculations Completed!");
-
             mWin.Show();
-
-
         }
     }
 }

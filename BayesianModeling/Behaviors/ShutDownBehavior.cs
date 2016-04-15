@@ -49,7 +49,7 @@ namespace BayesianModeling.Behaviors
         {
             if (ShuttingDownFlag)
             {
-                AssociatedObject.Close();
+                ((Window) AssociatedObject).Close();
             }
         }
     }
