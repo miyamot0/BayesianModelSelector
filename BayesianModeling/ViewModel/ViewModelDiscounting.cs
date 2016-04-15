@@ -517,8 +517,6 @@ namespace BayesianModeling.ViewModel
                 engine.Evaluate("datHack<-data.frame(X = mDelays, Y = mIndiffs, ses=mSes)");
                 engine.Evaluate("output <- BDS(datHack)");
 
-                DataFrame output = engine.Evaluate("output").AsDataFrame();
-
                 engine.Evaluate("ainslieK <- as.numeric(output[[2]]['Mazur.lnk'])");
                 engine.Evaluate("samuelsonK <- as.numeric(output[[3]]['exp.lnk'])");
                 engine.Evaluate("beta <- as.numeric(output[[9]]['BD.beta'])");
