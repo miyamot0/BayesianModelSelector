@@ -166,6 +166,14 @@ namespace BayesianModeling.ViewModel
         private void ViewClosed()
         {
             Properties.Settings.Default.Save();
+
+            for (int i = 0; i < mWindow.dataGrid.Items.Count; i++)
+            {
+                for (int j = 0; j < mWindow.dataGrid.Columns.Count; j++)
+                {
+                    DataGridTools.GetDataGridCell(mWindow.dataGrid, DataGridTools.GetDataGridRow(mWindow.dataGrid, i), j).Background = Brushes.Transparent;
+                }
+            }
         }
         
         /// <summary>

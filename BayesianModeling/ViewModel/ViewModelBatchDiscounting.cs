@@ -157,6 +157,14 @@ namespace BayesianModeling.ViewModel
         private void ViewClosed()
         {
             Properties.Settings.Default.Save();
+
+            for (int i = 0; i < mWindow.dataGrid.Items.Count; i++)
+            {
+                for (int j = 0; j < mWindow.dataGrid.Columns.Count; j++)
+                {
+                    DataGridTools.GetDataGridCell(mWindow.dataGrid, DataGridTools.GetDataGridRow(mWindow.dataGrid, i), j).Background = Brushes.Transparent;
+                }
+            }
         }
 
         /// <summary>
@@ -500,20 +508,6 @@ namespace BayesianModeling.ViewModel
         /// </summary>
         private void CalculateScores()
         {
-
-            /*
-             
-            if (xRange.Count != yRange.Count)
-            {
-                mWindow.OutputEvents("Error while validating current ranges, Delay/Value ranges must be EQUAL in length for comparison.");
-                mWindow.OutputEvents("Counts for Delays/Values were " + xRange.Count + " and " + yRange.Count + " respectively.");
-                MessageBox.Show("Error while validating current ranges, Delay/Value ranges must be EQUAL in length for comparison.");
-                return;
-            }
-             
-             */
-
-
             if (failed) return;
 
             mWindow.OutputEvents("---------------------------------------------------");
