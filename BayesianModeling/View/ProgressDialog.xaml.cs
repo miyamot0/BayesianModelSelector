@@ -26,8 +26,6 @@ namespace BayesianModeling.View
         public void UpdateProgress(int max, int curr)
         {
             ProgressBar.Value = (int) (((double) curr / (double) max)*100);
-
-            Console.WriteLine("Prog: " + ProgressBar.Value);
         }
     }
 }

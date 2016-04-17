@@ -438,7 +438,7 @@ namespace BayesianModeling.ViewModel
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
+                //Console.WriteLine(e.ToString());
                 return null;
             }
 
@@ -476,7 +476,7 @@ namespace BayesianModeling.ViewModel
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
+                //Console.WriteLine(e.ToString());
                 return null;
             }
 
@@ -629,7 +629,7 @@ namespace BayesianModeling.ViewModel
                 }
                 catch (ParseException pe)
                 {
-                    Console.WriteLine(pe.ToString());
+                    mWindow.OutputEvents(pe.ToString());
                 }
 
                 double noiseProb = double.Parse(engine.Evaluate("as.numeric(output[[1]]['noise.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);

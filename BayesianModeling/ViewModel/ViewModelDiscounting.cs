@@ -529,7 +529,7 @@ namespace BayesianModeling.ViewModel
             }
             catch (ParseException pe)
             {
-                Console.WriteLine(pe.ToString());
+                mWindow.OutputEvents(pe.ToString());
             }
 
             mWindow.OutputEvents("Computation successful!");
