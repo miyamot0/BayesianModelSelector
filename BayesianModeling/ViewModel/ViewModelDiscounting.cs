@@ -610,6 +610,8 @@ namespace BayesianModeling.ViewModel
                 mWin.DataContext = mVM;
                 mWin.Owner = windowRef;
                 mWin.Topmost = true;
+                mWin.Height = 500;
+                mWin.Width = 500;
 
                 for (int i=0; i<35; i++)
                 {

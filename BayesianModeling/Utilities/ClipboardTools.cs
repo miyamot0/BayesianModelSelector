@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 
 namespace BayesianModeling.Utilities
@@ -27,50 +28,65 @@ namespace BayesianModeling.Utilities
     {
         delegate string[] ParseFormat(string value);
 
-        static char mComma = ',';
-        static char mTab = '\t';
+        public static List<string[]> ReadAndParseClipboardData()
+        {
+            List<string[]> clipboardData = new List<string[]>();
+            object clipboardRawData = null;
+            IDataObject clipboadDataObj = Clipboard.GetDataObject();
 
-        private static string[] ParseCsvOrTextFormat(string value, bool isCommaDoc)
+            string[] rows;
+
+            if ((clipboardRawData = clipboadDataObj.GetData(DataFormats.CommaSeparatedValue)) != null)
+            {
+                rows = (clipboardRawData as string).Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+                if (rows == null)
+                    return clipboardData;
+
+                rows.ToList().ForEach(x => clipboardData.Add(ParseCommaSeparatedFormat(x)));
+            }
+            else if ((clipboardRawData = clipboadDataObj.GetData(DataFormats.Text)) != null)
+            {
+                rows = (clipboardRawData as string).Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+                if (rows == null)
+                    return clipboardData;
+
+                rows.ToList().ForEach(x => clipboardData.Add(ParseTabbedSeparatedFormat(x)));
+            }
+
+            return clipboardData;
+        }
+
+        private static string[] ParseCommaSeparatedFormat(string value)
         {
             List<string> returnList = new List<string>();
-            char separator;
+            char separator = ',';
 
-            if (isCommaDoc)
-            {
-                separator = mComma;
-            }
-            else
-            {
-                separator = mTab;
-            }
-
-            int begin = 0, end = 0;
+            int begin = 0, 
+                end = 0;
 
             for (int i = 0; i < value.Length; i++)
             {
-                char ch = value[i];
-
-                /* If delimit, begin a new item for list */
-                if (ch == separator)
+                if (value[i] == separator)
                 {
                     returnList.Add(value.Substring(begin, end - begin));
 
                     begin = end + 1;
                     end = begin;
                 }
-                else if (isCommaDoc && ch == '\"')
-                {
-                    /* Loop to next relevant item */
+                else if (value[i] == '\"')
+                { /*Possible escaped character*/
                     i++;
                     if (i >= value.Length)
-                    {
-                        return new string[] { "Error with parsing" };
+                    { /*Possibly just at the end, in case break*/
+                        break;
                     }
 
-                    char tempCh = value[i];
+                    char charHolder = value[i];
 
-                    while (tempCh != '\"' && i < value.Length)
-                    {
+                    while (charHolder != '\"' && i < value.Length)
+                    { /*Continue reading until unescaped or over*/
                         i++;
                     }
 
@@ -91,38 +107,36 @@ namespace BayesianModeling.Utilities
             return returnList.ToArray();
         }
 
-        public static List<string[]> ReadAndParseClipboardData()
+        private static string[] ParseTabbedSeparatedFormat(string value)
         {
-            List<string[]> clipboardData = new List<string[]>();
-            object clipboardRawData = null;
-            IDataObject clipboadDataObj = System.Windows.Clipboard.GetDataObject();
+            List<string> returnList = new List<string>();
+            char separator = '\t';
 
-            if ((clipboardRawData = clipboadDataObj.GetData(DataFormats.CommaSeparatedValue)) != null)
+            int begin = 0, 
+                end = 0;
+
+            for (int i = 0; i < value.Length; i++)
             {
-                string[] rows = (clipboardRawData as string).Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
-
-                if (rows != null && rows.Length > 0)
+                if (value[i] == separator)
                 {
-                    foreach (string row in rows)
-                    {
-                        clipboardData.Add(ParseCsvOrTextFormat(row, true));
-                    }
+                    returnList.Add(value.Substring(begin, end - begin));
+
+                    begin = end + 1;
+                    end = begin;
+                }
+                else if (i + 1 == value.Length)
+                {
+                    returnList.Add(value.Substring(begin));
+
+                    break;
+                }
+                else
+                {
+                    end++;
                 }
             }
-            else if ((clipboardRawData = clipboadDataObj.GetData(DataFormats.Text)) != null)
-            {
-                string[] rows = (clipboardRawData as string).Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
 
-                if (rows != null && rows.Length > 0)
-                {
-                    foreach (string row in rows)
-                    {
-                        clipboardData.Add(ParseCsvOrTextFormat(row, false));
-                    }
-                }
-            }
-
-            return clipboardData;
+            return returnList.ToArray();
         }
     }
 }
