@@ -37,11 +37,11 @@ namespace BayesianModeling.Behaviors
             }
         }
 
-        private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnValueChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
-            if ((d as ShutDownBehavior) != null)
+            if ((obj as ShutDownBehavior) != null)
             {
-                (d as ShutDownBehavior).OnValueChanged();
+                (obj as ShutDownBehavior).OnValueChanged();
             }
         }
 

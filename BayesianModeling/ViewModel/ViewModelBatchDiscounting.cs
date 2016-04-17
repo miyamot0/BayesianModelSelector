@@ -273,21 +273,7 @@ namespace BayesianModeling.ViewModel
             mWindow.dataGrid.PreviewMouseUp -= DataGrid_PreviewMouseUp_Delays;
 
             DelaysBrush = Brushes.LightBlue;
-            Delays = GetColumnName(lowColDelay) + lowRowDelay.ToString() + ":" + GetColumnName(highColDelay) + highRowDelay.ToString();
-        }
-
-        public string GetColumnName(int index)
-        {
-            const string letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-            var value = "";
-
-            if (index >= letters.Length)
-                value += letters[index / letters.Length - 1];
-
-            value += letters[index % letters.Length];
-
-            return value;
+            Delays = DataGridTools.GetColumnName(lowColDelay) + lowRowDelay.ToString() + ":" + DataGridTools.GetColumnName(highColDelay) + highRowDelay.ToString();
         }
 
         /// <summary>
@@ -319,8 +305,7 @@ namespace BayesianModeling.ViewModel
             DataGrid grd = e.Source as DataGrid;
             if (grd == null)
                 return;
-
-
+            
             List<DataGridCellInfo> cells = mWindow.dataGrid.SelectedCells.ToList();
 
             lowRowValue = cells.Min(i => DataGridTools.GetDataGridRowIndex(mWindow.dataGrid, i));
@@ -358,7 +343,7 @@ namespace BayesianModeling.ViewModel
             mWindow.dataGrid.PreviewMouseUp -= DataGrid_PreviewMouseUp_Values;
 
             ValuesBrush = Brushes.LightGreen;
-            Values = GetColumnName(lowColValue) + lowRowValue.ToString() + ":" + GetColumnName(highColValue) + highRowValue.ToString();
+            Values = DataGridTools.GetColumnName(lowColValue) + lowRowValue.ToString() + ":" + DataGridTools.GetColumnName(highColValue) + highRowValue.ToString();
         }
 
         /// <summary>
@@ -715,5 +700,6 @@ namespace BayesianModeling.ViewModel
             mWindow.OutputEvents("Final Calculations Completed!");
             mWin.Show();
         }
+
     }
 }

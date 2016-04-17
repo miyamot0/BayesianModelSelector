@@ -26,44 +26,12 @@ namespace BayesianModeling.Utilities
 {
     class ClipboardTools
     {
-        delegate string[] ParseFormat(string value);
-
-        public static List<string[]> ReadAndParseClipboardData()
-        {
-            List<string[]> clipboardData = new List<string[]>();
-            object clipboardRawData = null;
-            IDataObject clipboadDataObj = Clipboard.GetDataObject();
-
-            string[] rows;
-
-            if ((clipboardRawData = clipboadDataObj.GetData(DataFormats.CommaSeparatedValue)) != null)
-            {
-                rows = (clipboardRawData as string).Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
-
-                if (rows == null)
-                    return clipboardData;
-
-                rows.ToList().ForEach(x => clipboardData.Add(ParseCommaSeparatedFormat(x)));
-            }
-            else if ((clipboardRawData = clipboadDataObj.GetData(DataFormats.Text)) != null)
-            {
-                rows = (clipboardRawData as string).Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
-
-                if (rows == null)
-                    return clipboardData;
-
-                rows.ToList().ForEach(x => clipboardData.Add(ParseTabbedSeparatedFormat(x)));
-            }
-
-            return clipboardData;
-        }
-
         private static string[] ParseCommaSeparatedFormat(string value)
         {
             List<string> returnList = new List<string>();
             char separator = ',';
 
-            int begin = 0, 
+            int begin = 0,
                 end = 0;
 
             for (int i = 0; i < value.Length; i++)
@@ -112,7 +80,7 @@ namespace BayesianModeling.Utilities
             List<string> returnList = new List<string>();
             char separator = '\t';
 
-            int begin = 0, 
+            int begin = 0,
                 end = 0;
 
             for (int i = 0; i < value.Length; i++)
@@ -138,5 +106,41 @@ namespace BayesianModeling.Utilities
 
             return returnList.ToArray();
         }
+
+        private static string[] ParseNewLinesRows(object lines)
+        {
+            return (lines as string).Split(new string[] { "\r\n" }, StringSplitOptions.None);
+        }
+
+        public static List<string[]> ReadAndParseClipboardData()
+        {
+            List<string[]> clipboardData = new List<string[]>();
+            object clipboardRawData = null;
+            IDataObject clipboadDataObj = Clipboard.GetDataObject();
+
+            string[] rows;
+
+            if ((clipboardRawData = clipboadDataObj.GetData(DataFormats.CommaSeparatedValue)) != null)
+            {
+                rows = ParseNewLinesRows(clipboardRawData);
+
+                if (rows == null)
+                    return clipboardData;
+
+                rows.ToList().ForEach(x => clipboardData.Add(ParseCommaSeparatedFormat(x)));
+            }
+            else if ((clipboardRawData = clipboadDataObj.GetData(DataFormats.Text)) != null)
+            {
+                rows = ParseNewLinesRows(clipboardRawData);
+
+                if (rows == null)
+                    return clipboardData;
+
+                rows.ToList().ForEach(x => clipboardData.Add(ParseTabbedSeparatedFormat(x)));
+            }
+
+            return clipboardData;
+        }
+
     }
 }

@@ -24,7 +24,6 @@ using System.Windows;
 using System.ComponentModel;
 using System.Windows.Data;
 using System;
-using System.Windows.Controls.Primitives;
 
 namespace BayesianModeling.Utilities
 {
@@ -45,7 +44,7 @@ namespace BayesianModeling.Utilities
 
         public static bool GetDisplayRowNumber(DependencyObject sender)
         {
-            return ((bool)sender.GetValue(RowNumber));
+            return ((bool) sender.GetValue(RowNumber));
         }
 
         public static void SetDisplayRowNumber(DependencyObject sender, bool value)
@@ -53,36 +52,16 @@ namespace BayesianModeling.Utilities
             sender.SetValue(RowNumber, value);
         }
 
-        private static void ChangeRowNumberEvent(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        private static void ChangeRowNumberEvent(DependencyObject sender, DependencyPropertyChangedEventArgs args)
         {
             DataGrid dataGrid = sender as DataGrid;
 
-            if ((bool)e.NewValue == true)
+            EventHandler<DataGridRowEventArgs> loadedRowHandler = (object target, DataGridRowEventArgs eArgs) =>
             {
-                EventHandler<DataGridRowEventArgs> loadedRowHandler = null;
-                loadedRowHandler = (object target, DataGridRowEventArgs ea) =>
-                {
-                    if (GetDisplayRowNumber(dataGrid) == false)
-                    {
-                        dataGrid.LoadingRow -= loadedRowHandler;
-                        return;
-                    }
-                    ea.Row.Header = ea.Row.GetIndex();
-                };
-                dataGrid.LoadingRow += loadedRowHandler;
+                eArgs.Row.Header = eArgs.Row.GetIndex();
+            };
 
-                ItemsChangedEventHandler itemsChangedHandler = null;
-                itemsChangedHandler = (object target, ItemsChangedEventArgs ea) =>
-                {
-                    if (GetDisplayRowNumber(dataGrid) == false)
-                    {
-                        dataGrid.ItemContainerGenerator.ItemsChanged -= itemsChangedHandler;
-                        return;
-                    }
-                };
-
-                dataGrid.ItemContainerGenerator.ItemsChanged += itemsChangedHandler;
-            }
+            dataGrid.LoadingRow += loadedRowHandler;
         }
 
         private static void OnCanExecutePaste(object sender, CanExecuteRoutedEventArgs paras)
@@ -108,9 +87,8 @@ namespace BayesianModeling.Utilities
             int lowRow = Items.IndexOf(CurrentItem),
                 highRow = Items.Count - 1,
                 lowCol = Columns.IndexOf(CurrentColumn),
-                highCol = Columns.Count - 1;
-
-            int pasteContentRowIterator = 0,
+                highCol = Columns.Count - 1,
+                pasteContentRowIterator = 0,
                 pasteContentColumnIterator = 0;
 
             for (int i = lowRow; (i <= highRow) && (pasteContentRowIterator < rowData.Count); i++)

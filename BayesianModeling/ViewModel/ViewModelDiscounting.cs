@@ -27,7 +27,6 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 
 namespace BayesianModeling.ViewModel
@@ -275,7 +274,7 @@ namespace BayesianModeling.ViewModel
             mWindow.dataGrid.PreviewMouseUp -= DataGrid_PreviewMouseUp_Delays;
 
             DelaysBrush = Brushes.LightBlue;
-            Delays = GetColumnName(lowColDelay) + lowRowDelay.ToString() + ":" + GetColumnName(highColDelay) + highRowDelay.ToString();
+            Delays = DataGridTools.GetColumnName(lowColDelay) + lowRowDelay.ToString() + ":" + DataGridTools.GetColumnName(highColDelay) + highRowDelay.ToString();
         }
 
         private void DataGrid_PreviewMouseUp_Values(object sender, MouseButtonEventArgs e)
@@ -314,23 +313,7 @@ namespace BayesianModeling.ViewModel
             mWindow.dataGrid.PreviewMouseUp -= DataGrid_PreviewMouseUp_Values;
 
             ValuesBrush = Brushes.LightGreen;
-            Values = GetColumnName(lowColValue) + lowRowValue.ToString() + ":" + GetColumnName(highColValue) + highRowValue.ToString();
-        }
-
-        private static string GetColumnName(int index)
-        {
-            string letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-            var value = "";
-
-            if (index >= letters.Length)
-            {
-                value = value + letters[index / letters.Length - 1];
-            }
-
-            value = value + letters[index % letters.Length];
-
-            return value;
+            Values = DataGridTools.GetColumnName(lowColValue) + lowRowValue.ToString() + ":" + DataGridTools.GetColumnName(highColValue) + highRowValue.ToString();
         }
 
         /// <summary>

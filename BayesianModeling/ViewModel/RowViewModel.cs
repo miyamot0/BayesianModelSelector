@@ -17,14 +17,13 @@
 
  */
 
+
 using BayesianModeling.Utilities;
 
 namespace BayesianModeling.ViewModel
 {
     public class RowViewModel : ViewModelBase
     {
-        static string letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
         public string[] values = new string[100];
 
         public RowViewModel()
@@ -35,23 +34,9 @@ namespace BayesianModeling.ViewModel
             }
         }
 
-        private static string GetColumnName(int index)
-        {
-            var value = "";
-
-            if (index >= letters.Length)
-            {
-                value = value + letters[index / letters.Length - 1];
-            }
-
-            value = value + letters[index % letters.Length];
-
-            return value;
-        }
-
         public void ForcePropertyUpdate(int col)
         {
-            string column = GetColumnName(col);
+            string column = DataGridTools.GetColumnName(col);
             OnPropertyChanged(column);
         }
 

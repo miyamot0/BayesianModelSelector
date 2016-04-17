@@ -17,8 +17,6 @@
 
 */
 
-using System.Collections.Generic;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
@@ -68,7 +66,7 @@ namespace BayesianModeling.Utilities
         public static DataGridCell GetDataGridCell(DataGrid dataGrid, DataGridRow gridRow, int gridColumn)
         {
             DataGridCellsPresenter gridPresenter = GetVisualChild<System.Windows.Controls.Primitives.DataGridCellsPresenter>(gridRow);
-            DataGridCell gridCell = (System.Windows.Controls.DataGridCell) gridPresenter.ItemContainerGenerator.ContainerFromIndex(gridColumn);
+            DataGridCell gridCell = (DataGridCell) gridPresenter.ItemContainerGenerator.ContainerFromIndex(gridColumn);
             return gridCell;
         }
 

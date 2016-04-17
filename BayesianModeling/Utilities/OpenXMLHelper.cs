@@ -19,7 +19,6 @@
 
 using BayesianModeling.ViewModel;
 using DocumentFormat.OpenXml.Packaging;
-using System;
 using System.Collections.ObjectModel;
 
 namespace BayesianModeling.Utilities
@@ -53,7 +52,7 @@ namespace BayesianModeling.Utilities
                 {
                     DocumentFormat.OpenXml.Spreadsheet.Row newRow = new DocumentFormat.OpenXml.Spreadsheet.Row();
 
-                    foreach (String col in row.values)
+                    foreach (string col in row.values)
                     {
                         DocumentFormat.OpenXml.Spreadsheet.Cell cell = new DocumentFormat.OpenXml.Spreadsheet.Cell();
                         cell.DataType = DocumentFormat.OpenXml.Spreadsheet.CellValues.String;
