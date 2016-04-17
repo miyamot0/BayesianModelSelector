@@ -11,7 +11,6 @@ Bayesian Model Simulator is a WPF application that uses R interop libraries (Rdo
 ### Acknowledgements and Credits
 The Bayesian Model Simulator uses a number of open source projects to work properly:
 * R - The open-sourced statistical package
-* Reogrid Spreadsheet - A free spreadsheet view component for use in WPF projects
 * RdotNet - A R interop library facilitating a C# bridge to the R binaries
 * nls Package for R: Curve-fitting methods
 * ggplot2 Package for R: Grammar of graphics charting methods
