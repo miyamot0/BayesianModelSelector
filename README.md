@@ -1,12 +1,12 @@
 # Bayesian Model Simulator
-Bayesian Model Simulator is a WPF application that uses R interop libraries (RdotNet) and spreadsheet views (ReoGrid) to easily facilitate complex calculations.  Features include:
+Bayesian Model Simulator is a WPF application that uses R interop libraries (RdotNet) to easily facilitate complex calculations.  Features include:
   - Non-linear model fittings
   - Model comparison/competition
   - Access to R-based graphics and R-based graphic capabilities
-  - Input/output in common spreadsheet file formats (.xls*)
+  - Input/output in common spreadsheet file formats (.xlsx, .csv)
 
 ### Version
-1.0.0.2
+1.0.0.22
 
 ### Acknowledgements and Credits
 The Bayesian Model Simulator uses a number of open source projects to work properly:
@@ -17,7 +17,7 @@ The Bayesian Model Simulator uses a number of open source projects to work prope
 
 
 ### Installation
-You need the R open-source statistical package for calculations to be performed.  
+You need the R open-source statistical package for model fitting/charting to be performed.  
 
 The application itself is a ClickOnce application, enabling seamless updates as the program is refined.
 
