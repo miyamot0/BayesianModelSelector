@@ -55,7 +55,7 @@ namespace BayesianModeling.Utilities
 
         private static void ChangeRowNumberEvent(DependencyObject sender, DependencyPropertyChangedEventArgs args)
         {
-            if ((bool)args.NewValue == false)
+            if ((bool) args.NewValue == false)
                 return;
 
             ((DataGrid)sender).LoadingRow += (object target, DataGridRowEventArgs eArgs) =>
@@ -71,7 +71,7 @@ namespace BayesianModeling.Utilities
 
         private static void OnCanExecutePaste(object sender, CanExecuteRoutedEventArgs paras)
         {
-            ((CustomDataGrid)sender).OnCanExecutePaste(paras);
+            ((CustomDataGrid) sender).OnCanExecutePaste(paras);
         }
 
         protected virtual void OnCanExecutePaste(CanExecuteRoutedEventArgs paras)
@@ -100,7 +100,7 @@ namespace BayesianModeling.Utilities
             {
                 if (i == highRow)
                 {
-                    (CollectionViewSource.GetDefaultView(Items) as IEditableCollectionView).AddNew();
+                    ((IEditableCollectionView) CollectionViewSource.GetDefaultView(Items)).AddNew();
                     if (pasteContentRowIterator + 1 < rowData.Count)
                     {
                         highRow = Items.Count - 1;
@@ -111,7 +111,7 @@ namespace BayesianModeling.Utilities
 
                 for (int j = lowCol; (j < highCol) && (pasteContentColumnIterator < rowData[pasteContentRowIterator].Length); j++)
                 {
-                    string propertyName = ((ColumnFromDisplayIndex(j) as DataGridBoundColumn).Binding as Binding).Path.Path;
+                    string propertyName = ((Binding)((DataGridBoundColumn) ColumnFromDisplayIndex(j)).Binding).Path.Path;
 
                     if ((Items[i].GetType().GetProperty(propertyName)) != null)
                     {

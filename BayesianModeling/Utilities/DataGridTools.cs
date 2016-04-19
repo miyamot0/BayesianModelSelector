@@ -67,7 +67,7 @@ namespace BayesianModeling.Utilities
 
         public static DataGridCell GetDataGridCell(DataGrid dataGrid, DataGridRow gridRow, int gridColumn)
         {
-            DataGridCellsPresenter gridPresenter = GetVisualChild<System.Windows.Controls.Primitives.DataGridCellsPresenter>(gridRow);
+            DataGridCellsPresenter gridPresenter = GetGridPresenter(gridRow);
             DataGridCell gridCell = (DataGridCell) gridPresenter.ItemContainerGenerator.ContainerFromIndex(gridColumn);
             return gridCell;
         }
@@ -92,24 +92,26 @@ namespace BayesianModeling.Utilities
             return visualCollection;
         }
 
-        public static T GetVisualChild<T>(Visual parent) where T : Visual
+        public static DataGridCellsPresenter GetGridPresenter(Visual parent) 
         {
-            T child = default(T);
-            int numVisuals = VisualTreeHelper.GetChildrenCount(parent);
-            for (int i = 0; i < numVisuals; i++)
+            DataGridCellsPresenter cellPresenter = null;
+
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
             {
-                Visual v = (Visual)VisualTreeHelper.GetChild(parent, i);
-                child = v as T;
-                if (child == null)
+                Visual visual = (Visual) VisualTreeHelper.GetChild(parent, i);
+
+                cellPresenter = visual as DataGridCellsPresenter;
+
+                if (cellPresenter == null)
                 {
-                    child = GetVisualChild<T>(v);
+                    cellPresenter = GetGridPresenter(visual);
                 }
-                if (child != null)
+                else
                 {
                     break;
                 }
             }
-            return child;
+            return cellPresenter;
         }
     }
 }
