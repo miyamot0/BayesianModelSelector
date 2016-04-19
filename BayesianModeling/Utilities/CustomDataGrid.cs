@@ -24,6 +24,7 @@ using System.Windows;
 using System.ComponentModel;
 using System.Windows.Data;
 using System;
+using System.Windows.Controls.Primitives;
 
 namespace BayesianModeling.Utilities
 {
@@ -37,31 +38,35 @@ namespace BayesianModeling.Utilities
                 new CanExecuteRoutedEventHandler(OnCanExecutePaste)));
         }
 
-        public static DependencyProperty RowNumber = DependencyProperty.RegisterAttached("DisplayRowNumber",
+        public static DependencyProperty RowNumber = DependencyProperty.RegisterAttached("DisplayRowNumbers",
             typeof(bool),
             typeof(CustomDataGrid),
             new FrameworkPropertyMetadata(false, ChangeRowNumberEvent));
 
-        public static bool GetDisplayRowNumber(DependencyObject sender)
+        public static bool GetDisplayRowNumbers(DependencyObject sender)
         {
             return ((bool) sender.GetValue(RowNumber));
         }
 
-        public static void SetDisplayRowNumber(DependencyObject sender, bool value)
+        public static void SetDisplayRowNumbers(DependencyObject sender, bool value)
         {
             sender.SetValue(RowNumber, value);
         }
 
         private static void ChangeRowNumberEvent(DependencyObject sender, DependencyPropertyChangedEventArgs args)
         {
-            DataGrid dataGrid = sender as DataGrid;
+            if ((bool)args.NewValue == false)
+                return;
 
-            EventHandler<DataGridRowEventArgs> loadedRowHandler = (object target, DataGridRowEventArgs eArgs) =>
+            ((DataGrid)sender).LoadingRow += (object target, DataGridRowEventArgs eArgs) =>
             {
                 eArgs.Row.Header = eArgs.Row.GetIndex();
             };
 
-            dataGrid.LoadingRow += loadedRowHandler;
+            ((DataGrid)sender).ItemContainerGenerator.ItemsChanged += (object target, ItemsChangedEventArgs eArgs) =>
+            {
+                DataGridTools.GetVisualChildCollection<DataGridRow>(((DataGrid)sender)).ForEach(d => d.Header = d.GetIndex());
+            };
         }
 
         private static void OnCanExecutePaste(object sender, CanExecuteRoutedEventArgs paras)
