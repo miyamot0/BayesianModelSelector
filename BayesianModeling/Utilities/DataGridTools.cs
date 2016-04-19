@@ -72,10 +72,23 @@ namespace BayesianModeling.Utilities
             return gridCell;
         }
 
-        public static List<T> GetVisualChildCollection<T>(object parent) where T : Visual
+        public static List<DataGridRow> GetDataGridChildren(object parent, List<DataGridRow> visualCollection)
         {
-            List<T> visualCollection = new List<T>();
-            GetVisualChildCollection(parent as DependencyObject, visualCollection);
+            DependencyObject child;
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount((DependencyObject)parent); i++)
+            {
+                child = VisualTreeHelper.GetChild((DependencyObject)parent, i);
+
+                if (child.GetType() == typeof(DataGridRow))
+                {
+                    visualCollection.Add((DataGridRow)child);
+                }
+                else if (child != null)
+                {
+                    GetDataGridChildren(child, visualCollection);
+                }
+            }
+
             return visualCollection;
         }
 
@@ -97,23 +110,6 @@ namespace BayesianModeling.Utilities
                 }
             }
             return child;
-        }
-
-        public static void GetVisualChildCollection<T>(DependencyObject parent, List<T> visualCollection) where T : Visual
-        {
-            int count = VisualTreeHelper.GetChildrenCount(parent);
-            for (int i = 0; i < count; i++)
-            {
-                DependencyObject child = VisualTreeHelper.GetChild(parent, i);
-                if (child is T)
-                {
-                    visualCollection.Add(child as T);
-                }
-                if (child != null)
-                {
-                    GetVisualChildCollection(child, visualCollection);
-                }
-            }
         }
     }
 }

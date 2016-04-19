@@ -65,7 +65,7 @@ namespace BayesianModeling.Utilities
 
             ((DataGrid)sender).ItemContainerGenerator.ItemsChanged += (object target, ItemsChangedEventArgs eArgs) =>
             {
-                DataGridTools.GetVisualChildCollection<DataGridRow>(((DataGrid)sender)).ForEach(d => d.Header = d.GetIndex());
+                DataGridTools.GetDataGridChildren(((DataGrid)sender), new List<DataGridRow>()).ForEach(d => d.Header = d.GetIndex());
             };
         }
 
