@@ -233,6 +233,9 @@ namespace BayesianModeling.ViewModel
             }                      
         }
 
+        /// <summary>
+        /// Delegate after highlighting takes place on datagrid (call back specific to delays).
+        /// </summary>
         private void DataGrid_PreviewMouseUp_Delays(object sender, MouseButtonEventArgs e)
         {
             DataGrid grd = e.Source as DataGrid;
@@ -300,6 +303,9 @@ namespace BayesianModeling.ViewModel
             mWindow.dataGrid.PreviewMouseUp += DataGrid_PreviewMouseUp_Delays;
         }
 
+        /// <summary>
+        /// Delegate after highlighting takes place on datagrid (call back specific to values).
+        /// </summary>
         private void DataGrid_PreviewMouseUp_Values(object sender, MouseButtonEventArgs e)
         {
             DataGrid grd = e.Source as DataGrid;
@@ -374,6 +380,9 @@ namespace BayesianModeling.ViewModel
             mWindow.dataGrid.PreviewMouseUp += DataGrid_PreviewMouseUp_Values;
         }
 
+        /// <summary>
+        /// Function for parsing values of individual cells by referencing the UI-bound text content (generally, this is a bad idea).
+        /// </summary>
         private List<double> GetRangedValues(int startRow, int endRow, int column)
         {
             List<double> mRange = new List<double>();

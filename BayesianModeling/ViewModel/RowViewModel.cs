@@ -24,8 +24,13 @@ namespace BayesianModeling.ViewModel
 {
     public class RowViewModel : ViewModelBase
     {
-        public string[] values = new string[100];
 
+        public const int rowLimit = 100;
+        public string[] values = new string[rowLimit];
+
+        /// <summary>
+        /// Instantiate each row with n (rowLimit) columns
+        /// </summary>
         public RowViewModel()
         {
             for (int i=0; i<values.Length; i++)
@@ -34,10 +39,12 @@ namespace BayesianModeling.ViewModel
             }
         }
 
+        /// <summary>
+        /// Force property changed calls on parameters (i.e., call columns directly)
+        /// </summary>
         public void ForcePropertyUpdate(int col)
         {
-            string column = DataGridTools.GetColumnName(col);
-            OnPropertyChanged(column);
+            OnPropertyChanged(DataGridTools.GetColumnName(col));
         }
 
         public string A

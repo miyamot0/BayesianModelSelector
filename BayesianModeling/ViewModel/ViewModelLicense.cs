@@ -43,6 +43,9 @@ namespace BayesianModeling.ViewModel
             }
         }
 
+        /// <summary>
+        /// Blank License file, mainly just to echo out license strings.
+        /// </summary>
         public ViewModelLicense() { }
     }
 }

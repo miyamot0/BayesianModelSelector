@@ -671,12 +671,10 @@ namespace BayesianModeling.ViewModel
                                 string[] fields = parser.ReadFields();
 
                                 RowViewModel mModel = new RowViewModel();
-                                //TODO fix hacky limit
                                 for (int i = 0; i < fields.Length && i < 100; i++)
                                 {
                                     mModel.values[i] = fields[i];
                                 }
-
                                 RowViewModels.Add(mModel);
 
                             }
@@ -690,7 +688,6 @@ namespace BayesianModeling.ViewModel
                 catch (Exception e)
                 {
                     MessageBox.Show("We weren't able to open the file.  Is the target file open or in use?");
-                    Console.WriteLine(e.ToString());
                 }
 
                 window.FinishedWithLoad();
