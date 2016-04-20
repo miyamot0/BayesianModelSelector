@@ -25,6 +25,15 @@ namespace BayesianModeling.Utilities
 {
     public class OpenXMLHelper
     {
+        /// <summary>
+        /// Write contents of RowModels to spreadsheet
+        /// <param name="rowCollection">
+        /// Contents of data grid
+        /// </param>
+        /// <param name="filePath">
+        /// Output location for .xlsx file
+        /// </param>
+        /// </summary>
         public static void ExportToExcel(ObservableCollection<RowViewModel> rowCollection, string filePath)
         {
             using (var workbook = SpreadsheetDocument.Create(filePath, DocumentFormat.OpenXml.SpreadsheetDocumentType.Workbook))

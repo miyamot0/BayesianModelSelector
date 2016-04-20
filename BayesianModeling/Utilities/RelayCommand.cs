@@ -28,9 +28,10 @@ namespace BayesianModeling.Utilities
         readonly Action<object> _execute;
         readonly Predicate<object> _canExecute;
 
-        public RelayCommand(Action<object> execute) : this(execute, null)
-        {
-        }
+        /// <summary>
+        /// Base command class
+        /// </summary>
+        public RelayCommand(Action<object> execute) : this(execute, null) { }
 
         public RelayCommand(Action<object> execute, Predicate<object> predicate)
         {
@@ -57,6 +58,5 @@ namespace BayesianModeling.Utilities
         {
             _execute(parameter);
         }
-
     }
 }

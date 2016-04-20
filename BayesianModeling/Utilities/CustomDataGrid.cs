@@ -30,6 +30,9 @@ namespace BayesianModeling.Utilities
 {
     public class CustomDataGrid : DataGrid
     {
+        /// <summary>
+        /// Extension of DataGrid control to include row numbers and on-demand paste operations
+        /// </summary>
         public CustomDataGrid()
         {
             CommandManager.RegisterClassCommandBinding(typeof(CustomDataGrid), 
@@ -38,6 +41,9 @@ namespace BayesianModeling.Utilities
                 new CanExecuteRoutedEventHandler(OnCanExecutePaste)));
         }
 
+        /// <summary>
+        /// Dependency property for display of row headers (T/F)
+        /// </summary>
         public static DependencyProperty RowNumber = DependencyProperty.RegisterAttached("DisplayRowNumbers",
             typeof(bool),
             typeof(CustomDataGrid),
@@ -53,57 +59,81 @@ namespace BayesianModeling.Utilities
             sender.SetValue(RowNumber, value);
         }
 
+        /// <summary>
+        /// Adding/Removing event
+        /// <param name="sender">
+        /// Event reference to data grid proper, used to traverse tree for individual grid rows
+        /// </param>
+        /// 
+        /// <param name="args">
+        /// Event arguments for changing row, provides reference for change (if new) and to header fields
+        /// </param>
+        /// </summary>
         private static void ChangeRowNumberEvent(DependencyObject sender, DependencyPropertyChangedEventArgs args)
         {
             if ((bool) args.NewValue == false)
                 return;
 
-            ((DataGrid)sender).LoadingRow += (object target, DataGridRowEventArgs eArgs) =>
+            ((DataGrid) sender).LoadingRow += (object target, DataGridRowEventArgs eArgs) =>
             {
                 eArgs.Row.Header = eArgs.Row.GetIndex();
             };
 
-            ((DataGrid)sender).ItemContainerGenerator.ItemsChanged += (object target, ItemsChangedEventArgs eArgs) =>
+            ((DataGrid) sender).ItemContainerGenerator.ItemsChanged += (object target, ItemsChangedEventArgs eArgs) =>
             {
-                DataGridTools.GetDataGridChildren(((DataGrid)sender), new List<DataGridRow>()).ForEach(d => d.Header = d.GetIndex());
+                DataGridTools.GetDataGridChildren(((DataGrid) sender), new List<DataGridRow>()).ForEach(d => d.Header = d.GetIndex());
             };
         }
 
+        /// <summary>
+        /// Command binding event call to CanExecute parameters
+        /// </summary>
         private static void OnCanExecutePaste(object sender, CanExecuteRoutedEventArgs paras)
         {
             ((CustomDataGrid) sender).OnCanExecutePaste(paras);
         }
 
+        /// <summary>
+        /// Method returning (if not null) that action can be executed and is handled
+        /// </summary>
         protected virtual void OnCanExecutePaste(CanExecuteRoutedEventArgs paras)
         {
             paras.CanExecute = (CurrentCell != null);
             paras.Handled = true;
         }
 
+        /// <summary>
+        /// Command binding event call to Execute parameters/methods
+        /// </summary>
         private static void OnExecutedPaste(object sender, ExecutedRoutedEventArgs paras)
         {
-            ((CustomDataGrid)sender).OnExecutedPaste(paras);
+            ((CustomDataGrid) sender).OnExecutedPaste(paras);
         }
 
+        /// <summary>
+        /// Paste operation, parsing clipboard information into collection of string arrays, iterating through cells and updating as needed
+        /// </summary>
         protected virtual void OnExecutedPaste(ExecutedRoutedEventArgs paras)
         {
             List<string[]> rowData = ClipboardTools.ReadAndParseClipboardData();
 
-            int lowRow = Items.IndexOf(CurrentItem),
-                highRow = Items.Count - 1,
-                lowCol = Columns.IndexOf(CurrentColumn),
-                highCol = Columns.Count - 1,
+            int lowRow = Items.IndexOf(CurrentItem),        // Current highlighted cell's row
+                highRow = Items.Count - 1,                  // Highest row in table
+                lowCol = Columns.IndexOf(CurrentColumn),    // Current highlighted cell's column
+                highCol = Columns.Count - 1,                // Highest column index in tabl
                 pasteContentRowIterator = 0,
                 pasteContentColumnIterator = 0;
+
+            var rowSource = (IEditableCollectionView) CollectionViewSource.GetDefaultView(Items);
 
             for (int i = lowRow; (i <= highRow) && (pasteContentRowIterator < rowData.Count); i++)
             {
                 if (i == highRow)
                 {
-                    ((IEditableCollectionView) CollectionViewSource.GetDefaultView(Items)).AddNew();
+                    rowSource.AddNew();                     // Add new rows if more space needed
                     if (pasteContentRowIterator + 1 < rowData.Count)
                     {
-                        highRow++;
+                        highRow++;                          // Update table row max
                     }
                 }
 
@@ -111,15 +141,10 @@ namespace BayesianModeling.Utilities
 
                 for (int j = lowCol; (j < highCol) && (pasteContentColumnIterator < rowData[pasteContentRowIterator].Length); j++)
                 {
-                    string propertyName = ((Binding)((DataGridBoundColumn) ColumnFromDisplayIndex(j)).Binding).Path.Path;
-
-                    if ((Items[i].GetType().GetProperty(propertyName)) != null)
-                    {
-                        object convertedValue = Convert.ChangeType(rowData[pasteContentRowIterator][pasteContentColumnIterator],
-                            (Items[i].GetType().GetProperty(propertyName)).PropertyType);
-
-                        Items[i].GetType().GetProperty(propertyName).SetValue(Items[i], convertedValue, null);
-                    }
+                    // Hackish method to update property through binding (UI) to row index/column binding, setting value in cells to clipboard contents
+                    string columnPropertyName = ((Binding) ((DataGridBoundColumn) ColumnFromDisplayIndex(j)).Binding).Path.Path;
+                    Items[i].GetType().GetProperty(columnPropertyName).SetValue(Items[i], 
+                        rowData[pasteContentRowIterator][pasteContentColumnIterator], null);
 
                     pasteContentColumnIterator++;
                 }

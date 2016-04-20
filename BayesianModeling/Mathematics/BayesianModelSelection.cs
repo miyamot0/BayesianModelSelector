@@ -21,11 +21,17 @@ namespace BayesianModeling.Mathematics
 {
     class BayesianModelSelection
     {
+        /// <summary>
+        /// Chris Franck's Bayesian model selection script is called from resources here (as string), for use in R function calls
+        /// </summary>
         public static string GetFranckFunction()
         {
             return Properties.Resources.FranckComputation;
         }
 
+        /// <summary>
+        /// Charting methods are called from this script (as string), to visualize results
+        /// </summary>
         public static string GetLogChartFunction()
         {
             return Properties.Resources.ChartingFunctions;

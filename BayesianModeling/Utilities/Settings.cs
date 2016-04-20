@@ -21,6 +21,9 @@ namespace BayesianModeling.Utilities
 {
     internal sealed partial class Settings
     {
+        /// <summary>
+        /// Base settings access class
+        /// </summary>
         public Settings() { }
 
         private void SettingChangingEventHandler(object sender, System.Configuration.SettingChangingEventArgs e) { }

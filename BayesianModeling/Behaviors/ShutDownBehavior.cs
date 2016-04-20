@@ -24,27 +24,36 @@ namespace BayesianModeling.Behaviors
 {
     class ShutDownBehavior : Behavior<Window>
     {
+        /// <summary>
+        /// Event behavior (Window) for window close events, attached to main window primarily for menuitem close command
+        /// </summary>
         public static readonly DependencyProperty ShutDownProperty =
             DependencyProperty.Register("ShuttingDownFlag", 
                 typeof(bool), typeof(ShutDownBehavior), 
                 new PropertyMetadata(false, OnValueChanged));
 
+        /// <summary>
+        /// Behavior reference value 
+        /// </summary>
         public bool ShuttingDownFlag
         {
-            get { return (bool)GetValue(ShutDownProperty); }
+            get { return (bool) GetValue(ShutDownProperty); }
             set {
                 SetValue(ShutDownProperty, value);
             }
         }
 
+        /// <summary>
+        /// Event trigger, calling non-static private method 
+        /// </summary>
         private static void OnValueChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
-            if ((obj as ShutDownBehavior) != null)
-            {
-                (obj as ShutDownBehavior).OnValueChanged();
-            }
+            ((ShutDownBehavior) obj).OnValueChanged();
         }
 
+        /// <summary>
+        /// Called method on change, call close action if changed value is false (i.e., window open status = shutting down flag)
+        /// </summary>
         private void OnValueChanged()
         {
             if (ShuttingDownFlag)

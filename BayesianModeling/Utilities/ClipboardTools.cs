@@ -26,6 +26,11 @@ namespace BayesianModeling.Utilities
 {
     class ClipboardTools
     {
+        /// <summary>
+        /// Clipboard parsing class.  
+        /// Detects clipboard object, parses as such using VB IO library.
+        /// Returns block-/jagged-style collection of string arrays, for use in grid paste
+        /// </summary>
         public static List<string[]> ReadAndParseClipboardData()
         {
             List<string[]> clipboardData = new List<string[]>();
@@ -45,7 +50,7 @@ namespace BayesianModeling.Utilities
             }
             else if (Clipboard.GetDataObject().GetData(DataFormats.Text) != null)
             {
-                using (TextFieldParser parser = new TextFieldParser(new StringReader((string)Clipboard.GetDataObject().GetData(DataFormats.Text))))
+                using (TextFieldParser parser = new TextFieldParser(new StringReader((string) Clipboard.GetDataObject().GetData(DataFormats.Text))))
                 {
                     parser.SetDelimiters(new string[] { "\t" });
                     parser.HasFieldsEnclosedInQuotes = true;
