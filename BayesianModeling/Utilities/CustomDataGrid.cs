@@ -103,7 +103,7 @@ namespace BayesianModeling.Utilities
                     ((IEditableCollectionView) CollectionViewSource.GetDefaultView(Items)).AddNew();
                     if (pasteContentRowIterator + 1 < rowData.Count)
                     {
-                        highRow = Items.Count - 1;
+                        highRow++;
                     }
                 }
 

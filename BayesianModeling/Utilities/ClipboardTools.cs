@@ -17,126 +17,44 @@
 
 */
 
-using System;
+using Microsoft.VisualBasic.FileIO;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Windows;
 
 namespace BayesianModeling.Utilities
 {
     class ClipboardTools
     {
-        private static string[] ParseCommaSeparatedFormat(string value)
-        {
-            List<string> returnList = new List<string>();
-            char separator = ',';
-
-            int begin = 0,
-                end = 0;
-
-            for (int i = 0; i < value.Length; i++)
-            {
-                if (value[i] == separator)
-                {
-                    returnList.Add(value.Substring(begin, end - begin));
-
-                    begin = end + 1;
-                    end = begin;
-                }
-                else if (value[i] == '\"')
-                { /*Possible escaped character*/
-                    i++;
-                    if (i >= value.Length)
-                    { /*Possibly just at the end, in case break*/
-                        break;
-                    }
-
-                    char charHolder = value[i];
-
-                    while (charHolder != '\"' && i < value.Length)
-                    { /*Continue reading until unescaped or over*/
-                        i++;
-                    }
-
-                    end = i;
-                }
-                else if (i + 1 == value.Length)
-                {
-                    returnList.Add(value.Substring(begin));
-
-                    break;
-                }
-                else
-                {
-                    end++;
-                }
-            }
-
-            return returnList.ToArray();
-        }
-
-        private static string[] ParseTabbedSeparatedFormat(string value)
-        {
-            List<string> returnList = new List<string>();
-            char separator = '\t';
-
-            int begin = 0,
-                end = 0;
-
-            for (int i = 0; i < value.Length; i++)
-            {
-                if (value[i] == separator)
-                {
-                    returnList.Add(value.Substring(begin, end - begin));
-
-                    begin = end + 1;
-                    end = begin;
-                }
-                else if (i + 1 == value.Length)
-                {
-                    returnList.Add(value.Substring(begin));
-
-                    break;
-                }
-                else
-                {
-                    end++;
-                }
-            }
-
-            return returnList.ToArray();
-        }
-
-        private static string[] ParseNewLinesRows(object lines)
-        {
-            return (lines as string).Split(new string[] { "\r\n" }, StringSplitOptions.None);
-        }
-
         public static List<string[]> ReadAndParseClipboardData()
         {
             List<string[]> clipboardData = new List<string[]>();
-            object clipboardRawData = null;
-            IDataObject clipboadDataObj = Clipboard.GetDataObject();
 
-            string[] rows;
-
-            if ((clipboardRawData = clipboadDataObj.GetData(DataFormats.CommaSeparatedValue)) != null)
+            if (Clipboard.GetDataObject().GetData(DataFormats.CommaSeparatedValue) != null)
             {
-                rows = ParseNewLinesRows(clipboardRawData);
+                using (TextFieldParser parser = new TextFieldParser(new StringReader((string) Clipboard.GetDataObject().GetData(DataFormats.CommaSeparatedValue))))
+                {
+                    parser.SetDelimiters(new string[] { "," });
+                    parser.HasFieldsEnclosedInQuotes = true;
 
-                if (rows == null)
-                    return clipboardData;
-
-                rows.ToList().ForEach(x => clipboardData.Add(ParseCommaSeparatedFormat(x)));
+                    while (!parser.EndOfData)
+                    {
+                        clipboardData.Add(parser.ReadFields());
+                    }
+                }
             }
-            else if ((clipboardRawData = clipboadDataObj.GetData(DataFormats.Text)) != null)
+            else if (Clipboard.GetDataObject().GetData(DataFormats.Text) != null)
             {
-                rows = ParseNewLinesRows(clipboardRawData);
+                using (TextFieldParser parser = new TextFieldParser(new StringReader((string)Clipboard.GetDataObject().GetData(DataFormats.Text))))
+                {
+                    parser.SetDelimiters(new string[] { "\t" });
+                    parser.HasFieldsEnclosedInQuotes = true;
 
-                if (rows == null)
-                    return clipboardData;
-
-                rows.ToList().ForEach(x => clipboardData.Add(ParseTabbedSeparatedFormat(x)));
+                    while (!parser.EndOfData)
+                    {
+                        clipboardData.Add(parser.ReadFields());
+                    }
+                }
             }
 
             return clipboardData;

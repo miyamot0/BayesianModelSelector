@@ -45,24 +45,13 @@ namespace BayesianModeling.Utilities
 
         public static int GetDataGridRowIndex(DataGrid dataGrid, DataGridCellInfo dataGridCellInfo)
         {
-            object rawRow = dataGrid.ItemContainerGenerator.ContainerFromItem(dataGridCellInfo.Item);
-            DataGridRow gridRow = rawRow as DataGridRow;
-
-            if (gridRow != null)
-            {
-                return gridRow.GetIndex();
-            }
-            else
-            {
-                return -1;
-            }
+            DataGridRow gridRow = dataGrid.ItemContainerGenerator.ContainerFromItem(dataGridCellInfo.Item) as DataGridRow;
+            return (gridRow != null) ? gridRow.GetIndex() : -1;
         }
 
         public static DataGridRow GetDataGridRow(DataGrid dataGrid, int index)
         {
-            object rawRow = dataGrid.ItemContainerGenerator.ContainerFromIndex(index);
-            DataGridRow gridRow = rawRow as DataGridRow;
-            return gridRow;
+            return (DataGridRow) dataGrid.ItemContainerGenerator.ContainerFromIndex(index);
         }
 
         public static DataGridCell GetDataGridCell(DataGrid dataGrid, DataGridRow gridRow, int gridColumn)
@@ -95,11 +84,11 @@ namespace BayesianModeling.Utilities
         public static DataGridCellsPresenter GetGridPresenter(Visual parent) 
         {
             DataGridCellsPresenter cellPresenter = null;
+            Visual visual;
 
             for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
             {
-                Visual visual = (Visual) VisualTreeHelper.GetChild(parent, i);
-
+                visual = (Visual) VisualTreeHelper.GetChild(parent, i);
                 cellPresenter = visual as DataGridCellsPresenter;
 
                 if (cellPresenter == null)
