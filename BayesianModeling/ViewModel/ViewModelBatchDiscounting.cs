@@ -635,72 +635,72 @@ namespace BayesianModeling.ViewModel
                     engine.Evaluate("rachlinK <- as.numeric(output[[5]]['Rachlin.lnk'])");
                     engine.Evaluate("rachlinS <- as.numeric(output[[5]]['Rachlin.s'])");
 
+                    double noiseProb = double.Parse(engine.Evaluate("as.numeric(output[[1]]['noise.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
+                    double hyperProb = double.Parse(engine.Evaluate("as.numeric(output[[2]]['Mazur.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
+                    double exponProb = double.Parse(engine.Evaluate("as.numeric(output[[3]]['exp.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
+                    double quasiProb = double.Parse(engine.Evaluate("as.numeric(output[[9]]['BD.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
+                    double myerProb = double.Parse(engine.Evaluate("as.numeric(output[[4]]['MG.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
+                    double rachProb = double.Parse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
+
+                    var dictionary = new Dictionary<string, double>();
+                    dictionary.Add("Noise Model", noiseProb);
+                    dictionary.Add("Exponential Model", exponProb);
+                    dictionary.Add("Hyperbolic Model", hyperProb);
+                    dictionary.Add("Quasi Hyperbolic Model", quasiProb);
+                    dictionary.Add("Hyperboloid (Myerson) Model", myerProb);
+                    dictionary.Add("Hyperboloid (Rachlin) Model", rachProb);
+
+                    var items = from pair in dictionary orderby pair.Value descending select pair;
+
+                    mVM.RowViewModels[0].values[mIndex + 1] = "Series #" + (int)(mIndex + 1);
+
+                    if (mIndex == 0)
+                    {
+                        mVM.RowViewModels[1].values[0] = "Results of Fittings:";
+                        mVM.RowViewModels[3].values[0] = "Exponential - ln(k): ";
+                        mVM.RowViewModels[5].values[0] = "Hyperbolic - ln(k): ";
+                        mVM.RowViewModels[7].values[0] = "Quasi-Hyperbolic - beta: ";
+                        mVM.RowViewModels[8].values[0] = "Quasi-Hyperbolic - delta: ";
+                        mVM.RowViewModels[10].values[0] = "Myerson-Hyperboloid - ln(k): ";
+                        mVM.RowViewModels[11].values[0] = "Myerson-Hyperboloid - s: ";
+                        mVM.RowViewModels[13].values[0] = "Rachlin-Hyperboloid - ln(k): ";
+                        mVM.RowViewModels[14].values[0] = "Rachlin-Hyperboloid - s): ";
+                        mVM.RowViewModels[18].values[0] = "Model Competition (#1)";
+                        mVM.RowViewModels[19].values[0] = "#2";
+                        mVM.RowViewModels[20].values[0] = "#3";
+                        mVM.RowViewModels[21].values[0] = "#4";
+                        mVM.RowViewModels[22].values[0] = "#5";
+                        mVM.RowViewModels[23].values[0] = "#6";
+                        mVM.RowViewModels[25].values[0] = "Most competitive model: ";
+                        mVM.RowViewModels[26].values[0] = "ED50 of Most Competitive Model - ln(x): ";
+                    }
+
+                    int row = 18;
+                    foreach (KeyValuePair<string, double> pair in items)
+                    {
+                        mVM.RowViewModels[row].values[mIndex + 1] = pair.Key + " - (" + pair.Value.ToString("0.000") + ")";
+                        row++;
+                    }
+
+                    mVM.RowViewModels[3].values[mIndex + 1] = engine.Evaluate("as.numeric(output[[3]]['exp.lnk'])").AsVector().First().ToString();
+                    mVM.RowViewModels[5].values[mIndex + 1] = engine.Evaluate("as.numeric(output[[2]]['Mazur.lnk'])").AsVector().First().ToString();
+                    mVM.RowViewModels[7].values[mIndex + 1] = engine.Evaluate("as.numeric(output[[9]]['BD.beta'])").AsVector().First().ToString();
+                    mVM.RowViewModels[8].values[mIndex + 1] = engine.Evaluate("as.numeric(output[[9]]['BD.delta'])").AsVector().First().ToString();
+                    mVM.RowViewModels[10].values[mIndex + 1] = engine.Evaluate("as.numeric(output[[4]]['MG.lnk'])").AsVector().First().ToString();
+                    mVM.RowViewModels[11].values[mIndex + 1] = engine.Evaluate("as.numeric(output[[4]]['MG.s'])").AsVector().First().ToString();
+                    mVM.RowViewModels[13].values[mIndex + 1] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.lnk'])").AsVector().First().ToString();
+                    mVM.RowViewModels[14].values[mIndex + 1] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.s'])").AsVector().First().ToString();
+
+                    double ed50Best = engine.Evaluate("as.numeric(output[[8]]['lnED50.mostprob'])").AsNumeric().First();
+
+                    mVM.RowViewModels[25].values[mIndex + 1] = items.First().Key.ToString();
+                    mVM.RowViewModels[26].values[mIndex + 1] = ed50Best.ToString();
+
                 }
                 catch (ParseException pe)
                 {
                     mWindow.OutputEvents(pe.ToString());
                 }
-
-                double noiseProb = double.Parse(engine.Evaluate("as.numeric(output[[1]]['noise.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
-                double hyperProb = double.Parse(engine.Evaluate("as.numeric(output[[2]]['Mazur.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
-                double exponProb = double.Parse(engine.Evaluate("as.numeric(output[[3]]['exp.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
-                double quasiProb = double.Parse(engine.Evaluate("as.numeric(output[[9]]['BD.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
-                double myerProb = double.Parse(engine.Evaluate("as.numeric(output[[4]]['MG.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
-                double rachProb = double.Parse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
-
-                var dictionary = new Dictionary<string, double>();
-                dictionary.Add("Noise Model", noiseProb);
-                dictionary.Add("Exponential Model", exponProb);
-                dictionary.Add("Hyperbolic Model", hyperProb);
-                dictionary.Add("Quasi Hyperbolic Model", quasiProb);
-                dictionary.Add("Hyperboloid (Myerson) Model", myerProb);
-                dictionary.Add("Hyperboloid (Rachlin) Model", rachProb);
-
-                var items = from pair in dictionary orderby pair.Value descending select pair;
-                
-                mVM.RowViewModels[0].values[mIndex+1] = "Series #" + (int)(mIndex + 1);
-
-                if (mIndex == 0)
-                {
-                    mVM.RowViewModels[1].values[0] = "Results of Fittings:";
-                    mVM.RowViewModels[3].values[0] = "Exponential - ln(k): ";
-                    mVM.RowViewModels[5].values[0] = "Hyperbolic - ln(k): ";
-                    mVM.RowViewModels[7].values[0] = "Quasi-Hyperbolic - beta: ";
-                    mVM.RowViewModels[8].values[0] = "Quasi-Hyperbolic - delta: ";
-                    mVM.RowViewModels[10].values[0] = "Myerson-Hyperboloid - ln(k): ";
-                    mVM.RowViewModels[11].values[0] = "Myerson-Hyperboloid - s: ";
-                    mVM.RowViewModels[13].values[0] = "Rachlin-Hyperboloid - ln(k): ";
-                    mVM.RowViewModels[14].values[0] = "Rachlin-Hyperboloid - s): ";
-                    mVM.RowViewModels[18].values[0] = "Model Competition (#1)";
-                    mVM.RowViewModels[19].values[0] = "#2";
-                    mVM.RowViewModels[20].values[0] = "#3";
-                    mVM.RowViewModels[21].values[0] = "#4";
-                    mVM.RowViewModels[22].values[0] = "#5";
-                    mVM.RowViewModels[23].values[0] = "#6";
-                    mVM.RowViewModels[25].values[0] = "Most competitive model: ";
-                    mVM.RowViewModels[26].values[0] = "ED50 of Most Competitive Model - ln(x): ";
-                }
-               
-                int row = 18;
-                foreach (KeyValuePair<string, double> pair in items)
-                {
-                    mVM.RowViewModels[row].values[mIndex + 1] = pair.Key + " - (" + pair.Value.ToString("0.000") + ")";
-                    row++;
-                }
-                
-                mVM.RowViewModels[3].values[mIndex + 1] = engine.Evaluate("as.numeric(output[[3]]['exp.lnk'])").AsVector().First().ToString();
-                mVM.RowViewModels[5].values[mIndex + 1] = engine.Evaluate("as.numeric(output[[2]]['Mazur.lnk'])").AsVector().First().ToString();
-                mVM.RowViewModels[7].values[mIndex + 1] = engine.Evaluate("as.numeric(output[[9]]['BD.beta'])").AsVector().First().ToString();
-                mVM.RowViewModels[8].values[mIndex + 1] = engine.Evaluate("as.numeric(output[[9]]['BD.delta'])").AsVector().First().ToString();
-                mVM.RowViewModels[10].values[mIndex + 1] = engine.Evaluate("as.numeric(output[[4]]['MG.lnk'])").AsVector().First().ToString();
-                mVM.RowViewModels[11].values[mIndex + 1] = engine.Evaluate("as.numeric(output[[4]]['MG.s'])").AsVector().First().ToString();
-                mVM.RowViewModels[13].values[mIndex + 1] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.lnk'])").AsVector().First().ToString();
-                mVM.RowViewModels[14].values[mIndex + 1] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.s'])").AsVector().First().ToString();
-
-                double ed50Best = engine.Evaluate("as.numeric(output[[8]]['lnED50.mostprob'])").AsNumeric().First();
-
-                mVM.RowViewModels[25].values[mIndex + 1] = items.First().Key.ToString();
-                mVM.RowViewModels[26].values[mIndex + 1] = ed50Best.ToString();
 
                 mWindow.OutputEvents("Computation #" + ((int)mIndex + (int)1) + " of " + wholeRange.GetLength(0) + " Completed!");
 
