@@ -1,5 +1,5 @@
-# Bayesian Model Simulator
-Bayesian Model Simulator is a WPF application that uses R interop libraries (RdotNet) to easily facilitate complex calculations.  Features include:
+# Bayesian Model Selector
+Bayesian Model Selector is a WPF application that uses R interop libraries (RdotNet) to easily facilitate complex calculations.  Features include:
   - Non-linear model fittings
   - Model comparison/competition
   - Access to R-based graphics and R-based graphic capabilities
@@ -9,7 +9,7 @@ Bayesian Model Simulator is a WPF application that uses R interop libraries (Rdo
 1.0.0.22
 
 ### Acknowledgements and Credits
-The Bayesian Model Simulator uses a number of open source projects to work properly:
+The Bayesian Model Selector uses a number of open source projects to work properly:
 * R - The open-sourced statistical package
 * RdotNet - A R interop library facilitating a C# bridge to the R binaries
 * nls Package for R: Curve-fitting methods
