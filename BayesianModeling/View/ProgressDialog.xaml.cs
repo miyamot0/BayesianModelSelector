@@ -7,7 +7,7 @@ namespace BayesianModeling.View
 {
     /// <summary>
     /// Interaction logic for ProgressDialog.xaml
-    /// </summary>
+    /// </summary> 
     public partial class ProgressDialog : Window
     {
         public ProgressDialog(string text, string title)

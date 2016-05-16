@@ -30,7 +30,7 @@ namespace BayesianModeling.Utilities
         /// Clipboard parsing class.  
         /// Detects clipboard object, parses as such using VB IO library.
         /// Returns block-/jagged-style collection of string arrays, for use in grid paste
-        /// </summary>
+        /// </summary> 
         public static List<string[]> ReadAndParseClipboardData()
         {
             List<string[]> clipboardData = new List<string[]>();

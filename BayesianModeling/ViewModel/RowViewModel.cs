@@ -17,7 +17,6 @@
 
  */
 
-
 using BayesianModeling.Utilities;
 
 namespace BayesianModeling.ViewModel

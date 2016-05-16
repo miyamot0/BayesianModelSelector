@@ -257,7 +257,7 @@ namespace BayesianModeling.ViewModel
 
         /* UI Logic */
 
-        bool failed;
+        bool failed; 
 
         /// <summary>
         /// Public constructor

@@ -17,7 +17,6 @@
 
 */
 
-
 namespace BayesianModeling.Utilities
 {
     public class DataGridTools

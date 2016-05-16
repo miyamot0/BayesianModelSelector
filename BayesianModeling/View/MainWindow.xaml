@@ -157,7 +157,7 @@
                             <MenuItem.Icon>
                                 <Image Source="/Images/text-x-preview.png" />
                             </MenuItem.Icon>
-                        </MenuItem>
+                        </MenuItem> 
                         <MenuItem Header="ggplot2 (R Package) License (GPL-v2)" 
                                   Command="{Binding Ggplot2LicenseWindowCommand}">
                             <MenuItem.Icon>

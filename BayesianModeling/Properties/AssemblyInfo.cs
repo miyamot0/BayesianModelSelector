@@ -4,7 +4,7 @@ using System.Windows;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
-// associated with an assembly.
+// associated with an assembly. 
 [assembly: AssemblyTitle("Bayesian Modeling")]
 [assembly: AssemblyDescription("Bayesian Discounting Modeling Selection")]
 [assembly: AssemblyConfiguration("")]

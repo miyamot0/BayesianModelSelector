@@ -16,7 +16,7 @@
 #
 #
 # Input is a data frame with $X for delay, $Y for indiff point, and $ses for session
-#
+# 
 # Arguments      value     purpose
 # Noise          binary    include noise model?
 # Mazur          binary    include Mazur model?
