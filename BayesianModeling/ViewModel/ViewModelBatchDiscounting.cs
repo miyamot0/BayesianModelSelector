@@ -810,9 +810,9 @@ namespace BayesianModeling.ViewModel
             var mVM = new ResultsViewModel();
             mWin.DataContext = mVM;
             mWin.Owner = windowRef;
-            mWin.Topmost = true;
-            mWin.Height = 500;
-            mWin.Width = 500;
+            mWin.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            mWin.Height = 600;
+            mWin.Width = 800;
 
             for (int i = 0; i < wholeRange.GetLength(1) + 5; i++)
             {

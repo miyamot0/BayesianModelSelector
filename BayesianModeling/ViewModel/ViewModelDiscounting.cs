@@ -848,7 +848,6 @@ namespace BayesianModeling.ViewModel
                 mWin.DataContext = mVM;
                 mWin.Owner = windowRef;
                 mWin.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-                mWin.Topmost = true;
                 mWin.Height = 600;
                 mWin.Width = 800;
 
