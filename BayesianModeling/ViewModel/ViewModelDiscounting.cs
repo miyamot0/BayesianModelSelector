@@ -15,6 +15,38 @@
     You should have received a copy of the GNU General Public License
     along with Bayesian Model Selector.  If not, see <http://www.gnu.org/licenses/gpl-2.0.html>.
 
+    This file uses R.NET Community to leverage interactions with the R program
+
+    ============================================================================
+
+    R.NET Community is distributed under this license:
+
+    Copyright (c) 2010, RecycleBin
+    Copyright (c) 2014-2015 CSIRO
+
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+    are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice, this list 
+    of conditions and the following disclaimer.
+
+    * Redistributions in binary form must reproduce the above copyright notice, this 
+    list of conditions and the following disclaimer in the documentation and/or other 
+    materials provided with the distribution.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
+    ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+    IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+    INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+    NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+    PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+    WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    OF SUCH DAMAGE.
+
  */
 
 using BayesianModeling.Mathematics;
@@ -28,6 +60,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System;
 using System.Windows.Controls;
+using System.Collections.ObjectModel;
 
 namespace BayesianModeling.ViewModel
 {
@@ -75,6 +108,83 @@ namespace BayesianModeling.ViewModel
 
         private double maxValueA = 0;
 
+        private bool advancedMenu = false;
+        public bool AdvancedMenu
+        {
+            get { return advancedMenu; }
+            set
+            {
+                advancedMenu = value;
+                OnPropertyChanged("AdvancedMenu");
+            }
+        }
+
+        private bool noiseModel = true;
+        public bool NoiseModel
+        {
+            get { return noiseModel; }
+            set
+            {
+                noiseModel = value;
+                OnPropertyChanged("NoiseModel");
+            }
+        }
+
+        private bool exponentialModel = true;
+        public bool ExponentialModel
+        {
+            get { return exponentialModel; }
+            set
+            {
+                exponentialModel = value;
+                OnPropertyChanged("ExponentialModel");
+            }
+        }
+
+        private bool hyperbolicModel = true;
+        public bool HyperbolicModel
+        {
+            get { return hyperbolicModel; }
+            set
+            {
+                hyperbolicModel = value;
+                OnPropertyChanged("HyperbolicModel");
+            }
+        }
+
+        private bool quasiHyperbolicModel = true;
+        public bool QuasiHyperbolicModel
+        {
+            get { return quasiHyperbolicModel; }
+            set
+            {
+                quasiHyperbolicModel = value;
+                OnPropertyChanged("QuasiHyperbolicModel");
+            }
+        }
+
+        private bool myerHyperboloidModel = true;
+        public bool MyerHyperboloidModel
+        {
+            get { return myerHyperboloidModel; }
+            set
+            {
+                myerHyperboloidModel = value;
+                OnPropertyChanged("MyerHyperboloidModel");
+            }
+        }
+
+        private bool rachHyperboloidModel = true;
+        public bool RachHyperboloidModel
+        {
+            get { return rachHyperboloidModel; }
+            set
+            {
+                rachHyperboloidModel = value;
+                OnPropertyChanged("RachHyperboloidModel");
+            }
+        }
+
         private Brush delaysBrush = Brushes.White;
         public Brush DelaysBrush
         {
@@ -99,7 +209,7 @@ namespace BayesianModeling.ViewModel
 
         int lowRowDelay = 0,
             highRowDelay = 0,
-            lowColDelay = 0, 
+            lowColDelay = 0,
             highColDelay = 0;
 
         int lowRowValue = 0,
@@ -115,11 +225,24 @@ namespace BayesianModeling.ViewModel
 
         public RelayCommand ViewLoadedCommand { get; set; }
         public RelayCommand ViewClosingCommand { get; set; }
+
+        public RelayCommand DelayRangeCommand { get; set; }
+        public RelayCommand ValueRangeCommand { get; set; }
+
         public RelayCommand GetDelaysRangeCommand { get; set; }
         public RelayCommand GetValuesRangeCommand { get; set; }
         public RelayCommand CalculateScoresCommand { get; set; }
         public RelayCommand FigureOutput { get; set; }
         public RelayCommand WorkbookOutput { get; set; }
+
+        public RelayCommand AdvancedSettings { get; set; }
+
+        public RelayCommand NoiseModelCommand { get; set; }
+        public RelayCommand ExponentialModelCommand { get; set; }
+        public RelayCommand HyperbolicModelCommand { get; set; }
+        public RelayCommand QuasiHyperbolicModelCommand { get; set; }
+        public RelayCommand MyersonHyperboloidModelCommand { get; set; }
+        public RelayCommand RachlinHyperboloidModelCommand { get; set; }
 
         /* UI Logic */
 
@@ -140,6 +263,116 @@ namespace BayesianModeling.ViewModel
 
             FigureOutput = new RelayCommand(param => UpdateFigureOutput(), param => true);
             WorkbookOutput = new RelayCommand(param => UpdateWorkbookOutput(), param => true);
+
+            AdvancedSettings = new RelayCommand(param => UpdateSettings(), param => true);
+
+            DelayRangeCommand = new RelayCommand(param => GetCustomDelays(), param => true);
+            ValueRangeCommand = new RelayCommand(param => GetCustomValues(), param => true);
+
+            NoiseModelCommand = new RelayCommand(param => UpdateNoise(), param => true);
+            ExponentialModelCommand = new RelayCommand(param => UpdateExponential(), param => true);
+            HyperbolicModelCommand = new RelayCommand(param => UpdateHyperbolic(), param => true);
+            QuasiHyperbolicModelCommand = new RelayCommand(param => UpdateQuasiHyperbolic(), param => true);
+            MyersonHyperboloidModelCommand = new RelayCommand(param => UpdateMyersonHyperboloid(), param => true);
+            RachlinHyperboloidModelCommand = new RelayCommand(param => UpdateRachlinHyperboloid(), param => true);
+        }
+
+        /// <summary>
+        /// Query user for a range
+        /// </summary>
+        private void GetCustomDelays()
+        {
+            var mWin = new RangePrompt();
+            mWin.Topmost = true;
+            mWin.Owner = windowRef;
+            mWin.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+
+            if (mWin.ShowDialog() == true)
+            {
+                string[] addresses = mWin.ResponseText.Split(':');
+
+                if (addresses.Length != 2) return;
+
+                var firstChars = new String(addresses[0].ToCharArray().Where(c => !Char.IsDigit(c)).ToArray());
+                var firstNums = new String(addresses[0].ToCharArray().Where(c => Char.IsDigit(c)).ToArray());
+
+                var secondChars = new String(addresses[1].ToCharArray().Where(c => !Char.IsDigit(c)).ToArray());
+                var secondNums = new String(addresses[1].ToCharArray().Where(c => Char.IsDigit(c)).ToArray());
+
+                int fNum, sNum;
+
+                if (int.TryParse(firstNums, out fNum) && int.TryParse(secondNums, out sNum) && firstChars.Length > 0 && secondChars.Length > 0)
+                {
+                    if ((sNum - fNum) == 0)
+                    {
+                        DelaysBrush = Brushes.LightBlue;
+                        Delays = firstChars + firstNums + ":" + secondChars + secondNums;
+
+                        lowColDelay = DataGridTools.GetColumnIndex(firstChars);
+                        highColDelay = DataGridTools.GetColumnIndex(secondChars);
+
+                        lowRowDelay = fNum;
+                        highRowDelay = sNum;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Please ensure that only a single row is selected");
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Parse error!");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Query user for a range
+        /// </summary>
+        private void GetCustomValues()
+        {
+            var mWin = new RangePrompt();
+            mWin.Topmost = true;
+            mWin.Owner = windowRef;
+            mWin.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+
+            if (mWin.ShowDialog() == true)
+            {
+                string[] addresses = mWin.ResponseText.Split(':');
+
+                if (addresses.Length != 2) return;
+
+                var firstChars = new String(addresses[0].ToCharArray().Where(c => !Char.IsDigit(c)).ToArray());
+                var firstNums = new String(addresses[0].ToCharArray().Where(c => Char.IsDigit(c)).ToArray());
+
+                var secondChars = new String(addresses[1].ToCharArray().Where(c => !Char.IsDigit(c)).ToArray());
+                var secondNums = new String(addresses[1].ToCharArray().Where(c => Char.IsDigit(c)).ToArray());
+
+                int fNum, sNum;
+
+                if (int.TryParse(firstNums, out fNum) && int.TryParse(secondNums, out sNum) && firstChars.Length > 0 && secondChars.Length > 0)
+                {
+                    if ((sNum - fNum) == 0)
+                    {
+                        ValuesBrush = Brushes.LightGreen;
+                        Values = firstChars + firstNums + ":" + secondChars + secondNums;
+
+                        lowColValue = DataGridTools.GetColumnIndex(firstChars);
+                        highColValue = DataGridTools.GetColumnIndex(secondChars);
+
+                        lowRowValue = fNum;
+                        highRowValue = sNum;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Please ensure that only a single row is selected");
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Parse error!");
+                }
+            }
         }
 
         /// <summary>
@@ -159,29 +392,80 @@ namespace BayesianModeling.ViewModel
         }
 
         /// <summary>
+        /// Command-based update of UI logic in VM
+        /// </summary>
+        private void UpdateSettings()
+        {
+            if (!AdvancedMenu)
+            {
+                AdvancedMenu = !AdvancedMenu;
+            }
+
+        }
+
+        /// <summary>
+        /// Command-based update of UI logic in VM
+        /// </summary>
+        public void UpdateNoise()
+        {
+            NoiseModel = !NoiseModel;
+        }
+
+        /// <summary>
+        /// Command-based update of UI logic in VM
+        /// </summary>
+        public void UpdateExponential()
+        {
+            ExponentialModel = !ExponentialModel;
+        }
+
+        /// <summary>
+        /// Command-based update of UI logic in VM
+        /// </summary>
+        public void UpdateHyperbolic()
+        {
+            HyperbolicModel = !HyperbolicModel;
+        }
+
+        /// <summary>
+        /// Command-based update of UI logic in VM
+        /// </summary>
+        public void UpdateQuasiHyperbolic()
+        {
+            QuasiHyperbolicModel = !QuasiHyperbolicModel;
+        }
+
+        /// <summary>
+        /// Command-based update of UI logic in VM
+        /// </summary>
+        public void UpdateMyersonHyperboloid()
+        {
+            MyerHyperboloidModel = !MyerHyperboloidModel;
+        }
+
+        /// <summary>
+        /// Command-based update of UI logic in VM
+        /// </summary>
+        public void UpdateRachlinHyperboloid()
+        {
+            RachHyperboloidModel = !RachHyperboloidModel;
+        }
+
+        /// <summary>
         /// Command-based update of UI logic during close.
         /// Will retain window position in Settings.settings
         /// </summary>
         private void ViewClosed()
         {
             Properties.Settings.Default.Save();
-
-            for (int i = 0; i < mWindow.dataGrid.Items.Count; i++)
-            {
-                for (int j = 0; j < mWindow.dataGrid.Columns.Count; j++)
-                {
-                    DataGridTools.GetDataGridCell(mWindow.dataGrid, DataGridTools.GetDataGridRow(mWindow.dataGrid, i), j).Background = Brushes.Transparent;
-                }
-            }
         }
-        
+
         /// <summary>
         /// Command-based update of UI logic during open.
         /// Will re-check for R interactivity
         /// </summary>
         private void ViewLoaded()
         {
-
             mWindow.OutputEvents("---------------------------------------------------");
             failed = false;
 
@@ -239,19 +523,37 @@ namespace BayesianModeling.ViewModel
         }
 
         /// <summary>
+        /// Linq companion for referencing object's location in collection.
+        /// </summary>
+        /// <param name="model">
+        /// Individual row model reference
+        /// </param>
+        /// <param name="coll">
+        /// Collection overall
+        /// </param>
+        /// <returns>
+        /// int-based index
+        /// </returns>
+        private int GetIndexViewModel(RowViewModel model, ObservableCollection<RowViewModel> coll)
+        {
+            return coll.IndexOf(model);
+        }
+
+        /// <summary>
         /// Delegate after highlighting takes place on datagrid (call back specific to delays).
         /// </summary>
         private void DataGrid_PreviewMouseUp_Delays(object sender, MouseButtonEventArgs e)
         {
             List<DataGridCellInfo> cells = mWindow.dataGrid.SelectedCells.ToList();
 
-            lowRowDelay = cells.Min(i => DataGridTools.GetDataGridRowIndex(mWindow.dataGrid, i));
-            highRowDelay = cells.Max(i => DataGridTools.GetDataGridRowIndex(mWindow.dataGrid, i));
+            var itemSource = mWindow.dataGrid.ItemsSource as ObservableCollection<RowViewModel>;
+            lowRowDelay = cells.Min(i => GetIndexViewModel((RowViewModel)i.Item, itemSource));
+            highRowDelay = cells.Max(i => GetIndexViewModel((RowViewModel)i.Item, itemSource));
 
             lowColDelay = cells.Min(i => i.Column.DisplayIndex);
             highColDelay = cells.Max(i => i.Column.DisplayIndex);
 
-            if ((highColDelay - lowColDelay) > 0)
+            if ((highRowDelay - lowRowDelay) > 0)
             {
                 DefaultFieldsToGray();
 
@@ -261,22 +563,15 @@ namespace BayesianModeling.ViewModel
                 lowRowDelay = -1;
                 highColDelay = -1;
                 highRowDelay = -1;
-                MessageBox.Show("Please select a single vertical column.  You can have many rows, but just one column of them.");
+                MessageBox.Show("Please select a single horizontal row (increasing, from left to right).  You can have many columns, but just one row.");
 
                 return;
-            }
-
-            if (mWindow.dataGrid.SelectedCells.Count > 0)
-            {
-                foreach (System.Windows.Controls.DataGridCellInfo obj in mWindow.dataGrid.SelectedCells)
-                {
-                    ((DataGridCell)obj.Column.GetCellContent(obj.Item).Parent).Background = Brushes.LightBlue;
-                }
             }
 
             mWindow.dataGrid.PreviewMouseUp -= DataGrid_PreviewMouseUp_Delays;
 
             DelaysBrush = Brushes.LightBlue;
+
             Delays = DataGridTools.GetColumnName(lowColDelay) + lowRowDelay.ToString() + ":" + DataGridTools.GetColumnName(highColDelay) + highRowDelay.ToString();
         }
 
@@ -284,16 +579,17 @@ namespace BayesianModeling.ViewModel
         /// Delegate after highlighting takes place on datagrid (call back specific to values).
         /// </summary>
         private void DataGrid_PreviewMouseUp_Values(object sender, MouseButtonEventArgs e)
-        {            
+        {
             List<DataGridCellInfo> cells = mWindow.dataGrid.SelectedCells.ToList();
 
-            lowRowValue = cells.Min(i => DataGridTools.GetDataGridRowIndex(mWindow.dataGrid, i));
-            highRowValue = cells.Max(i => DataGridTools.GetDataGridRowIndex(mWindow.dataGrid, i));
+            var itemSource = mWindow.dataGrid.ItemsSource as ObservableCollection<RowViewModel>;
+            lowRowValue = cells.Min(i => GetIndexViewModel((RowViewModel)i.Item, itemSource));
+            highRowValue = cells.Max(i => GetIndexViewModel((RowViewModel)i.Item, itemSource));
 
             lowColValue = cells.Min(i => i.Column.DisplayIndex);
             highColValue = cells.Max(i => i.Column.DisplayIndex);
-            
-            if ((highColValue - lowColValue) > 0)
+
+            if ((highRowValue - lowRowValue) > 0)
             {
                 DefaultFieldsToGray();
 
@@ -303,17 +599,9 @@ namespace BayesianModeling.ViewModel
                 lowRowValue = -1;
                 highColValue = -1;
                 highRowValue = -1;
-                MessageBox.Show("Please select a single vertical column.  You can have many rows, but just one column of them.");
+                MessageBox.Show("Please select a single horizontal row (increasing, from left to right).  You can have many columns, but just one row.");
 
                 return;
-            }
-
-            if (mWindow.dataGrid.SelectedCells.Count > 0)
-            {
-                foreach (System.Windows.Controls.DataGridCellInfo obj in mWindow.dataGrid.SelectedCells)
-                {
-                    ((DataGridCell) obj.Column.GetCellContent(obj.Item).Parent).Background = Brushes.LightGreen;
-                }
             }
 
             mWindow.dataGrid.PreviewMouseUp -= DataGrid_PreviewMouseUp_Values;
@@ -330,21 +618,10 @@ namespace BayesianModeling.ViewModel
         {
             DefaultFieldsToGray();
 
-            if (Delays.Length > 0 && !Delays.ToLower().Contains("spreadsheet"))
-            {
-                for (int i = lowRowDelay; i <= highRowDelay; i++)
-                {
-                    DataGridCell mCell = DataGridTools.GetDataGridCell(mWindow.dataGrid, DataGridTools.GetDataGridRow(mWindow.dataGrid, i), lowColDelay);
-                    mCell.Background = Brushes.Transparent;
-                    mCell = null;
-                }
-            }
-
             DelaysBrush = Brushes.Yellow;
             Delays = "Select delays on spreadsheet";
 
             mWindow.dataGrid.PreviewMouseUp += DataGrid_PreviewMouseUp_Delays;
-
         }
 
         /// <summary>
@@ -355,16 +632,6 @@ namespace BayesianModeling.ViewModel
         {
             DefaultFieldsToGray();
 
-            if (Values.Length > 0 && !Values.ToLower().Contains("spreadsheet"))
-            {
-                for (int i = lowRowValue; i <= highRowValue; i++)
-                {
-                    DataGridCell mCell = DataGridTools.GetDataGridCell(mWindow.dataGrid, DataGridTools.GetDataGridRow(mWindow.dataGrid, i), lowColValue);
-                    mCell.Background = Brushes.Transparent;
-                    mCell = null;
-                }
-            }
-
             ValuesBrush = Brushes.Yellow;
             Values = "Select values on spreadsheet";
 
@@ -372,58 +639,57 @@ namespace BayesianModeling.ViewModel
         }
 
         /// <summary>
-        /// Function for parsing values of individual cells by referencing the UI-bound text content (generally, this is a bad idea).
+        /// Walk through ranged values as needed, finding necessary pairs
         /// </summary>
-        private List<double> GetRangedValues(int startRow, int endRow, int column)
-        {
-            List<double> mRange = new List<double>();
-
-            DataGridCell mCell;
-            double test;
-
-            for (int i = startRow; i <= endRow; i++)
-            {
-                mCell = DataGridTools.GetDataGridCell(mWindow.dataGrid, DataGridTools.GetDataGridRow(mWindow.dataGrid, i), column);
-
-                if (!Double.TryParse((((TextBlock)mCell.Content)).Text.ToString(), out test))
-                {
-                    return null;
-                }
-                else
-                {
-                    mRange.Add(test);
-                }
-            }
-
-            return mRange;
-        }
-
-        private List<double>[] GetRangedValues(int startRowDelay, int endRowDelay, int columnDelay, int startRowValue, int endRowValue, int columnValue)
+        /// <param name="startColDelay">
+        /// First column index for delay
+        /// </param>
+        /// <param name="endColDelay">
+        /// Final column index for delay
+        /// </param>
+        /// <param name="rowDelay">
+        /// Row index for delays
+        /// </param>
+        /// <param name="startColValue">
+        /// First column index for values
+        /// </param>
+        /// <param name="endColValue">
+        /// Final column index for values
+        /// </param>
+        /// <param name="rowValue">
+        /// Row index for values
+        /// </param>
+        /// <returns>
+        /// List of all range/value pairs that correspond
+        /// </returns>
+        private List<double>[] GetRangedValues(int startColDelay, int endColDelay, int rowDelay, int startColValue, int endColValue, int rowValue)
         {
             List<double>[] array = new List<double>[2];
             array[0] = new List<double>();
             array[1] = new List<double>();
 
-            DataGridCell mCellDelay, 
-                         mCellValue;
+            string mCellDelay, mCellValue;
 
-            double testDelay = -1, 
+            double testDelay = -1,
                    testValue = -1;
 
-            int i = startRowDelay,
-                j = startRowValue;
+            int i = startColDelay,
+                j = startColValue;
 
-            for (; i <= endRowDelay && j <= endRowValue; )
+            var itemSource = mWindow.dataGrid.ItemsSource as ObservableCollection<RowViewModel>;
+
+            if (itemSource == null)
+                return null;
+
+            for (; i <= endColDelay && j <= endColValue;)
             {
-                mCellDelay = DataGridTools.GetDataGridCell(mWindow.dataGrid, DataGridTools.GetDataGridRow(mWindow.dataGrid, i), columnDelay);
-                mCellValue = DataGridTools.GetDataGridCell(mWindow.dataGrid, DataGridTools.GetDataGridRow(mWindow.dataGrid, j), columnValue);
+                mCellDelay = itemSource[rowDelay].values[i];
+                mCellValue = itemSource[rowValue].values[j];
 
-                if (Double.TryParse((((TextBlock)mCellDelay.Content)).Text.ToString(), out testDelay) &&
-                    Double.TryParse((((TextBlock)mCellValue.Content)).Text.ToString(), out testValue))
+                if (Double.TryParse(mCellDelay, out testDelay) && Double.TryParse(mCellValue, out testValue))
                 {
                     array[0].Add(testDelay);
                     array[1].Add(testValue);
-
                 }
 
                 i++;
@@ -441,7 +707,7 @@ namespace BayesianModeling.ViewModel
         {
             if (failed) return;
 
-            List<double>[] array = GetRangedValues(lowRowDelay, highRowDelay, lowColDelay, lowRowValue, highRowValue, lowColValue);
+            List<double>[] array = GetRangedValues(lowColDelay, highColDelay, lowRowDelay, lowColValue, highColValue, lowRowValue);
             List<double> xRange = array[0];
             List<double> yRange = array[1];
 
@@ -487,7 +753,7 @@ namespace BayesianModeling.ViewModel
             {
                 engine.Evaluate("rm(list = setdiff(ls(), lsf.str()))");
 
-                List<double>[] arrayNew = GetRangedValues(lowRowDelay, highRowDelay, lowColDelay, lowRowValue, highRowValue, lowColValue);
+                List<double>[] arrayNew = GetRangedValues(lowColDelay, highColDelay, lowRowDelay, lowColValue, highColValue, lowRowValue);
                 List<double> xRangeNew = arrayNew[0];
                 List<double> yRangeNew = arrayNew[1];
 
@@ -566,34 +832,14 @@ namespace BayesianModeling.ViewModel
 
             foreach (KeyValuePair<string, double> pair in items)
             {
-                  mWindow.OutputEvents(pair.Key + ":  " + pair.Value + " ");
+                mWindow.OutputEvents(pair.Key + ":  " + pair.Value + " ");
             }
 
             mWindow.OutputEvents(" ");
             mWindow.OutputEvents("Computation Completed");
             mWindow.OutputEvents("---------------------------------------------------");
 
-            if (outputFigures)
-            {
-                mWindow.OutputEvents("Charting Started... Please wait... ");
-
-                try
-                {
-                    engine.Evaluate("library(ggplot2)");
-                    engine.Evaluate("library(reshape2)");
-                    engine.Evaluate("library(gridExtra)");
-
-                    engine.Evaluate(BayesianModelSelection.GetLogChartFunction());
-                }
-                catch (Exception e)
-                {
-                    mWindow.OutputEvents(e.ToString());
-                }
-
-                mWindow.OutputEvents("Charting Completed!");
-            }
-
-            if (outputWorkbook)
+            if (true)
             {
                 mWindow.OutputEvents("Outputting to workbook Started... Please wait... ");
 
@@ -601,11 +847,12 @@ namespace BayesianModeling.ViewModel
                 var mVM = new ResultsViewModel();
                 mWin.DataContext = mVM;
                 mWin.Owner = windowRef;
+                mWin.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                 mWin.Topmost = true;
-                mWin.Height = 500;
-                mWin.Width = 500;
+                mWin.Height = 600;
+                mWin.Width = 800;
 
-                for (int i=0; i<35; i++)
+                for (int i = 0; i < 35; i++)
                 {
                     mVM.RowViewModels.Add(new RowViewModel());
                 }
@@ -616,8 +863,8 @@ namespace BayesianModeling.ViewModel
 
                 for (int i = 0; i < xRange.Count; i++)
                 {
-                    mVM.RowViewModels[1].values[1+i] = xRange[i].ToString();
-                    mVM.RowViewModels[2].values[1+i] = yRange[i].ToString();
+                    mVM.RowViewModels[1].values[1 + i] = xRange[i].ToString();
+                    mVM.RowViewModels[2].values[1 + i] = yRange[i].ToString();
                 }
 
                 mVM.RowViewModels[3].values[0] = "Delayed Value";
@@ -666,6 +913,26 @@ namespace BayesianModeling.ViewModel
                 mWin.Show();
 
                 mWindow.OutputEvents("Output Completed!");
+            }
+
+            if (outputFigures)
+            {
+                mWindow.OutputEvents("Charting Started... Please wait... ");
+
+                try
+                {
+                    engine.Evaluate("library(ggplot2)");
+                    engine.Evaluate("library(reshape2)");
+                    engine.Evaluate("library(gridExtra)");
+
+                    engine.Evaluate(BayesianModelSelection.GetLogChartFunction());
+                }
+                catch (Exception e)
+                {
+                    mWindow.OutputEvents(e.ToString());
+                }
+
+                mWindow.OutputEvents("Charting Completed!");
             }
 
         }

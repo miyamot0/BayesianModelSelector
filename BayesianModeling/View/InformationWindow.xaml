@@ -24,7 +24,7 @@
         xmlns:local="clr-namespace:BayesianModeling.View"
         mc:Ignorable="d"
         Title="Information Window" 
-        Height="600" 
+        Height="550" 
         Icon="/Images/x-office-address-book.png"
         ResizeMode="NoResize"
         Width="450">
@@ -51,7 +51,7 @@
                             <Run Text="Small n Stats"/>
                         </Hyperlink>
                     </Bold>
-                    <Run Text=", refers to a project developed/maintained by Shawn P. Gilroy. This project utilizes several open-source components, which are indicated below."/>
+                    <Run Text=", references an on-going project developed/maintained by Shawn P. Gilroy. This project aims to increase the accesibility of mathematical methods in the behavioral sciences.  The current project utilizes peer reviewed works and these are indicated below."/>
                 </Paragraph>
                 <Paragraph>
                     <Bold>
@@ -67,30 +67,7 @@
                             <LineBreak/>
                         </Paragraph>
                     </ListItem>
-                    <ListItem>
-                        <Paragraph>
-                            <Hyperlink NavigateUri="https://www.r-project.org/">
-                                <Run Text="R Project for Statistical Computing. R Core Team. Licensed under GPL-2."/>
-                            </Hyperlink>
-                            <LineBreak/>
-                        </Paragraph>
-                    </ListItem>
-                    <ListItem>
-                        <Paragraph>
-                            <Hyperlink NavigateUri="https://github.com/lgautier/R-3-0-branch-alt/blob/master/src/library/stats/R/nls.R">
-                                <Run Text="NLS R package. Developed by Saikat DebRoy, Douglas M. Bates, Jose C. Pinheiro 1999. Licensed under GPL-2."/>
-                            </Hyperlink>
-                            <LineBreak/>
-                        </Paragraph>
-                    </ListItem>
-                    <ListItem>
-                        <Paragraph>
-                            <Hyperlink NavigateUri="https://github.com/jmp75/rdotnet">
-                                <Run Text="Rdotnet (R calls for to NLS package). R Programming language interop library. New BSD License."/>
-                            </Hyperlink>
-                            <LineBreak/>
-                        </Paragraph>
-                    </ListItem>
+
                 </List>
 
             </FlowDocument>

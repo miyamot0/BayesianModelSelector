@@ -15,16 +15,42 @@
     You should have received a copy of the GNU General Public License
     along with Bayesian Model Selector.  If not, see <http://www.gnu.org/licenses/gpl-2.0.html>.
 
+    This project utilizes ClosedXML to leverage interactions with OpenXML formats
+
+    ============================================================================
+
+    ClosedXML is distributed under this license:
+
+    Copyright (c) 2010 Manuel De Leon
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy of 
+    this software and associated documentation files (the "Software"), to deal in the 
+    Software without restriction, including without limitation the rights to use, 
+    copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the 
+    Software, and to permit persons to whom the Software is furnished to do so, 
+    subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all 
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
+    WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
+    CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 */
 
 using BayesianModeling.ViewModel;
-using DocumentFormat.OpenXml.Packaging;
+using ClosedXML.Excel;
 using System.Collections.ObjectModel;
 
 namespace BayesianModeling.Utilities
 {
     public class OpenXMLHelper
     {
+
         /// <summary>
         /// Write contents of RowModels to spreadsheet
         /// <param name="rowCollection">
@@ -36,42 +62,18 @@ namespace BayesianModeling.Utilities
         /// </summary>
         public static void ExportToExcel(ObservableCollection<RowViewModel> rowCollection, string filePath)
         {
-            using (var workbook = SpreadsheetDocument.Create(filePath, DocumentFormat.OpenXml.SpreadsheetDocumentType.Workbook))
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Bayesian Model Calculations");
+
+            for (int i = 0; i < rowCollection.Count; i++)
             {
-                var wbPart = workbook.AddWorkbookPart();
-                workbook.WorkbookPart.Workbook = new DocumentFormat.OpenXml.Spreadsheet.Workbook();
-                workbook.WorkbookPart.Workbook.Sheets = new DocumentFormat.OpenXml.Spreadsheet.Sheets();
-
-                var sheetPart = workbook.WorkbookPart.AddNewPart<WorksheetPart>();
-                var sheetData = new DocumentFormat.OpenXml.Spreadsheet.SheetData();
-                sheetPart.Worksheet = new DocumentFormat.OpenXml.Spreadsheet.Worksheet(sheetData);
-
-                DocumentFormat.OpenXml.Spreadsheet.Sheets sheets = workbook.WorkbookPart.Workbook.GetFirstChild<DocumentFormat.OpenXml.Spreadsheet.Sheets>();
-                string relationshipId = workbook.WorkbookPart.GetIdOfPart(sheetPart);
-
-                DocumentFormat.OpenXml.Spreadsheet.Sheet sheet = new DocumentFormat.OpenXml.Spreadsheet.Sheet() {
-                    Id = relationshipId,
-                    SheetId = 1,
-                    Name = "Bayesian Model Calculations"
-                };
-
-                sheets.Append(sheet);
-
-                foreach (RowViewModel row in rowCollection)
+                for (int j = 0; j < 100; j++)
                 {
-                    DocumentFormat.OpenXml.Spreadsheet.Row newRow = new DocumentFormat.OpenXml.Spreadsheet.Row();
-
-                    foreach (string col in row.values)
-                    {
-                        DocumentFormat.OpenXml.Spreadsheet.Cell cell = new DocumentFormat.OpenXml.Spreadsheet.Cell();
-                        cell.DataType = DocumentFormat.OpenXml.Spreadsheet.CellValues.String;
-                        cell.CellValue = new DocumentFormat.OpenXml.Spreadsheet.CellValue(col);
-                        newRow.AppendChild(cell);
-                    }
-
-                    sheetData.AppendChild(newRow);
+                    ws.Cell(i + 1, j + 1).Value = rowCollection[i].values[j].ToString();
                 }
             }
+
+            wb.SaveAs(filePath);
         }
     }
 }

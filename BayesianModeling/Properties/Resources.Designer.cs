@@ -100,6 +100,65 @@ namespace BayesianModeling.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bayesian Model Selector is Copyright (C) 2016 Shawn Gilroy
+        ///Contact: Shawn Gilroy (shawn.gilroy@temple.edu)
+        ///
+        ///====================
+        ///Bayesian Model Selector LICENSE
+        ///====================
+        ///
+        ///Bayesian Model Selector is free software: you can redistribute it and/or modify it 
+        ///under the terms of the GNU General Public License as published by the 
+        ///Free Software Foundation, version 2.
+        ///
+        ///Bayesian Model Selector is distributed in the hope that it will be useful, but
+        ///WITHOUT ANY WARRANTY; without even the implie [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string License {
+            get {
+                return ResourceManager.GetString("License", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copyright (C) 2016 Chris Franck
+        ///
+        ///BDS is free software: you can redistribute it and/or modify it 
+        ///under the terms of the GNU General Public License as published by the 
+        ///Free Software Foundation, version 2 or later.
+        ///
+        ///BDS is distributed in the hope that it will be useful, but
+        ///WITHOUT ANY WARRANTY; without even the implied warranty of
+        ///MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+        ///Public License for more details.
+        ///
+        ///You should have received a copy of the GNU General Public Lic [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string License_BDS {
+            get {
+                return ResourceManager.GetString("License_BDS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ClosedXML is distributed under this license:
+        ///
+        ///Copyright (c) 2010 Manuel De Leon
+        ///
+        ///Permission is hereby granted, free of charge, to any person obtaining a copy of 
+        ///this software and associated documentation files (the &quot;Software&quot;), to deal in the 
+        ///Software without restriction, including without limitation the rights to use, 
+        ///copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the 
+        ///Software, and to permit persons to whom the Software is furnished to do so, 
+        ///subject to the follow [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string License_ClosedXML {
+            get {
+                return ResourceManager.GetString("License_ClosedXML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 		    GNU GENERAL PUBLIC LICENSE
         ///		       Version 2, June 1991
         ///
@@ -156,9 +215,9 @@ namespace BayesianModeling.Properties {
         ///freedom to share and change it.  By contrast, the GNU General Public
         ///License is intended to guar [rest of string was truncated]&quot;;.
         /// </summary>
-        public static string License_gridExtra {
+        public static string License_Gridextra {
             get {
-                return ResourceManager.GetString("License_gridExtra", resourceCulture);
+                return ResourceManager.GetString("License_Gridextra", resourceCulture);
             }
         }
         

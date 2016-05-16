@@ -127,9 +127,6 @@
   <data name="License_ggplot2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\License_ggplot2.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;iso-8859-1</value>
   </data>
-  <data name="License_gridExtra" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\License_gridExtra.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
   <data name="License_NLS" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\License_NLS.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
@@ -150,5 +147,17 @@
   </data>
   <data name="License_Gnome_Icons" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\License_Gnome_Icons.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="License" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\License.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="License_BDS" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\License_BDS.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="License_ClosedXML" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\License_ClosedXML.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="License_Gridextra" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\License_Gridextra.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
 </root>

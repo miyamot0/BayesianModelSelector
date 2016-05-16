@@ -1,0 +1,22 @@
+﻿<Window x:Class="BayesianModeling.View.RangePrompt"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BayesianModeling.View"
+        mc:Ignorable="d"
+        Title="RangePrompt" 
+        Height="150" 
+        Width="300">
+    <StackPanel VerticalAlignment="Bottom" 
+                    Margin="5"
+                    FocusManager.FocusedElement="{Binding ElementName=RangeText}">
+        <TextBlock Text="Enter the custom Range (e.g., B1:B10)"
+                       Margin="5"/>
+        <TextBox x:Name="RangeText"
+                     Margin="5" />
+        <Button Content="Save"
+                    Margin="5" 
+                    Click="Button_Click" />
+    </StackPanel>
+</Window>

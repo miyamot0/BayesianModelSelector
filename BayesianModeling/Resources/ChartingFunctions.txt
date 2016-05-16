@@ -22,6 +22,9 @@
 # output 1: Bar chart, proportions of wins using ggplot2
 # output 2: Semi-logged (x) discounting functions using ggplot2
 
+library(ggplot2)
+library(reshape2)
+
 barGraph = data.frame(Noise=output[[1]]['noise.prob'],
                       Hyperbolic=output[[2]]['Mazur.prob'],
                       Exponential=output[[3]]['exp.prob'],
@@ -123,6 +126,10 @@ logChart <- ggplot() +
   theme(panel.grid.major = element_blank()) +
   guides(col = guide_legend(ncol = 3)) 
   
-pushViewport(viewport(layout = grid.layout(1, 4, heights = unit(c(6, 6), "null"))))
-print(ggBar, vp = viewport(layout.pos.row = 1, layout.pos.col = 1:2))
-print(logChart, vp = viewport(layout.pos.row = 1, layout.pos.col = 3:4))
+grDevices::windows.options(width = 8, height = 8, rescale = c("fixed"))
+
+dev.new()
+print(ggBar)
+
+dev.new()
+print(logChart)

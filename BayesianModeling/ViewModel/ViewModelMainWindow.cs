@@ -15,29 +15,61 @@
     You should have received a copy of the GNU General Public License
     along with Bayesian Model Selector.  If not, see <http://www.gnu.org/licenses/gpl-2.0.html>.
 
+    This file uses R.NET Community to leverage interactions with the R program
+
+    ============================================================================
+
+    R.NET Community is distributed under this license:
+
+    Copyright (c) 2010, RecycleBin
+    Copyright (c) 2014-2015 CSIRO
+
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+    are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice, this list 
+    of conditions and the following disclaimer.
+
+    * Redistributions in binary form must reproduce the above copyright notice, this 
+    list of conditions and the following disclaimer in the documentation and/or other 
+    materials provided with the distribution.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
+    ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+    IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+    INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+    NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+    PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+    WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    OF SUCH DAMAGE.
+
  */
 
 using BayesianModeling.Utilities;
 using BayesianModeling.View;
-using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Spreadsheet;
+using ClosedXML.Excel;
 using Microsoft.VisualBasic.FileIO;
 using Microsoft.Win32;
 using RDotNet;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
+using System.Threading;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace BayesianModeling.ViewModel
 {
     class ViewModelMainWindow : ViewModelBase
     {
         public MainWindow MainWindow { get; set; }
+        Thread loadThread;
+        Window window;
 
         #region Observable Bindings
 
@@ -93,9 +125,12 @@ namespace BayesianModeling.ViewModel
         public RelayCommand RdotNetLicenseWindowCommand { get; set; }
         public RelayCommand NlsLicenseWindowCommand { get; set; }
         public RelayCommand Ggplot2LicenseWindowCommand { get; set; }
-        public RelayCommand Reshape2LicenseWindowCommand { get; set; }
         public RelayCommand GridExtraLicenseWindowCommand { get; set; }
+
+        public RelayCommand Reshape2LicenseWindowCommand { get; set; }
         public RelayCommand GnomeIconLicenseWindowCommand { get; set; }
+        public RelayCommand BDSLicenseWindowCommand { get; set; }
+        public RelayCommand ClosedXMLLicenseWindowCommand { get; set; }
 
         /* Misc Commands */
 
@@ -118,10 +153,6 @@ namespace BayesianModeling.ViewModel
 
         REngine engine;
 
-        /* Worker */
-
-        private readonly BackgroundWorker worker = new BackgroundWorker();
-
         #endregion
 
         public ViewModelMainWindow()
@@ -132,7 +163,7 @@ namespace BayesianModeling.ViewModel
             FileSaveAsCommand = new RelayCommand(param => SaveFileAs(), param => true);
             FileCloseCommand = new RelayCommand(param => CloseProgram(), param => true);
             FileSaveNoDialogCommand = new RelayCommand(param => SaveFileWithoutDialog(), param => true);
-            
+
             SaveLogsWindowCommand = new RelayCommand(param => SaveLogs(), param => true);
             ClearLogsWindowCommand = new RelayCommand(param => ClearLogs(), param => true);
 
@@ -147,11 +178,14 @@ namespace BayesianModeling.ViewModel
             RLicenseWindowCommand = new RelayCommand(param => RLicenseInformationWindow(), param => true);
             RdotNetLicenseWindowCommand = new RelayCommand(param => RdotNetLicenseInformationWindow(), param => true);
             NlsLicenseWindowCommand = new RelayCommand(param => NlsLicenseInformationWindow(), param => true);
-
             Ggplot2LicenseWindowCommand = new RelayCommand(param => Ggplot2LicenseInformationWindow(), param => true);
-            Reshape2LicenseWindowCommand = new RelayCommand(param => Reshape2LicenseInformationWindow(), param => true);
             GridExtraLicenseWindowCommand = new RelayCommand(param => GridExtraLicenseInformationWindow(), param => true);
+            
+            Reshape2LicenseWindowCommand = new RelayCommand(param => Reshape2LicenseInformationWindow(), param => true);
             GnomeIconLicenseWindowCommand = new RelayCommand(param => GnomeIconLicenseInformationWindow(), param => true);
+
+            BDSLicenseWindowCommand = new RelayCommand(param => BDSLicenseWindow(), param => true);
+            ClosedXMLLicenseWindowCommand = new RelayCommand(param => ClosedXMLLicenseWindow(), param => true);
 
             RowViewModels = new ObservableCollection<RowViewModel>();
 
@@ -171,10 +205,8 @@ namespace BayesianModeling.ViewModel
 
         public void UpdateTitle(string title)
         {
-            Title = "Bayesian Model Selection - " + title;
+            Title = title;
         }
-
-        // TODO MVVM this
 
         private void DeleteSelected()
         {
@@ -182,9 +214,14 @@ namespace BayesianModeling.ViewModel
             {
                 foreach (System.Windows.Controls.DataGridCellInfo obj in MainWindow.dataGrid.SelectedCells)
                 {
-                    int x = (RowViewModels.IndexOf((RowViewModel)obj.Item));
-                    RowViewModels[x].values[obj.Column.DisplayIndex] = "";
-                    RowViewModels[x].ForcePropertyUpdate(obj.Column.DisplayIndex);
+                    var mItem = obj.Item as RowViewModel;
+
+                    if (mItem != null)
+                    {
+                        int x = RowViewModels.IndexOf(mItem);
+                        RowViewModels[x].values[obj.Column.DisplayIndex] = "";
+                        RowViewModels[x].ForcePropertyUpdate(obj.Column.DisplayIndex);
+                    }
                 }
             }
         }
@@ -195,21 +232,43 @@ namespace BayesianModeling.ViewModel
 
         private void GnomeIconLicenseInformationWindow()
         {
-            var window = new View.License();
+            var window = new License();
             window.DataContext = new ViewModelLicense
             {
-                licenseTitle = "License - Gnome Icons",
+                licenseTitle = "License (GPLv2) - Gnome Icons",
                 licenseText = Properties.Resources.License_Gnome_Icons
+            };
+            window.Show();
+        }
+
+        private void BDSLicenseWindow()
+        {
+            var window = new License();
+            window.DataContext = new ViewModelLicense
+            {
+                licenseTitle = "License (GPLv2) - BDS Script",
+                licenseText = Properties.Resources.License_BDS
+            };
+            window.Show();
+        }
+
+        private void ClosedXMLLicenseWindow()
+        {
+            var window = new License();
+            window.DataContext = new ViewModelLicense
+            {
+                licenseTitle = "License (MIT) - Closed XML",
+                licenseText = Properties.Resources.License_ClosedXML
             };
             window.Show();
         }
 
         private void NlsLicenseInformationWindow()
         {
-            var window = new View.License();
+            var window = new License();
             window.DataContext = new ViewModelLicense
             {
-                licenseTitle = "License - NLS",
+                licenseTitle = "License (GPLv2) - NLS",
                 licenseText = Properties.Resources.License_NLS
             };
             window.Show();
@@ -217,10 +276,10 @@ namespace BayesianModeling.ViewModel
 
         private void RdotNetLicenseInformationWindow()
         {
-            var window = new View.License();
+            var window = new License();
             window.DataContext = new ViewModelLicense
             {
-                licenseTitle = "License - RdotNet",
+                licenseTitle = "License (GPLv2) - RdotNet",
                 licenseText = Properties.Resources.License_RdotNet
             };
             window.Show();
@@ -228,10 +287,10 @@ namespace BayesianModeling.ViewModel
 
         private void RLicenseInformationWindow()
         {
-            var window = new View.License();
+            var window = new License();
             window.DataContext = new ViewModelLicense
             {
-                licenseTitle = "License - R",
+                licenseTitle = "License (GPLv2+) - R",
                 licenseText = Properties.Resources.License_R
             };
             window.Show();
@@ -239,33 +298,33 @@ namespace BayesianModeling.ViewModel
 
         private void Ggplot2LicenseInformationWindow()
         {
-            var window = new View.License();
+            var window = new License();
             window.DataContext = new ViewModelLicense
             {
-                licenseTitle = "License - ggplot2",
+                licenseTitle = "License (GPLv2) - ggplot2",
                 licenseText = Properties.Resources.License_ggplot2
-            };
-            window.Show();
-        }
-
-        private void Reshape2LicenseInformationWindow()
-        {
-            var window = new View.License();
-            window.DataContext = new ViewModelLicense
-            {
-                licenseTitle = "MIT License - reshape2",
-                licenseText = Properties.Resources.License_reshape2
             };
             window.Show();
         }
 
         private void GridExtraLicenseInformationWindow()
         {
-            var window = new View.License();
+            var window = new License();
             window.DataContext = new ViewModelLicense
             {
-                licenseTitle = "License - gridExtra",
-                licenseText = Properties.Resources.License_gridExtra
+                licenseTitle = "License (GPLv2+) - gridExtra",
+                licenseText = Properties.Resources.License_Gridextra
+            };
+            window.Show();
+        }
+
+        private void Reshape2LicenseInformationWindow()
+        {
+            var window = new License();
+            window.DataContext = new ViewModelLicense
+            {
+                licenseTitle = "License (MIT) - reshape2",
+                licenseText = Properties.Resources.License_reshape2
             };
             window.Show();
         }
@@ -286,7 +345,18 @@ namespace BayesianModeling.ViewModel
             bool failed = false;
 
             SendMessageToOutput("Welcome to Bayesian discounting model selector!");
+            SendMessageToOutput("");
             SendMessageToOutput("All view elements loaded");
+            SendMessageToOutput("");
+
+            StreamReader licenseFile = new StreamReader(@"LICENSE.txt");
+
+            string line;
+
+            while ((line = licenseFile.ReadLine()) != null)
+            {
+                SendMessageToOutput(line);
+            }
 
             SendMessageToOutput("Loading R interop libraries (R.Net.Community)");
 
@@ -294,12 +364,6 @@ namespace BayesianModeling.ViewModel
             {
                 REngine.SetEnvironmentVariables();
 
-                SendMessageToOutput("Displaying R.Net.Community License:");
-                SendMessageToOutput("");
-                SendMessageToOutput("R.Net.Community version 1.6.5, Copyright 2011-2014 RecycleBin, Copyright 2014-2015 CSIRO");
-                SendMessageToOutput("R.Net.Community comes with ABSOLUTELY NO WARRANTY; for details select Information > Licenses > R.Net");
-                SendMessageToOutput("This is free software, and you are welcome to redistribute it under certain conditions; see license for details.");
-                SendMessageToOutput("");
                 SendMessageToOutput("Attempting to link with R installation.");
 
                 engine = REngine.GetInstance();
@@ -310,7 +374,7 @@ namespace BayesianModeling.ViewModel
                 engine.AutoPrint = false;
 
             }
-            catch (System.Exception e)
+            catch (Exception e)
             {
                 SendMessageToOutput("R failed to load.  Error code: " + e.ToString());
                 failed = true;
@@ -329,94 +393,10 @@ namespace BayesianModeling.ViewModel
                 {
                     SendMessageToOutput("");
                     SendMessageToOutput("R is found and running");
-                    SendMessageToOutput("Linking to R (R Statistical Package)");
-                    SendMessageToOutput("Displaying R License:");
-                    SendMessageToOutput("");
 
-                    /* Interactive post for R */
-
-                    SendMessageToOutput("R Copyright (C) 2016 R Core Team");
-                    SendMessageToOutput("This program comes with ABSOLUTELY NO WARRANTY;");
-                    SendMessageToOutput("This is free software, and you are welcome to redistribute it");
-                    SendMessageToOutput("under certain conditions; for details select Information > Licenses > R.");
-                    SendMessageToOutput("");
-                    SendMessageToOutput("");
-
-                    /* Loading R packages for analyses */
-
-                    /* Interactive post for nls package */
-
-                    SendMessageToOutput("Package nls found");
-                    SendMessageToOutput("Displaying nls License:");
-                    SendMessageToOutput("Copyright (C) 1999-1999 Saikat DebRoy, Douglas M. Bates, Jose C. Pinheiro, Copyright (C) 2000-7 The R Core Team");
-                    SendMessageToOutput("# File src/library/stats/R/nls.R");
-                    SendMessageToOutput("# Part of the R package, http://www.R-project.org");
-                    SendMessageToOutput("#");
-                    SendMessageToOutput("# Copyright (C) 1999-1999 Saikat DebRoy, Douglas M. Bates, Jose C. Pinheiro");
-                    SendMessageToOutput("# Copyright (C) 2000-7    The R Core Team");
-                    SendMessageToOutput("#");
-                    SendMessageToOutput("# This program is free software; you can redistribute it and/or modify");
-                    SendMessageToOutput("# it under the terms of the GNU General Public License as published by");
-                    SendMessageToOutput("# the Free Software Foundation; either version 2 of the License, or");
-                    SendMessageToOutput("#  (at your option) any later version.");
-                    SendMessageToOutput("#");
-                    SendMessageToOutput("# This program is distributed in the hope that it will be useful,");
-                    SendMessageToOutput("# but WITHOUT ANY WARRANTY; without even the implied warranty of");
-                    SendMessageToOutput("# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the");
-                    SendMessageToOutput("# GNU General Public License for more details.");
-                    SendMessageToOutput("#");
-                    SendMessageToOutput("# A copy of the GNU General Public License is available at");
-                    SendMessageToOutput("# http://www.r-project.org/Licenses/");
-                    SendMessageToOutput("");
-                    SendMessageToOutput("###");
-                    SendMessageToOutput("###            Nonlinear least squares for R");
-                    SendMessageToOutput("###");
-                    SendMessageToOutput("For details select Information > Licenses > ggplot2.");
-                    SendMessageToOutput("");
-                    SendMessageToOutput("");
-
-                    SendMessageToOutput("Checking for required packages: ");
                     engine.Evaluate("if (!require(ggplot2)) { install.packages('ggplot2', repos = 'http://cran.us.r-project.org') }");
-
-                    /* Interactive post for ggplot2 package */
-
-                    SendMessageToOutput("Package ggplot2 found/loaded");
-                    SendMessageToOutput("Displaying ggplot2 License:");
-                    SendMessageToOutput("ggplot2 Copyright (C) 2016 Hadley Wickham, Winston Chang");
-                    SendMessageToOutput("This program comes with ABSOLUTELY NO WARRANTY;");
-                    SendMessageToOutput("This is free software, and you are welcome to redistribute it");
-                    SendMessageToOutput("under certain conditions; for details select Information > Licenses > ggplot2.");
-                    SendMessageToOutput("");
-                    SendMessageToOutput("");
-
-                    /* Interactive post for reshape2 package */
-
                     engine.Evaluate("if (!require(reshape2)) { install.packages('reshape2', repos = 'http://cran.us.r-project.org') }");
-                    SendMessageToOutput("Package reshape2 found/loaded");
-                    SendMessageToOutput("Displaying reshape2 License:");
-                    SendMessageToOutput("reshape2 Copyright 2008-2014 Hadley Wickham");
-                    SendMessageToOutput("reshape2 is released under the MIT license.");
-                    SendMessageToOutput("This program comes with ABSOLUTELY NO WARRANTY;");
-                    SendMessageToOutput("This is free software, and you are welcome to redistribute it");
-                    SendMessageToOutput("under certain conditions; for details select Information > Licenses > reshape2.");
-                    SendMessageToOutput("");
-                    SendMessageToOutput("");
-
-                    /* Interactive post for grid package */
-
-                    engine.Evaluate("if (!require(grid)) { install.packages('grid', repos = 'http://cran.us.r-project.org') }");
-
-                    /* Interactive post for gridExtra package */
-
                     engine.Evaluate("if (!require(gridExtra)) { install.packages('gridExtra', repos = 'http://cran.us.r-project.org') }");
-                    SendMessageToOutput("Package gridExtra found/loaded");
-                    SendMessageToOutput("Displaying gridExtra License:");
-                    SendMessageToOutput("gridExtra Copyright (C) 2016 Baptiste Auguie, Anton Antonov");
-                    SendMessageToOutput("This program comes with ABSOLUTELY NO WARRANTY;");
-                    SendMessageToOutput("This is free software, and you are welcome to redistribute it");
-                    SendMessageToOutput("under certain conditions; for details select Information > Licenses > gridExtra.");
-                    SendMessageToOutput("");
-                    SendMessageToOutput("");
 
                     SendMessageToOutput("All required packages have been found.  Ready to proceed.");
                 }
@@ -425,21 +405,23 @@ namespace BayesianModeling.ViewModel
                     SendMessageToOutput("R DLL's not found.");
                 }
 
+                SendMessageToOutput("");
                 SendMessageToOutput("A listing of all referenced software, with licensing, has been displayed above.");
                 SendMessageToOutput("TLDR: Bayesian Model Selector is made possible by the following software.");
                 SendMessageToOutput("");
-                SendMessageToOutput("R Statistical Package - GPLv2 Licensed. Copyright (C) 2000-16. The R Core Team");
+                SendMessageToOutput("R Statistical Package - GPL v2 Licensed. Copyright (C) 2000-16. The R Core Team");
                 SendMessageToOutput("nls R Package - GPLv2 Licensed. Copyright (C) 1999-1999 Saikat DebRoy, Douglas M. Bates, Jose C. Pinheiro.");
                 SendMessageToOutput("nls R Package - GPLv2 Licensed. Copyright (C) 2000-7. The R Core Team.");
                 SendMessageToOutput("ggplot2 R Package - GPLv2 Licensed. Copyright (c) 2016, Hadley Wickham.");
+                SendMessageToOutput("gridExtra R Package - GPLv2+ Licensed. Copyright (c) 2016, Baptiste Auguie.");
                 SendMessageToOutput("reshape2 R Package - MIT Licensed. Copyright (c) 2014, Hadley Wickham.");
-                SendMessageToOutput("gridExtra R Package - GPLv2 Licensed. Copyright (c) Baptiste Auguie.");
+                SendMessageToOutput("ClosedXML - MIT Licensed. Copyright (c) 2010 Manuel De Leon.");
+                SendMessageToOutput("BDS R Script - GPLv2 Licensed. Copyright (c) 2016, Chris Franck.");
                 SendMessageToOutput("Gnome Icon Set - GPLv2 Licensed.");
                 SendMessageToOutput("RdotNet: Interface for the R Statistical Package - New BSD License (BSD 2-Clause). Copyright(c) 2010, RecycleBin. All rights reserved.");
                 SendMessageToOutput("");
 
-                SendMessageToOutput("License information is also provided in Information > Licenses > ... as well as");
-                SendMessageToOutput("in the install directory of this program (under Resources).");
+                SendMessageToOutput("License information is also provided in Information > Licenses > ... as well as in the install directory of this program (under Resources).");
             }
         }
 
@@ -493,10 +475,10 @@ namespace BayesianModeling.ViewModel
 
         private void CreateNewFile()
         {
-            var window = new ProgressDialog("Creating new sheet", "New File Operation");
-            window.Owner = MainWindow;
-            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            window.Show();
+            loadThread = new Thread(new ThreadStart(ShowFileUIProgressWindow));
+            loadThread.SetApartmentState(ApartmentState.STA);
+            loadThread.IsBackground = true;
+            loadThread.Start();
 
             RowViewModels.Clear();
             for (int i = 0; i < RowSpans; i++)
@@ -506,7 +488,7 @@ namespace BayesianModeling.ViewModel
 
             UpdateTitle("New File");
 
-            window.FinishedWithLoad();
+            CloseFileUIProgressWindow();
         }
 
         private void SaveFile()
@@ -523,16 +505,18 @@ namespace BayesianModeling.ViewModel
 
                 if (saveFileDialog1.ShowDialog() == true)
                 {
-                    var window = new ProgressDialog("Saving sheet", "Save File Operation");
-                    window.Owner = MainWindow;
-                    window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-                    window.Show();
+                    loadThread = new Thread(new ThreadStart(ShowFileUIProgressWindow));
+                    loadThread.SetApartmentState(ApartmentState.STA);
+                    loadThread.IsBackground = true;
+                    loadThread.Start();
 
                     try
                     {
                         OpenXMLHelper.ExportToExcel(new ObservableCollection<RowViewModel>(RowViewModels), saveFileDialog1.FileName);
 
                         UpdateTitle(saveFileDialog1.SafeFileName);
+
+                        path = Path.GetDirectoryName(saveFileDialog1.FileName);
 
                         haveFileLoaded = true;
                     }
@@ -542,7 +526,7 @@ namespace BayesianModeling.ViewModel
                         Console.WriteLine(e.ToString());
                     }
 
-                    window.FinishedWithLoad();
+                    CloseFileUIProgressWindow();
                 }
             }
         }
@@ -556,16 +540,18 @@ namespace BayesianModeling.ViewModel
 
             if (saveFileDialog1.ShowDialog() == true)
             {
-                var window = new ProgressDialog("Saving sheet", "Save File Operation");
-                window.Owner = MainWindow;
-                window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-                window.Show();
+                loadThread = new Thread(new ThreadStart(ShowFileUIProgressWindow));
+                loadThread.SetApartmentState(ApartmentState.STA);
+                loadThread.IsBackground = true;
+                loadThread.Start();
 
                 try
                 {
                     OpenXMLHelper.ExportToExcel(new ObservableCollection<RowViewModel>(RowViewModels), saveFileDialog1.FileName);
 
                     UpdateTitle(saveFileDialog1.SafeFileName);
+
+                    path = Path.GetDirectoryName(saveFileDialog1.FileName);
 
                     haveFileLoaded = true;
 
@@ -577,7 +563,7 @@ namespace BayesianModeling.ViewModel
                     haveFileLoaded = false;
                 }
 
-                window.FinishedWithLoad();
+                CloseFileUIProgressWindow();
 
             }
         }
@@ -586,14 +572,15 @@ namespace BayesianModeling.ViewModel
         {
             if (haveFileLoaded)
             {
-                var window = new ProgressDialog("Saving sheet", "Save File Operation");
-                window.Owner = MainWindow;
-                window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-                window.Show();
+                loadThread = new Thread(new ThreadStart(ShowFileUIProgressWindow));
+                loadThread.SetApartmentState(ApartmentState.STA);
+                loadThread.IsBackground = true;
+                loadThread.Start();
 
                 try
                 {
                     OpenXMLHelper.ExportToExcel(new ObservableCollection<RowViewModel>(RowViewModels), Path.Combine(path, title));
+
                     UpdateTitle(title);
 
                 }
@@ -603,8 +590,21 @@ namespace BayesianModeling.ViewModel
                     Console.WriteLine(e.ToString());
                 }
 
-                window.FinishedWithLoad();
+                CloseFileUIProgressWindow();
             }
+        }
+
+        void ShowFileUIProgressWindow()
+        {
+            window = new ProgressDialog("Processing", "File operations ongoing...");
+            window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            window.Show();
+            Dispatcher.Run();
+        }
+
+        void CloseFileUIProgressWindow()
+        {
+            window.Dispatcher.Invoke(DispatcherPriority.Normal, new ThreadStart(window.Close));
         }
 
         private void OpenFile()
@@ -616,44 +616,44 @@ namespace BayesianModeling.ViewModel
 
             if (openFileDialog1.ShowDialog() == true)
             {
-                var window = new ProgressDialog("Opening sheet", "Open File Operation");
-                window.Owner = MainWindow;
-                window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-                window.Show();
+                loadThread = new Thread(new ThreadStart(ShowFileUIProgressWindow));
+                loadThread.SetApartmentState(ApartmentState.STA);
+                loadThread.IsBackground = true;
+                loadThread.Start();
 
                 string mExt = Path.GetExtension(openFileDialog1.FileName);
+
+                path = Path.GetDirectoryName(openFileDialog1.FileName);
 
                 try
                 {
                     if (mExt.Equals(".xlsx"))
                     {
-                        using (SpreadsheetDocument spreadSheetDocument = SpreadsheetDocument.Open(@openFileDialog1.FileName, false))
+
+                        using (var wb = new XLWorkbook(@openFileDialog1.FileName))
                         {
-                            WorkbookPart workbookPart = spreadSheetDocument.WorkbookPart;
-                            IEnumerable<Sheet> sheets = spreadSheetDocument.WorkbookPart.Workbook.GetFirstChild<Sheets>().Elements<Sheet>();
-                            string relationshipId = sheets.First().Id.Value;
-                            WorksheetPart worksheetPart = (WorksheetPart)spreadSheetDocument.WorkbookPart.GetPartById(relationshipId);
-                            Worksheet workSheet = worksheetPart.Worksheet;
-                            SheetData sheetData = workSheet.GetFirstChild<SheetData>();
-                            IEnumerable<Row> rows = sheetData.Descendants<Row>();
+                            var ws = wb.Worksheets;
+                            var sheet = ws.Worksheet(1);
+                            var range = sheet.RangeUsed();
+                            var table = range.AsTable();
 
                             RowViewModels.Clear();
 
-                            foreach (Row row in rows)
+                            foreach (var row in table.Rows())
                             {
                                 RowViewModel mModel = new RowViewModel();
-                                //TODO fix hacky limit
-                                for (int i = 1; i < row.Descendants<Cell>().Count() && i < 100; i++)
+
+                                for (int i = 0; i <= row.CellCount(); i++)
                                 {
-                                    mModel.values[i - 1] = GetCellValue(spreadSheetDocument, row.Descendants<Cell>().ElementAt(i - 1));
+                                    mModel.values[i] = row.Cell(i).Value.ToString();
                                 }
 
                                 RowViewModels.Add(mModel);
-
                             }
 
                             UpdateTitle(openFileDialog1.SafeFileName);
                             haveFileLoaded = true;
+
                         }
 
                     }
@@ -684,28 +684,14 @@ namespace BayesianModeling.ViewModel
                         }
 
                     }
+
                 }
-                catch (Exception e)
+                catch 
                 {
                     MessageBox.Show("We weren't able to open the file.  Is the target file open or in use?");
                 }
 
-                window.FinishedWithLoad();
-            }
-        }
-
-        public static string GetCellValue(SpreadsheetDocument document, Cell cell)
-        {
-            SharedStringTablePart stringTablePart = document.WorkbookPart.SharedStringTablePart;
-            string value = cell.CellValue.InnerXml;
-
-            if (cell.DataType != null && cell.DataType.Value == CellValues.SharedString)
-            {
-                return stringTablePart.SharedStringTable.ChildElements[System.Int32.Parse(value)].InnerText;
-            }
-            else
-            {
-                return value;
+                CloseFileUIProgressWindow();
             }
         }
 
@@ -725,7 +711,7 @@ namespace BayesianModeling.ViewModel
         }
 
         #endregion FileIO
-
+        
         public void SendMessageToOutput(string message)
         {
             MainWindow.OutputEvents(message);

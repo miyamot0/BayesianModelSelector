@@ -23,7 +23,6 @@ using System.Windows.Input;
 using System.Windows;
 using System.ComponentModel;
 using System.Windows.Data;
-using System;
 using System.Windows.Controls.Primitives;
 
 namespace BayesianModeling.Utilities
@@ -81,8 +80,32 @@ namespace BayesianModeling.Utilities
 
             ((DataGrid) sender).ItemContainerGenerator.ItemsChanged += (object target, ItemsChangedEventArgs eArgs) =>
             {
-                DataGridTools.GetDataGridChildren(((DataGrid) sender), new List<DataGridRow>()).ForEach(d => d.Header = d.GetIndex());
+                DataGrid mGrid = (DataGrid) sender;
+
+                for (int i=0; i<mGrid.Items.Count; i++)
+                {
+                    UpdateHeaders(mGrid, i);
+                }
             };
+        }
+
+        /// <summary>
+        /// Walks datagrid for rows, updating headers with indices as needed
+        /// </summary>
+        /// <param name="grid">
+        /// Datagrid being walked
+        /// </param>
+        /// <param name="i">
+        /// index of object (unknown) in grid content
+        /// </param>
+        public static void UpdateHeaders(DataGrid grid, int i)
+        {
+            DataGridRow item = (DataGridRow) grid.ItemContainerGenerator.ContainerFromIndex(i);
+
+            if (item != null)
+            {
+                item.Header = item.GetIndex();
+            }
         }
 
         /// <summary>
@@ -141,11 +164,7 @@ namespace BayesianModeling.Utilities
 
                 for (int j = lowCol; (j < highCol) && (pasteContentColumnIterator < rowData[pasteContentRowIterator].Length); j++)
                 {
-                    // Hackish method to update property through binding (UI) to row index/column binding, setting value in cells to clipboard contents
-                    string columnPropertyName = ((Binding) ((DataGridBoundColumn) ColumnFromDisplayIndex(j)).Binding).Path.Path;
-                    Items[i].GetType().GetProperty(columnPropertyName).SetValue(Items[i], 
-                        rowData[pasteContentRowIterator][pasteContentColumnIterator], null);
-
+                    Items[i].GetType().GetProperty(DataGridTools.GetColumnName(j)).SetValue(Items[i], rowData[pasteContentRowIterator][pasteContentColumnIterator], null);
                     pasteContentColumnIterator++;
                 }
 

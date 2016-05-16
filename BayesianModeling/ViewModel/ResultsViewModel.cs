@@ -70,7 +70,7 @@ namespace BayesianModeling.ViewModel
                 {
                     OpenXMLHelper.ExportToExcel(new ObservableCollection<RowViewModel>(RowViewModels), saveFileDialog1.FileName);
                 }
-                catch (Exception e)
+                catch
                 {
                     MessageBox.Show("We weren't able to save.  Is the target file open or in use?");
                 }
