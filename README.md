@@ -3,6 +3,8 @@ Bayesian Model Selector is a WPF application that uses R interop libraries (Rdot
 Features include:
   - Non-linear model fittings (Exponential, Hyperbolic, Quasi-Hyperbolic/b-d, and both Hyperboloid Variants)
   - Bayesian Model comparison/competition using Bayesian information criterion (BIC) to inform the best/better fitting models (see Franck et al., 2015)
+  - ED50 calculations for all models, all parameter fittings, and overall model competition (e.g., best, 2nd best, ...)
+  - Identification of best performing model, with corresponding ED50, for similar cross-model discounting indices
   - R-based graphical output in appropriate log space(s) for each model selected (ggplot2)
   - Easily imports common file formats into the application's spreadsheet (.xlsx, .csv)
   - Wide range of model outputs/metrics, saveable in common spreadsheet file formats
