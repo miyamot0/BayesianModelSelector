@@ -1,5 +1,5 @@
 # Small N Stats Bayesian Model Selector
-Bayesian Model Selector is a WPF application that uses R interop libraries (RdotNet) to easily facilitate many complex calculations, including the fitting of multiple models of intertemporal choice as well as a bayesian model comparison method.  
+Bayesian Model Selector is a WPF application that uses R interop libraries (RdotNet) to easily facilitate many complex calculations, including the fitting of multiple models of intertemporal choice as well as a bayesian model comparison method, using a friendly spreadsheet-based approach.  
 Features include:
   - Non-linear model fittings (Exponential, Hyperbolic, Quasi-Hyperbolic/b-d, and both Hyperboloid Variants)
   - Bayesian Model comparison/competition using Bayesian information criterion (BIC) to inform the best/better fitting models (see Franck et al., 2015)
