@@ -19,7 +19,7 @@ The Bayesian Model Selector uses a number of open source projects to work proper
 * ggplot2 R Package - GPLv2 Licensed. Copyright (c) 2016, Hadley Wickham.
 * gridExtra R Package - GPLv2+ Licensed. Copyright (c) 2016, Baptiste Auguie.
 * reshape2 R Package - MIT Licensed. Copyright (c) 2014, Hadley Wickham.
-* ClosedXML - MIT Licensed. Copyright (c) 2010 Manuel De Leon.
+* ClosedXML - MIT Licensed. Copyright (c) 2010 Manuel De Leon. [Codeplex](http://closedxml.codeplex.com/SourceControl/latest)
 * BDS R Script - GPLv2 Licensed. Copyright (c) 2016, Dr. Chris Franck, Virginia Tech - Department of Statistics.
 
 ### Referenced Works (academic works)
