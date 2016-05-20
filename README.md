@@ -1,5 +1,6 @@
 # Small N Stats Bayesian Model Selector
 Bayesian Model Selector is a WPF application that uses R interop libraries (RdotNet) to easily facilitate many complex calculations, including the fitting of multiple models of intertemporal choice as well as a bayesian model comparison method, using a friendly spreadsheet-based approach.  
+
 Features include:
   - Non-linear model fittings (Exponential, Hyperbolic, Quasi-Hyperbolic/b-d, and both Hyperboloid Variants)
   - Bayesian Model comparison/competition using Bayesian information criterion (BIC) to inform the best/better fitting models (see Franck et al., 2015)
@@ -10,7 +11,7 @@ Features include:
   - Wide range of model outputs/metrics, saveable in common spreadsheet file formats
 
 ### Version
-1.0.0.36
+1.0.0.0
 
 ### Referenced Works (F/OSS software)
 The Small N Stats Demand Calculator uses a number of open source projects to work properly:
@@ -39,6 +40,9 @@ The Small N Stats Bayesian Model Selector is based on the following academic wor
 You will need the R open-source statistical package for model fitting/charting to be performed.
 Once Bayesian Model Selector is installed, it will perform a one-time install the necessary R packages (internet required).
 Bayesian Model Selector is a ClickOnce application, the program will automatically update as the program is refined.
+
+### Download
+All downloads, if/when posted, will be hosted at [Small N Stats](http://www.smallnstats.com/BayesianSelector.html). 
 
 ### Development
 Want to contribute? Great! Emails or PM's are welcome.
