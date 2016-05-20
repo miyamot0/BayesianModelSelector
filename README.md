@@ -22,6 +22,10 @@ The Bayesian Model Selector uses a number of open source projects to work proper
 * ClosedXML - MIT Licensed. Copyright (c) 2010 Manuel De Leon.
 * BDS R Script - GPLv2 Licensed. Copyright (c) 2016, Dr. Chris Franck, Virginia Tech - Department of Statistics.
 
+### Referenced Works (academic works)
+The Small N Stats Bayesian Model Selector is based on the following academic works:
+* Franck, C. T., Koffarnus, M. N., House, L. L. & Bickel W. K. (2015). Accurate characterization of delay discounting: a multiple model approach using approximate Bayesian model selection and a unified discounting measure. Journal of the Experimental Analysis of Behavior, 103, 218-33.
+
 ### Acknowledgements and Credits
 * Donald A. Hantula, Decision Making Laboratory, Temple University [Site](http://astro.temple.edu/~hantula/)
 * Chris Franck, Laboratory for Interdisciplinary Statistical Analysis - Virginia Tech
