@@ -207,15 +207,15 @@ namespace BayesianModeling.ViewModel
             }
         }
 
-        int lowRowDelay = 0,
-            highRowDelay = 0,
-            lowColDelay = 0,
-            highColDelay = 0;
+        int lowRowDelay = -1,
+            highRowDelay = -1,
+            lowColDelay = -1,
+            highColDelay = -1;
 
-        int lowRowValue = 0,
-            highRowValue = 0,
-            lowColValue = 0,
-            highColValue = 0;
+        int lowRowValue = -1,
+            highRowValue = -1,
+            lowColValue = -1,
+            highColValue = -1;
 
         /* Math/Computation */
 
