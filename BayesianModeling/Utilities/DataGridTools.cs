@@ -17,6 +17,9 @@
 
 */
 
+using BayesianModeling.ViewModel;
+using System.Collections.ObjectModel;
+
 namespace BayesianModeling.Utilities
 {
     public class DataGridTools
@@ -54,6 +57,23 @@ namespace BayesianModeling.Utilities
         public static int GetColumnIndex(string location)
         {
             return ((location.Length - 1) * 26) + letters.IndexOf(location[location.Length - 1]);
+        }
+
+        /// <summary>
+        /// Linq companion for referencing object's location in collection.
+        /// </summary>
+        /// <param name="model">
+        /// Individual row model reference
+        /// </param>
+        /// <param name="coll">
+        /// Collection overall
+        /// </param>
+        /// <returns>
+        /// int-based index
+        /// </returns>
+        public static int GetIndexViewModel(RowViewModel model, ObservableCollection<RowViewModel> coll)
+        {
+            return coll.IndexOf(model);
         }
     }
 }

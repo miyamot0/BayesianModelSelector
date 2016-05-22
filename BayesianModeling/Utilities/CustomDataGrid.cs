@@ -34,7 +34,7 @@ namespace BayesianModeling.Utilities
         /// </summary>
         public CustomDataGrid()
         {
-            CommandManager.RegisterClassCommandBinding(typeof(CustomDataGrid), 
+            CommandManager.RegisterClassCommandBinding(typeof(CustomDataGrid),
                 new CommandBinding(ApplicationCommands.Paste,
                 new ExecutedRoutedEventHandler(OnExecutedPaste),
                 new CanExecuteRoutedEventHandler(OnCanExecutePaste)));
@@ -50,7 +50,7 @@ namespace BayesianModeling.Utilities
 
         public static bool GetDisplayRowNumbers(DependencyObject sender)
         {
-            return ((bool) sender.GetValue(RowNumber));
+            return ((bool)sender.GetValue(RowNumber));
         }
 
         public static void SetDisplayRowNumbers(DependencyObject sender, bool value)
@@ -70,42 +70,28 @@ namespace BayesianModeling.Utilities
         /// </summary>
         private static void ChangeRowNumberEvent(DependencyObject sender, DependencyPropertyChangedEventArgs args)
         {
-            if ((bool) args.NewValue == false)
+            if ((bool)args.NewValue == false)
                 return;
 
-            ((DataGrid) sender).LoadingRow += (object target, DataGridRowEventArgs eArgs) =>
+            ((DataGrid)sender).LoadingRow += (object target, DataGridRowEventArgs eArgs) =>
             {
                 eArgs.Row.Header = eArgs.Row.GetIndex();
             };
 
-            ((DataGrid) sender).ItemContainerGenerator.ItemsChanged += (object target, ItemsChangedEventArgs eArgs) =>
+            ((DataGrid)sender).ItemContainerGenerator.ItemsChanged += (object target, ItemsChangedEventArgs eArgs) =>
             {
-                DataGrid mGrid = (DataGrid) sender;
+                DataGrid mGrid = (DataGrid)sender;
 
-                for (int i=0; i<mGrid.Items.Count; i++)
+                foreach (var item in mGrid.Items)
                 {
-                    UpdateHeaders(mGrid, i);
+                    DataGridRow row = (DataGridRow)mGrid.ItemContainerGenerator.ContainerFromItem(item);
+
+                    if (row != null)
+                    {
+                        row.Header = row.GetIndex();
+                    }
                 }
             };
-        }
-
-        /// <summary>
-        /// Walks datagrid for rows, updating headers with indices as needed
-        /// </summary>
-        /// <param name="grid">
-        /// Datagrid being walked
-        /// </param>
-        /// <param name="i">
-        /// index of object (unknown) in grid content
-        /// </param>
-        public static void UpdateHeaders(DataGrid grid, int i)
-        {
-            DataGridRow item = (DataGridRow) grid.ItemContainerGenerator.ContainerFromIndex(i);
-
-            if (item != null)
-            {
-                item.Header = item.GetIndex();
-            }
         }
 
         /// <summary>
@@ -113,7 +99,7 @@ namespace BayesianModeling.Utilities
         /// </summary>
         private static void OnCanExecutePaste(object sender, CanExecuteRoutedEventArgs paras)
         {
-            ((CustomDataGrid) sender).OnCanExecutePaste(paras);
+            ((CustomDataGrid)sender).OnCanExecutePaste(paras);
         }
 
         /// <summary>
@@ -130,7 +116,7 @@ namespace BayesianModeling.Utilities
         /// </summary>
         private static void OnExecutedPaste(object sender, ExecutedRoutedEventArgs paras)
         {
-            ((CustomDataGrid) sender).OnExecutedPaste(paras);
+            ((CustomDataGrid)sender).OnExecutedPaste(paras);
         }
 
         /// <summary>
@@ -147,7 +133,7 @@ namespace BayesianModeling.Utilities
                 pasteContentRowIterator = 0,
                 pasteContentColumnIterator = 0;
 
-            var rowSource = (IEditableCollectionView) CollectionViewSource.GetDefaultView(Items);
+            var rowSource = (IEditableCollectionView)CollectionViewSource.GetDefaultView(Items);
 
             for (int i = lowRow; (i <= highRow) && (pasteContentRowIterator < rowData.Count); i++)
             {

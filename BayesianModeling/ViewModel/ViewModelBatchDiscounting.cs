@@ -512,36 +512,17 @@ namespace BayesianModeling.ViewModel
         }
 
         /// <summary>
-        /// Linq companion for referencing object's location in collection.
-        /// </summary>
-        /// <param name="model">
-        /// Individual row model reference
-        /// </param>
-        /// <param name="coll">
-        /// Collection overall
-        /// </param>
-        /// <returns>
-        /// int-based index
-        /// </returns>
-        private int GetIndexViewModel(RowViewModel model, ObservableCollection<RowViewModel> coll)
-        {
-            return coll.IndexOf(model);
-        }
-
-        /// <summary>
         /// Delegate after highlighting takes place on datagrid (call back specific to delays).
         /// </summary>
         private void DataGrid_PreviewMouseUp_Delays(object sender, MouseButtonEventArgs e)
         {
-            DataGrid grd = e.Source as DataGrid;
-            if (grd == null)
-                return;
+            List<DataGridCellInfo> cells = mWindow.dataGrid.SelectedCells.ToList();
+            var itemSource = mWindow.dataGrid.ItemsSource as ObservableCollection<RowViewModel>;
 
-            List<DataGridCellInfo> cells = grd.SelectedCells.ToList();
+            if (cells.Count < 1 || itemSource.Count < 1) return;
 
-            var itemSource = grd.ItemsSource as ObservableCollection<RowViewModel>;
-            lowRowDelay = cells.Min(i => GetIndexViewModel((RowViewModel)i.Item, itemSource));
-            highRowDelay = cells.Max(i => GetIndexViewModel((RowViewModel)i.Item, itemSource));
+            lowRowDelay = cells.Min(i => DataGridTools.GetIndexViewModel((RowViewModel)i.Item, itemSource));
+            highRowDelay = cells.Max(i => DataGridTools.GetIndexViewModel((RowViewModel)i.Item, itemSource));
 
             lowColDelay = cells.Min(i => i.Column.DisplayIndex);
             highColDelay = cells.Max(i => i.Column.DisplayIndex);
@@ -588,15 +569,13 @@ namespace BayesianModeling.ViewModel
         /// </summary>
         private void DataGrid_PreviewMouseUp_Values(object sender, MouseButtonEventArgs e)
         {
-            DataGrid grd = e.Source as DataGrid;
-            if (grd == null)
-                return;
-
             List<DataGridCellInfo> cells = mWindow.dataGrid.SelectedCells.ToList();
+            var itemSource = mWindow.dataGrid.ItemsSource as ObservableCollection<RowViewModel>;
 
-            var itemSource = grd.ItemsSource as ObservableCollection<RowViewModel>;
-            lowRowValue = cells.Min(i => GetIndexViewModel((RowViewModel)i.Item, itemSource));
-            highRowValue = cells.Max(i => GetIndexViewModel((RowViewModel)i.Item, itemSource));
+            if (cells.Count < 1 || itemSource.Count < 1) return;
+
+            lowRowValue = cells.Min(i => DataGridTools.GetIndexViewModel((RowViewModel)i.Item, itemSource));
+            highRowValue = cells.Max(i => DataGridTools.GetIndexViewModel((RowViewModel)i.Item, itemSource));
 
             lowColValue = cells.Min(i => i.Column.DisplayIndex);
             highColValue = cells.Max(i => i.Column.DisplayIndex);

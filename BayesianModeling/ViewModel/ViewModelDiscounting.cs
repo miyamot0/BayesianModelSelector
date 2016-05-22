@@ -523,32 +523,17 @@ namespace BayesianModeling.ViewModel
         }
 
         /// <summary>
-        /// Linq companion for referencing object's location in collection.
-        /// </summary>
-        /// <param name="model">
-        /// Individual row model reference
-        /// </param>
-        /// <param name="coll">
-        /// Collection overall
-        /// </param>
-        /// <returns>
-        /// int-based index
-        /// </returns>
-        private int GetIndexViewModel(RowViewModel model, ObservableCollection<RowViewModel> coll)
-        {
-            return coll.IndexOf(model);
-        }
-
-        /// <summary>
         /// Delegate after highlighting takes place on datagrid (call back specific to delays).
         /// </summary>
         private void DataGrid_PreviewMouseUp_Delays(object sender, MouseButtonEventArgs e)
         {
             List<DataGridCellInfo> cells = mWindow.dataGrid.SelectedCells.ToList();
-
             var itemSource = mWindow.dataGrid.ItemsSource as ObservableCollection<RowViewModel>;
-            lowRowDelay = cells.Min(i => GetIndexViewModel((RowViewModel)i.Item, itemSource));
-            highRowDelay = cells.Max(i => GetIndexViewModel((RowViewModel)i.Item, itemSource));
+
+            if (cells.Count < 1 || itemSource.Count < 1) return;
+
+            lowRowDelay = cells.Min(i => DataGridTools.GetIndexViewModel((RowViewModel)i.Item, itemSource));
+            highRowDelay = cells.Max(i => DataGridTools.GetIndexViewModel((RowViewModel)i.Item, itemSource));
 
             lowColDelay = cells.Min(i => i.Column.DisplayIndex);
             highColDelay = cells.Max(i => i.Column.DisplayIndex);
@@ -581,10 +566,12 @@ namespace BayesianModeling.ViewModel
         private void DataGrid_PreviewMouseUp_Values(object sender, MouseButtonEventArgs e)
         {
             List<DataGridCellInfo> cells = mWindow.dataGrid.SelectedCells.ToList();
-
             var itemSource = mWindow.dataGrid.ItemsSource as ObservableCollection<RowViewModel>;
-            lowRowValue = cells.Min(i => GetIndexViewModel((RowViewModel)i.Item, itemSource));
-            highRowValue = cells.Max(i => GetIndexViewModel((RowViewModel)i.Item, itemSource));
+
+            if (cells.Count < 1 || itemSource.Count < 1) return;
+
+            lowRowValue = cells.Min(i => DataGridTools.GetIndexViewModel((RowViewModel)i.Item, itemSource));
+            highRowValue = cells.Max(i => DataGridTools.GetIndexViewModel((RowViewModel)i.Item, itemSource));
 
             lowColValue = cells.Min(i => i.Column.DisplayIndex);
             highColValue = cells.Max(i => i.Column.DisplayIndex);
@@ -780,6 +767,7 @@ namespace BayesianModeling.ViewModel
                 engine.SetSymbol("mSes", sesValues);
 
                 engine.Evaluate(BayesianModelSelection.GetFranckFunction());
+                
                 engine.Evaluate("datHack<-data.frame(X = mDelays, Y = mIndiffs, ses=mSes)");
                 engine.Evaluate("output <- BDS(datHack)");
 
@@ -839,80 +827,72 @@ namespace BayesianModeling.ViewModel
             mWindow.OutputEvents("Computation Completed");
             mWindow.OutputEvents("---------------------------------------------------");
 
-            if (true)
+            mWindow.OutputEvents("Outputting to workbook Started... Please wait... ");
+
+            var mWin = new ResultsWindow();
+            var mVM = new ResultsViewModel();
+            mWin.DataContext = mVM;
+            mWin.Owner = windowRef;
+            mWin.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            mWin.Height = 500;
+            mWin.Width = 800;
+
+            for (int i = 0; i < 25; i++)
             {
-                mWindow.OutputEvents("Outputting to workbook Started... Please wait... ");
-
-                var mWin = new ResultsWindow();
-                var mVM = new ResultsViewModel();
-                mWin.DataContext = mVM;
-                mWin.Owner = windowRef;
-                mWin.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-                mWin.Height = 600;
-                mWin.Width = 800;
-
-                for (int i = 0; i < 35; i++)
-                {
-                    mVM.RowViewModels.Add(new RowViewModel());
-                }
-
-                mVM.RowViewModels[0].values[0] = "Results of Bayesian Model Selector";
-                mVM.RowViewModels[1].values[0] = "Delays";
-                mVM.RowViewModels[2].values[0] = "Values";
-
-                for (int i = 0; i < xRange.Count; i++)
-                {
-                    mVM.RowViewModels[1].values[1 + i] = xRange[i].ToString();
-                    mVM.RowViewModels[2].values[1 + i] = yRange[i].ToString();
-                }
-
-                mVM.RowViewModels[3].values[0] = "Delayed Value";
-                mVM.RowViewModels[3].values[1] = MaxValue;
-
-                mVM.RowViewModels[5].values[0] = "Results of Fittings:";
-
-                mVM.RowViewModels[7].values[0] = "Exponential - ln(k): ";
-                mVM.RowViewModels[7].values[1] = engine.Evaluate("as.numeric(output[[3]]['exp.lnk'])").AsVector().First().ToString();
-                mVM.RowViewModels[9].values[0] = "Hyperbolic - ln(k): ";
-                mVM.RowViewModels[9].values[1] = engine.Evaluate("as.numeric(output[[2]]['Mazur.lnk'])").AsVector().First().ToString();
-                mVM.RowViewModels[11].values[0] = "Quasi-Hyperbolic - beta: ";
-                mVM.RowViewModels[11].values[1] = engine.Evaluate("as.numeric(output[[9]]['BD.beta'])").AsVector().First().ToString();
-                mVM.RowViewModels[12].values[0] = "Quasi-Hyperbolic - delta: ";
-                mVM.RowViewModels[12].values[1] = engine.Evaluate("as.numeric(output[[9]]['BD.delta'])").AsVector().First().ToString();
-                mVM.RowViewModels[14].values[0] = "Myerson-Hyperboloid - ln(k): ";
-                mVM.RowViewModels[14].values[1] = engine.Evaluate("as.numeric(output[[4]]['MG.lnk'])").AsVector().First().ToString();
-                mVM.RowViewModels[15].values[0] = "Myerson-Hyperboloid - s: ";
-                mVM.RowViewModels[15].values[1] = engine.Evaluate("as.numeric(output[[4]]['MG.s'])").AsVector().First().ToString();
-                mVM.RowViewModels[17].values[0] = "Rachlin-Hyperboloid - ln(k): ";
-                mVM.RowViewModels[17].values[1] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.lnk'])").AsVector().First().ToString();
-                mVM.RowViewModels[18].values[0] = "Rachlin-Hyperboloid - s: ";
-                mVM.RowViewModels[18].values[1] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.s'])").AsVector().First().ToString();
-
-                mVM.RowViewModels[21].values[0] = "Model Competition (Best to Worst)";
-
-                string left = string.Empty;
-                string right = string.Empty;
-                int row = 22;
-
-                foreach (KeyValuePair<string, double> pair in items)
-                {
-                    mVM.RowViewModels[row].values[0] = pair.Key;
-                    mVM.RowViewModels[row].values[1] = pair.Value.ToString();
-                    row++;
-                }
-
-                mVM.RowViewModels[29].values[0] = "Most competitive model: ";
-                mVM.RowViewModels[29].values[1] = items.First().Key.ToString();
-
-                double ed50Best = engine.Evaluate("as.numeric(output[[8]]['lnED50.mostprob'])").AsNumeric().First();
-
-                mVM.RowViewModels[30].values[0] = "ED50 of Most Competitive Model - ln(x): ";
-                mVM.RowViewModels[30].values[1] = ed50Best.ToString();
-
-                mWin.Show();
-
-                mWindow.OutputEvents("Output Completed!");
+                mVM.RowViewModels.Add(new RowViewModel());
             }
+
+            mVM.RowViewModels[0].values[0] = "Results of Bayesian Model Selector";
+            mVM.RowViewModels[1].values[0] = "Single Series Analysis";
+            mVM.RowViewModels[0].values[1] = "Exponential - ln(k): ";
+            mVM.RowViewModels[1].values[1] = engine.Evaluate("as.numeric(output[[3]]['exp.lnk'])").AsVector().First().ToString();
+            mVM.RowViewModels[0].values[2] = "Hyperbolic - ln(k): ";
+            mVM.RowViewModels[1].values[2] = engine.Evaluate("as.numeric(output[[2]]['Mazur.lnk'])").AsVector().First().ToString();
+            mVM.RowViewModels[0].values[3] = "Quasi-Hyperbolic - beta: ";
+            mVM.RowViewModels[1].values[3] = engine.Evaluate("as.numeric(output[[9]]['BD.beta'])").AsVector().First().ToString();
+            mVM.RowViewModels[0].values[4] = "Quasi-Hyperbolic - delta: ";
+            mVM.RowViewModels[1].values[4] = engine.Evaluate("as.numeric(output[[9]]['BD.delta'])").AsVector().First().ToString();
+            mVM.RowViewModels[0].values[5] = "Myerson-Hyperboloid - ln(k): ";
+            mVM.RowViewModels[1].values[5] = engine.Evaluate("as.numeric(output[[4]]['MG.lnk'])").AsVector().First().ToString();
+            mVM.RowViewModels[0].values[6] = "Myerson-Hyperboloid - s: ";
+            mVM.RowViewModels[1].values[6] = engine.Evaluate("as.numeric(output[[4]]['MG.s'])").AsVector().First().ToString();
+            mVM.RowViewModels[0].values[7] = "Rachlin-Hyperboloid - ln(k): ";
+            mVM.RowViewModels[1].values[7] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.lnk'])").AsVector().First().ToString();
+            mVM.RowViewModels[0].values[8] = "Rachlin-Hyperboloid - s: ";
+            mVM.RowViewModels[1].values[8] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.s'])").AsVector().First().ToString();
+            mVM.RowViewModels[0].values[9] = "Most competitive model: ";
+            mVM.RowViewModels[1].values[9] = items.First().Key.ToString();
+
+            double ed50Best = engine.Evaluate("as.numeric(output[[8]]['lnED50.mostprob'])").AsNumeric().First();
+
+            mVM.RowViewModels[0].values[10] = "ED50 of Most Competitive Model - ln(x): ";
+            mVM.RowViewModels[1].values[10] = ed50Best.ToString();
+
+            int col = 11, rank = 1;
+
+            foreach (KeyValuePair<string, double> pair in items)
+            {
+                mVM.RowViewModels[0].values[col] = pair.Key + "(Ranked #" + rank + ")";
+                mVM.RowViewModels[1].values[col] = pair.Value.ToString();
+                rank++;
+                col++;
+            }
+
+            mVM.RowViewModels[3].values[0] = "Delayed Value";
+            mVM.RowViewModels[3].values[1] = MaxValue;
+
+            mVM.RowViewModels[4].values[0] = "Delays";
+            mVM.RowViewModels[5].values[0] = "Values";
+                
+            for (int i = 0; i < xRange.Count; i++)
+            {
+                mVM.RowViewModels[4].values[1 + i] = xRange[i].ToString();
+                mVM.RowViewModels[5].values[1 + i] = yRange[i].ToString();
+            }
+                
+            mWin.Show();
+
+            mWindow.OutputEvents("Output Completed!");
 
             if (outputFigures)
             {

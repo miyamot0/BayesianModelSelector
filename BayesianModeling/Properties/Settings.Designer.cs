@@ -5,7 +5,7 @@
 //
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
-// </auto-generated> 
+// </auto-generated>
 //------------------------------------------------------------------------------
 
 namespace BayesianModeling.Properties {
@@ -188,6 +188,18 @@ namespace BayesianModeling.Properties {
             }
             set {
                 this["BatchDiscountLeft"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string RecentFiles {
+            get {
+                return ((string)(this["RecentFiles"]));
+            }
+            set {
+                this["RecentFiles"] = value;
             }
         }
     }

@@ -28,8 +28,8 @@ namespace BayesianModeling.Behaviors
         /// Event behavior (Window) for window close events, attached to main window primarily for menuitem close command
         /// </summary>
         public static readonly DependencyProperty ShutDownProperty =
-            DependencyProperty.Register("ShuttingDownFlag", 
-                typeof(bool), typeof(ShutDownBehavior), 
+            DependencyProperty.Register("ShuttingDownFlag",
+                typeof(bool), typeof(ShutDownBehavior),
                 new PropertyMetadata(false, OnValueChanged));
 
         /// <summary>
@@ -37,10 +37,8 @@ namespace BayesianModeling.Behaviors
         /// </summary>
         public bool ShuttingDownFlag
         {
-            get { return (bool) GetValue(ShutDownProperty); }
-            set {
-                SetValue(ShutDownProperty, value);
-            }
+            get { return (bool)GetValue(ShutDownProperty); }
+            set { SetValue(ShutDownProperty, value); }
         }
 
         /// <summary>
@@ -48,7 +46,7 @@ namespace BayesianModeling.Behaviors
         /// </summary>
         private static void OnValueChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
-            ((ShutDownBehavior) obj).OnValueChanged();
+            ((ShutDownBehavior)obj).OnValueChanged();
         }
 
         /// <summary>
@@ -56,10 +54,7 @@ namespace BayesianModeling.Behaviors
         /// </summary>
         private void OnValueChanged()
         {
-            if (ShuttingDownFlag)
-            {
-                ((Window) AssociatedObject).Close();
-            }
+            if (ShuttingDownFlag) { ((Window)AssociatedObject).Close(); }
         }
     }
 }

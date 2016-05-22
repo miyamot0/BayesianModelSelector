@@ -47,7 +47,7 @@
     ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
     OF SUCH DAMAGE.
 
-        ============================================================================
+    ============================================================================
 
     ClosedXML is distributed under this license:
 
@@ -79,11 +79,14 @@ using Microsoft.VisualBasic.FileIO;
 using Microsoft.Win32;
 using RDotNet;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Threading;
 
 namespace BayesianModeling.ViewModel
@@ -96,7 +99,27 @@ namespace BayesianModeling.ViewModel
 
         #region Observable Bindings
 
-        public ObservableCollection<RowViewModel> RowViewModels { get; set; }
+        private ObservableCollection<RowViewModel> rowViewModels { get; set; }
+        public ObservableCollection<RowViewModel> RowViewModels
+        {
+            get { return rowViewModels; }
+            set
+            {
+                rowViewModels = value;
+                OnPropertyChanged("RowViewModels");
+            }
+        }
+
+        private ObservableCollection<MenuItem> recentStuff { get; set; }
+        public ObservableCollection<MenuItem> RecentStuff
+        {
+            get { return recentStuff; }
+            set
+            {
+                recentStuff = value;
+                OnPropertyChanged("RecentStuff");
+            }
+        }
 
         public string title = "Bayesian Model Selection - New File";
         public string Title
@@ -128,10 +151,12 @@ namespace BayesianModeling.ViewModel
 
         public RelayCommand FileNewCommand { get; set; }
         public RelayCommand FileOpenCommand { get; set; }
+        public RelayCommand FileOpenNoDialogCommand { get; set; }
         public RelayCommand FileSaveCommand { get; set; }
         public RelayCommand FileSaveAsCommand { get; set; }
         public RelayCommand FileCloseCommand { get; set; }
         public RelayCommand FileSaveNoDialogCommand { get; set; }
+        public RelayCommand RecentsClearCommand { get; set; }
 
         /* Loading Commands */
 
@@ -160,6 +185,7 @@ namespace BayesianModeling.ViewModel
         public RelayCommand SaveLogsWindowCommand { get; set; }
         public RelayCommand ClearLogsWindowCommand { get; set; }
         public RelayCommand DeleteSelectedCommand { get; set; }
+        public RelayCommand CutSelectedCommand { get; set; }
 
         #endregion Commands
 
@@ -171,6 +197,8 @@ namespace BayesianModeling.ViewModel
         string path = "";
         public static int RowSpans = 50;
         public static int ColSpans = 100;
+        private string workingSheet = "";
+        string[] recentsArray;
 
         /* Math / Computation */
 
@@ -180,35 +208,95 @@ namespace BayesianModeling.ViewModel
 
         public ViewModelMainWindow()
         {
+            #region FileCommands
+
             FileNewCommand = new RelayCommand(param => CreateNewFile(), param => true);
             FileOpenCommand = new RelayCommand(param => OpenFile(), param => true);
             FileSaveCommand = new RelayCommand(param => SaveFile(), param => true);
             FileSaveAsCommand = new RelayCommand(param => SaveFileAs(), param => true);
             FileCloseCommand = new RelayCommand(param => CloseProgram(), param => true);
+
             FileSaveNoDialogCommand = new RelayCommand(param => SaveFileWithoutDialog(), param => true);
+            FileOpenNoDialogCommand = new RelayCommand(param => FileOpenNoDialog(param), param => true);
+
+            RecentsClearCommand = new RelayCommand(param => ClearRecents(), param => true);
+
+            RecentStuff = new ObservableCollection<MenuItem>();
+
+            recentsArray = Properties.Settings.Default.RecentFiles.Trim().Split(';');
+
+            List<string> workingRecents = recentsArray.Select(item => item).Where(item => item.Trim().Length > 1).ToList();
+
+            if (workingRecents != null && workingRecents.Count > 0)
+            {
+                RecentStuff.Clear();
+
+                foreach (string recentFileLocation in workingRecents)
+                {
+                    if (recentFileLocation.Trim().Length < 2)
+                    {
+                        continue;
+                    }
+
+                    RecentStuff.Add(new MenuItem
+                    {
+                        Header = recentFileLocation,
+                        Command = FileOpenNoDialogCommand,
+                        CommandParameter = recentFileLocation
+                    });
+                }
+            }
+
+            RecentStuff.Add(new MenuItem
+            {
+                Header = "Clear Recents",
+                Command = RecentsClearCommand
+            });
+
+            #endregion
+
+            #region LogCommands
 
             SaveLogsWindowCommand = new RelayCommand(param => SaveLogs(), param => true);
             ClearLogsWindowCommand = new RelayCommand(param => ClearLogs(), param => true);
 
+            #endregion
+
+            #region GridCommands
+
             DeleteSelectedCommand = new RelayCommand(param => DeleteSelected(), param => true);
+            CutSelectedCommand = new RelayCommand(param => CutSelected(), param => true);
+
+            #endregion
+
+            #region TriggerCommands
 
             ViewLoadedCommand = new RelayCommand(param => ViewLoaded(), param => true);
             ViewClosingCommand = new RelayCommand(param => ViewClosed(), param => true);
+
+            #endregion
+
+            #region UICommands
+
             DiscountingWindowCommand = new RelayCommand(param => OpenDiscountingWindow(), param => true);
             BatchDiscountingWindowCommand = new RelayCommand(param => OpenBatchDiscountingWindow(), param => true);
             InformationWindowCommand = new RelayCommand(param => OpenInformationWindow(), param => true);
+
+            #endregion
+
+            #region LicenseCommands
 
             RLicenseWindowCommand = new RelayCommand(param => RLicenseInformationWindow(), param => true);
             RdotNetLicenseWindowCommand = new RelayCommand(param => RdotNetLicenseInformationWindow(), param => true);
             NlsLicenseWindowCommand = new RelayCommand(param => NlsLicenseInformationWindow(), param => true);
             Ggplot2LicenseWindowCommand = new RelayCommand(param => Ggplot2LicenseInformationWindow(), param => true);
-            GridExtraLicenseWindowCommand = new RelayCommand(param => GridExtraLicenseInformationWindow(), param => true);
-            
+            GridExtraLicenseWindowCommand = new RelayCommand(param => GridExtraLicenseInformationWindow(), param => true);            
             Reshape2LicenseWindowCommand = new RelayCommand(param => Reshape2LicenseInformationWindow(), param => true);
             GnomeIconLicenseWindowCommand = new RelayCommand(param => GnomeIconLicenseInformationWindow(), param => true);
-
             BDSLicenseWindowCommand = new RelayCommand(param => BDSLicenseWindow(), param => true);
             ClosedXMLLicenseWindowCommand = new RelayCommand(param => ClosedXMLLicenseWindow(), param => true);
+
+            #endregion
 
             RowViewModels = new ObservableCollection<RowViewModel>();
 
@@ -226,22 +314,127 @@ namespace BayesianModeling.ViewModel
 
         #region UI
 
+        /// <summary>
+        /// Clears the recents list, saving a blank string to settings
+        /// </summary>
+        private void ClearRecents()
+        {
+            Properties.Settings.Default.RecentFiles = "";
+            Properties.Settings.Default.Save();
+
+            RecentStuff.Clear();
+            RecentStuff.Add(new MenuItem
+            {
+                Header = "Clear Recents",
+                Command = RecentsClearCommand
+            });
+        }
+
+        /// <summary>
+        /// Adds a recently opened/saved file to the recent lists, if not already present
+        /// </summary>
+        /// <param name="filePath">
+        /// Path to recently opened/saved file
+        /// </param>
+        private void AddToRecents(string filePath)
+        {
+            recentsArray = Properties.Settings.Default.RecentFiles.Split(';');
+
+            List<string> workingRecents = recentsArray.Select(item => item).Where(item => item.Trim().Length > 1).ToList();
+
+            if (!workingRecents.Contains(filePath))
+            {
+                workingRecents.Add(filePath);
+                Properties.Settings.Default.RecentFiles = string.Join(";", workingRecents.ToArray());
+                Properties.Settings.Default.Save();
+
+                RecentStuff.Clear();
+
+                foreach (string recentFileLocation in workingRecents)
+                {
+                    if (recentFileLocation.Trim().Length < 2)
+                    {
+                        continue;
+                    }
+
+                    RecentStuff.Add(new MenuItem
+                    {
+                        Header = recentFileLocation,
+                        Command = FileOpenNoDialogCommand,
+                        CommandParameter = recentFileLocation
+                    });
+                }
+
+                RecentStuff.Add(new MenuItem
+                {
+                    Header = "Clear Recents",
+                    Command = RecentsClearCommand
+                });
+            }
+        }
+
+        /// <summary>
+        /// Update window title through bound object
+        /// </summary>
+        /// <param name="title">
+        /// File name to be used in title (string)
+        /// </param>
         public void UpdateTitle(string title)
         {
             Title = title;
         }
 
+        /// <summary>
+        /// Loop through selected/highlighted cells, clear cell contents through bound collections
+        /// </summary>
         private void DeleteSelected()
         {
             if (MainWindow.dataGrid.SelectedCells.Count > 0)
             {
                 foreach (System.Windows.Controls.DataGridCellInfo obj in MainWindow.dataGrid.SelectedCells)
                 {
-                    var mItem = obj.Item as RowViewModel;
+                    var rvm = obj.Item as RowViewModel;
 
-                    if (mItem != null)
+                    if (rvm != null)
                     {
-                        int x = RowViewModels.IndexOf(mItem);
+                        int x = RowViewModels.IndexOf(rvm);
+                        RowViewModels[x].values[obj.Column.DisplayIndex] = "";
+                        RowViewModels[x].ForcePropertyUpdate(obj.Column.DisplayIndex);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Cut cells after copying to clipboard
+        /// </summary>
+        private void CutSelected()
+        {
+            if (MainWindow.dataGrid.SelectedCells.Count > 0)
+            {
+                List<string> holdPreClip = new List<string>();
+
+                foreach (DataGridCellInfo obj in MainWindow.dataGrid.SelectedCells)
+                {
+                    var rvm = obj.Item as RowViewModel;
+
+                    if (rvm != null)
+                    {
+                        int x = RowViewModels.IndexOf(rvm);
+                        holdPreClip.Add(RowViewModels[x].values[obj.Column.DisplayIndex]);
+                    }
+                }
+
+                string holdClip = string.Join("\t", holdPreClip);
+                Clipboard.SetText(holdClip);
+
+                foreach (System.Windows.Controls.DataGridCellInfo obj in MainWindow.dataGrid.SelectedCells)
+                {
+                    var rvm = obj.Item as RowViewModel;
+
+                    if (rvm != null)
+                    {
+                        int x = RowViewModels.IndexOf(rvm);
                         RowViewModels[x].values[obj.Column.DisplayIndex] = "";
                         RowViewModels[x].ForcePropertyUpdate(obj.Column.DisplayIndex);
                     }
@@ -253,6 +446,9 @@ namespace BayesianModeling.ViewModel
 
         #region Licenses
 
+        /// <summary>
+        /// License window
+        /// </summary>
         private void GnomeIconLicenseInformationWindow()
         {
             var window = new License();
@@ -264,6 +460,9 @@ namespace BayesianModeling.ViewModel
             window.Show();
         }
 
+        /// <summary>
+        /// License window
+        /// </summary>
         private void BDSLicenseWindow()
         {
             var window = new License();
@@ -275,6 +474,9 @@ namespace BayesianModeling.ViewModel
             window.Show();
         }
 
+        /// <summary>
+        /// License window
+        /// </summary>
         private void ClosedXMLLicenseWindow()
         {
             var window = new License();
@@ -286,6 +488,9 @@ namespace BayesianModeling.ViewModel
             window.Show();
         }
 
+        /// <summary>
+        /// License window
+        /// </summary>
         private void NlsLicenseInformationWindow()
         {
             var window = new License();
@@ -297,6 +502,9 @@ namespace BayesianModeling.ViewModel
             window.Show();
         }
 
+        /// <summary>
+        /// License window
+        /// </summary>
         private void RdotNetLicenseInformationWindow()
         {
             var window = new License();
@@ -308,6 +516,9 @@ namespace BayesianModeling.ViewModel
             window.Show();
         }
 
+        /// <summary>
+        /// License window
+        /// </summary>
         private void RLicenseInformationWindow()
         {
             var window = new License();
@@ -319,6 +530,9 @@ namespace BayesianModeling.ViewModel
             window.Show();
         }
 
+        /// <summary>
+        /// License window
+        /// </summary>
         private void Ggplot2LicenseInformationWindow()
         {
             var window = new License();
@@ -330,6 +544,9 @@ namespace BayesianModeling.ViewModel
             window.Show();
         }
 
+        /// <summary>
+        /// License window
+        /// </summary>
         private void GridExtraLicenseInformationWindow()
         {
             var window = new License();
@@ -341,6 +558,9 @@ namespace BayesianModeling.ViewModel
             window.Show();
         }
 
+        /// <summary>
+        /// License window
+        /// </summary>
         private void Reshape2LicenseInformationWindow()
         {
             var window = new License();
@@ -356,6 +576,9 @@ namespace BayesianModeling.ViewModel
 
         #region Triggers
 
+        /// <summary>
+        /// Loaded event trigger
+        /// </summary>
         private void ViewLoaded()
         {
             ShuttingDown = false;
@@ -448,6 +671,9 @@ namespace BayesianModeling.ViewModel
             }
         }
 
+        /// <summary>
+        /// Closed event trigger
+        /// </summary>
         private void ViewClosed()
         {
             Properties.Settings.Default.Save();
@@ -458,6 +684,9 @@ namespace BayesianModeling.ViewModel
 
         #region OpenWindows
 
+        /// <summary>
+        /// Single mode analysis window
+        /// </summary>
         private void OpenDiscountingWindow()
         {
             var mWin = new DiscountingWindow();
@@ -471,6 +700,9 @@ namespace BayesianModeling.ViewModel
             mWin.Show();
         }
 
+        /// <summary>
+        /// Batch mode analysis window
+        /// </summary>
         private void OpenBatchDiscountingWindow()
         {
             var mWin = new BatchDiscountingWindow();
@@ -484,9 +716,13 @@ namespace BayesianModeling.ViewModel
             mWin.Show();
         }
 
+        /// <summary>
+        /// Information window
+        /// </summary>
         private void OpenInformationWindow()
         {
             var mWin = new InformationWindow();
+            mWin.Owner = MainWindow;
             mWin.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             mWin.Topmost = true;
             mWin.Show();
@@ -496,6 +732,9 @@ namespace BayesianModeling.ViewModel
 
         #region FileIO
 
+        /// <summary>
+        /// Creates new spreadsheet, not really "file"
+        /// </summary>
         private void CreateNewFile()
         {
             loadThread = new Thread(new ThreadStart(ShowFileUIProgressWindow));
@@ -510,12 +749,20 @@ namespace BayesianModeling.ViewModel
             }
 
             UpdateTitle("New File");
+            workingSheet = "Sheet1";
+
+            haveFileLoaded = false;
 
             CloseFileUIProgressWindow();
         }
 
+        /// <summary>
+        /// Saves file, usually from Ctrl+S binding
+        /// </summary>
         private void SaveFile()
         {
+            MainWindow.dataGrid.CommitEdit();
+
             if (haveFileLoaded)
             {
                 SaveFileWithoutDialog();
@@ -545,17 +792,24 @@ namespace BayesianModeling.ViewModel
                     }
                     catch (Exception e)
                     {
-                        MessageBox.Show("We weren't able to save.  Is the target file open or in use?");
+                        MessageBox.Show("We weren't able to save.  Is the target file either open, missing or in use?");
                         Console.WriteLine(e.ToString());
                     }
+
+                    workingSheet = "Demand Analysis Calculations";
 
                     CloseFileUIProgressWindow();
                 }
             }
         }
 
+        /// <summary>
+        /// Saves file with a dialog 
+        /// </summary>
         private void SaveFileAs()
         {
+            MainWindow.dataGrid.CommitEdit();
+
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
 
             saveFileDialog1.FileName = title;
@@ -578,10 +832,12 @@ namespace BayesianModeling.ViewModel
 
                     haveFileLoaded = true;
 
+                    workingSheet = "Demand Analysis Calculations";
+
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("We weren't able to save.  Is the target file open or in use?");
+                    MessageBox.Show("We weren't able to save.  Is the target file either open, missing or in use?");
                     Console.WriteLine(e.ToString());
                     haveFileLoaded = false;
                 }
@@ -591,8 +847,13 @@ namespace BayesianModeling.ViewModel
             }
         }
 
+        /// <summary>
+        /// Saves file without a dialog call
+        /// </summary>
         private void SaveFileWithoutDialog()
         {
+            MainWindow.dataGrid.CommitEdit();
+
             if (haveFileLoaded)
             {
                 loadThread = new Thread(new ThreadStart(ShowFileUIProgressWindow));
@@ -602,14 +863,14 @@ namespace BayesianModeling.ViewModel
 
                 try
                 {
-                    OpenXMLHelper.ExportToExcel(new ObservableCollection<RowViewModel>(RowViewModels), Path.Combine(path, title));
+                    OpenXMLHelper.ExportToExcel(new ObservableCollection<RowViewModel>(RowViewModels), Path.Combine(path, title), workingSheet);
 
                     UpdateTitle(title);
 
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("We weren't able to save.  Is the target file open or in use?");
+                    MessageBox.Show("We weren't able to save.  Is the target file either open, missing or in use?");
                     Console.WriteLine(e.ToString());
                 }
 
@@ -617,19 +878,9 @@ namespace BayesianModeling.ViewModel
             }
         }
 
-        void ShowFileUIProgressWindow()
-        {
-            window = new ProgressDialog("Processing", "File operations ongoing...");
-            window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            window.Show();
-            Dispatcher.Run();
-        }
-
-        void CloseFileUIProgressWindow()
-        {
-            window.Dispatcher.Invoke(DispatcherPriority.Normal, new ThreadStart(window.Close));
-        }
-
+        /// <summary>
+        /// Opens a file with a dialog
+        /// </summary>
         private void OpenFile()
         {
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
@@ -655,28 +906,79 @@ namespace BayesianModeling.ViewModel
 
                         using (var wb = new XLWorkbook(@openFileDialog1.FileName))
                         {
-                            var ws = wb.Worksheets;
-                            var sheet = ws.Worksheet(1);
-                            var range = sheet.RangeUsed();
-                            var table = range.AsTable();
+
+                            var wsMult = wb.Worksheets;
+
+                            List<string> workSheets = new List<string>();
+
+                            foreach (IXLWorksheet sheetPeek in wsMult)
+                            {
+                                workSheets.Add(sheetPeek.Name);
+                            }
+
+                            string[] workSheetsArray = workSheets.ToArray();
+
+                            var sheetWindow = new SelectionWindow(workSheetsArray, workSheetsArray[0]);
+                            sheetWindow.Title = "Pick a sheet";
+                            sheetWindow.MessageLabel.Text = "Select which spreadsheet to load";
+                            sheetWindow.Owner = MainWindow;
+                            sheetWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                            sheetWindow.Topmost = true;
+
+                            int output = -1;
+
+                            if (sheetWindow.ShowDialog() == true)
+                            {
+                                output = sheetWindow.MessageOptions.SelectedIndex + 1;
+
+                                workingSheet = workSheetsArray[sheetWindow.MessageOptions.SelectedIndex];
+                            }
+
+                            if (output == -1)
+                            {
+                                return;
+                            }
+
+                            var ws = wb.Worksheet(output);
 
                             RowViewModels.Clear();
 
-                            foreach (var row in table.Rows())
-                            {
-                                RowViewModel mModel = new RowViewModel();
+                            int currRows = 50;
 
-                                for (int i = 0; i <= row.CellCount(); i++)
+                            ObservableCollection<RowViewModel> temp = new ObservableCollection<RowViewModel>();
+                            for (int i = 0; i < currRows; i++)
+                            {
+                                temp.Add(new RowViewModel());
+                            }
+
+                            var cellsUsed = ws.CellsUsed();
+
+                            foreach (var cell in cellsUsed)
+                            {
+                                int col = cell.Address.ColumnNumber;
+                                int row = cell.Address.RowNumber;
+
+                                if (row >= currRows)
                                 {
-                                    mModel.values[i] = row.Cell(i).Value.ToString();
+                                    while (currRows < row)
+                                    {
+                                        temp.Add(new RowViewModel());
+                                        currRows++;
+                                    }
                                 }
 
-                                RowViewModels.Add(mModel);
+                                if (col - 1 >= ColSpans)
+                                {
+                                    continue;
+                                }
+
+                                temp[row - 1].values[col - 1] = cell.Value.ToString();
                             }
+
+                            RowViewModels = new ObservableCollection<RowViewModel>(temp);
 
                             UpdateTitle(openFileDialog1.SafeFileName);
                             haveFileLoaded = true;
-
                         }
 
                     }
@@ -702,25 +1004,231 @@ namespace BayesianModeling.ViewModel
 
                             }
 
+                            workingSheet = "Demand Analysis Calculations";
+
                             UpdateTitle(openFileDialog1.SafeFileName);
                             haveFileLoaded = true;
                         }
 
                     }
 
+                    AddToRecents(@openFileDialog1.FileName);
                 }
-                catch 
+                catch (IOException e)
                 {
-                    MessageBox.Show("We weren't able to open the file.  Is the target file open or in use?");
+                    CloseFileUIProgressWindow();
+                    Console.WriteLine(e.ToString());
+                    MessageBox.Show("We weren't able to save.  Is the target file either open, missing or in use?");
+                }
+                catch (Exception e)
+                {
+                    CloseFileUIProgressWindow();
+                    Console.WriteLine(e.ToString());
+                    MessageBox.Show("We weren't able to save.  Is the target file either open, missing or in use?");
                 }
 
                 CloseFileUIProgressWindow();
             }
         }
 
+        /// <summary>
+        /// Opens a file without a dialog window
+        /// </summary>
+        /// <param name="filePath">
+        /// path to the file to be opened
+        /// </param>
+        private void OpenFileNoDialog(string filePath)
+        {
+            loadThread = new Thread(new ThreadStart(ShowFileUIProgressWindow));
+            loadThread.SetApartmentState(ApartmentState.STA);
+            loadThread.IsBackground = true;
+            loadThread.Start();
+
+            string mExt = Path.GetExtension(@filePath);
+
+            path = Path.GetDirectoryName(@filePath);
+
+            try
+            {
+                if (mExt.Equals(".xlsx"))
+                {
+
+                    using (var wb = new XLWorkbook(@filePath))
+                    {
+
+                        var wsMult = wb.Worksheets;
+
+                        List<string> workSheets = new List<string>();
+
+                        foreach (IXLWorksheet sheetPeek in wsMult)
+                        {
+                            workSheets.Add(sheetPeek.Name);
+                        }
+
+                        string[] workSheetsArray = workSheets.ToArray();
+
+                        var sheetWindow = new SelectionWindow(workSheetsArray, workSheetsArray[0]);
+                        sheetWindow.Title = "Pick a sheet";
+                        sheetWindow.MessageLabel.Text = "Select which spreadsheet to load";
+                        sheetWindow.Owner = MainWindow;
+                        sheetWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                        sheetWindow.Topmost = true;
+
+                        int output = -1;
+
+                        if (sheetWindow.ShowDialog() == true)
+                        {
+                            output = sheetWindow.MessageOptions.SelectedIndex + 1;
+
+                            workingSheet = workSheetsArray[sheetWindow.MessageOptions.SelectedIndex];
+                        }
+
+                        if (output == -1)
+                        {
+                            return;
+                        }
+
+                        var ws = wb.Worksheet(output);
+
+                        RowViewModels.Clear();
+
+                        int currRows = 50;
+
+                        ObservableCollection<RowViewModel> temp = new ObservableCollection<RowViewModel>();
+                        for (int i = 0; i < currRows; i++)
+                        {
+                            temp.Add(new RowViewModel());
+                        }
+
+                        var cellsUsed = ws.CellsUsed();
+
+                        foreach (var cell in cellsUsed)
+                        {
+                            int col = cell.Address.ColumnNumber;
+                            int row = cell.Address.RowNumber;
+
+                            if (row >= currRows)
+                            {
+                                while (currRows < row)
+                                {
+                                    temp.Add(new RowViewModel());
+                                    currRows++;
+                                }
+                            }
+
+                            if (col - 1 >= ColSpans)
+                            {
+                                continue;
+                            }
+
+                            temp[row - 1].values[col - 1] = cell.Value.ToString();
+                        }
+
+                        RowViewModels = new ObservableCollection<RowViewModel>(temp);
+
+                        UpdateTitle(Path.GetFileName(@filePath));
+                        haveFileLoaded = true;
+                    }
+
+                }
+                else if (mExt.Equals(".csv"))
+                {
+                    using (TextFieldParser parser = new TextFieldParser(@filePath))
+                    {
+                        parser.TextFieldType = FieldType.Delimited;
+                        parser.SetDelimiters(",");
+
+                        RowViewModels.Clear();
+
+                        while (!parser.EndOfData)
+                        {
+                            string[] fields = parser.ReadFields();
+
+                            RowViewModel mModel = new RowViewModel();
+                            for (int i = 0; i < fields.Length && i < 100; i++)
+                            {
+                                mModel.values[i] = fields[i];
+                            }
+                            RowViewModels.Add(mModel);
+
+                        }
+
+                        workingSheet = "Demand Analysis Calculations";
+
+                        UpdateTitle(Path.GetFileName(@filePath));
+                        haveFileLoaded = true;
+                    }
+
+                }
+
+                AddToRecents(@filePath);
+            }
+            catch (IOException e)
+            {
+                CloseFileUIProgressWindow();
+                Console.WriteLine(e.ToString());
+                MessageBox.Show("We weren't able to save.  Is the target file either open, missing or in use?");
+            }
+            catch (Exception e)
+            {
+                CloseFileUIProgressWindow();
+                Console.WriteLine(e.ToString());
+                MessageBox.Show("We weren't able to save.  Is the target file either open, missing or in use?");
+            }
+
+            CloseFileUIProgressWindow();
+        }
+
+        /// <summary>
+        /// Method for opening file w/o dialog
+        /// </summary>
+        /// <param name="param">
+        /// Command parameter 
+        /// </param>
+        private void FileOpenNoDialog(object param)
+        {
+            string path = param as string;
+
+            if (path != null)
+            {
+                OpenFileNoDialog(path);
+            }
+        }
+
+        /// <summary>
+        /// Shows progress bar on another thread
+        /// </summary>
+        void ShowFileUIProgressWindow()
+        {
+            window = new ProgressDialog("Processing", "File operations ongoing...");
+            window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            window.Show();
+            Dispatcher.Run();
+        }
+
+        /// <summary>
+        /// Closes progress bar on another thread
+        /// </summary>
+        void CloseFileUIProgressWindow()
+        {
+            window.Dispatcher.Invoke(DispatcherPriority.Normal, new ThreadStart(window.Close));
+        }
+
+        /// <summary>
+        /// Updates ShutDown trigger
+        /// </summary>
         private void CloseProgram()
         {
             ShuttingDown = true;
+        }
+
+        #endregion FileIO
+
+        #region Logging
+
+        public void SendMessageToOutput(string message)
+        {
+            MainWindow.OutputEvents(message);
         }
 
         private void SaveLogs()
@@ -733,12 +1241,7 @@ namespace BayesianModeling.ViewModel
             MainWindow.ClearLogs();
         }
 
-        #endregion FileIO
-        
-        public void SendMessageToOutput(string message)
-        {
-            MainWindow.OutputEvents(message);
-        }
+        #endregion Logging
 
     }
 }
