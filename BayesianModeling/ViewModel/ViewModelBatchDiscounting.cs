@@ -727,9 +727,7 @@ namespace BayesianModeling.ViewModel
                 MessageBox.Show("Please review the the Delayed Amount number.  This must be a non-zero number.");
                 return;
             }
-
-            Console.WriteLine("Parsing x Ranges");
-
+            
             List<double> xRange = new List<double>();
             xRange = GetRangedValues(lowColDelay, highColDelay, lowRowDelay);
 
@@ -741,8 +739,6 @@ namespace BayesianModeling.ViewModel
             }
 
             List<double> yRange = new List<double>();
-
-            Console.WriteLine("Parsing y Ranges");
 
             string[,] wholeRange = ParseBulkRangeStrings(lowRowValue, highRowValue, lowColValue, highColValue);
 
