@@ -75,7 +75,10 @@ namespace BayesianModeling.Utilities
 
             IXLWorksheet ws;
 
-            ws = wb.AddWorksheet("Demand Analysis Calculations");
+            if (!wb.TryGetWorksheet("Bayesian Model Selector Calculations", out ws))
+            {
+                ws = wb.AddWorksheet("Bayesian Model Selector Calculations");
+            }
 
             for (int i = 0; i < rowCollection.Count; i++)
             {
@@ -118,7 +121,7 @@ namespace BayesianModeling.Utilities
 
             if (!wb.TryGetWorksheet(worksheetName, out ws))
             {
-                ws = wb.AddWorksheet("Demand Analysis Calculations");
+                ws = wb.AddWorksheet("Bayesian Model Selector Calculations");
             }
 
             for (int i = 0; i < rowCollection.Count; i++)

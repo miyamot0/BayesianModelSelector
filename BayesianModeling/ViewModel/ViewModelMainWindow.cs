@@ -796,7 +796,7 @@ namespace BayesianModeling.ViewModel
                         Console.WriteLine(e.ToString());
                     }
 
-                    workingSheet = "Demand Analysis Calculations";
+                    workingSheet = "Bayesian Model Selector Calculations";
 
                     CloseFileUIProgressWindow();
                 }
@@ -832,7 +832,7 @@ namespace BayesianModeling.ViewModel
 
                     haveFileLoaded = true;
 
-                    workingSheet = "Demand Analysis Calculations";
+                    workingSheet = "Bayesian Model Selector Calculations";
 
                 }
                 catch (Exception e)
@@ -1004,7 +1004,7 @@ namespace BayesianModeling.ViewModel
 
                             }
 
-                            workingSheet = "Demand Analysis Calculations";
+                            workingSheet = "Bayesian Model Selector Calculations";
 
                             UpdateTitle(openFileDialog1.SafeFileName);
                             haveFileLoaded = true;
@@ -1153,7 +1153,7 @@ namespace BayesianModeling.ViewModel
 
                         }
 
-                        workingSheet = "Demand Analysis Calculations";
+                        workingSheet = "Bayesian Model Selector Calculations";
 
                         UpdateTitle(Path.GetFileName(@filePath));
                         haveFileLoaded = true;
