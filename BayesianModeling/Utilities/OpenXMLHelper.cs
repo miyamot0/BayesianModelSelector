@@ -57,6 +57,34 @@ namespace BayesianModeling.Utilities
         /// Contents of data grid
         /// </param>
         /// <param name="filePath">
+        /// Output location for .csv file
+        /// </param>
+        /// </summary>
+        public static void ExportToCSV(ObservableCollection<RowViewModel> rowCollection, string filePath)
+        {
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+
+            using (var csv = new StreamWriter(filePath, true))
+            {
+                foreach (RowViewModel rvm in rowCollection)
+                {
+                    var newLine = string.Join(",", rvm.values);
+                    csv.WriteLine(newLine);
+                }
+
+                csv.Close();
+            }
+        }
+
+        /// <summary>
+        /// Write contents of RowModels to spreadsheet
+        /// <param name="rowCollection">
+        /// Contents of data grid
+        /// </param>
+        /// <param name="filePath">
         /// Output location for .xlsx file
         /// </param>
         /// </summary>
@@ -75,9 +103,9 @@ namespace BayesianModeling.Utilities
 
             IXLWorksheet ws;
 
-            if (!wb.TryGetWorksheet("Bayesian Model Selector Calculations", out ws))
+            if (!wb.TryGetWorksheet("Model Selector", out ws))
             {
-                ws = wb.AddWorksheet("Bayesian Model Selector Calculations");
+                ws = wb.AddWorksheet("Model Selector");
             }
 
             for (int i = 0; i < rowCollection.Count; i++)
@@ -116,12 +144,11 @@ namespace BayesianModeling.Utilities
                 wb = new XLWorkbook();
             }
 
-
             IXLWorksheet ws;
 
             if (!wb.TryGetWorksheet(worksheetName, out ws))
             {
-                ws = wb.AddWorksheet("Bayesian Model Selector Calculations");
+                ws = wb.AddWorksheet(worksheetName);
             }
 
             for (int i = 0; i < rowCollection.Count; i++)
