@@ -82,7 +82,6 @@
                                     RowDetailsVisibilityMode="Visible"
                                     ClipboardCopyMode="ExcludeHeader"
                                     ItemsSource="{Binding RowViewModels}"
-                                    DisplayRowNumbers="True"
                                     BorderThickness="0"
                                     VerticalAlignment="Stretch">
                 <DataGrid.ColumnHeaderStyle>

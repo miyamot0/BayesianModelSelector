@@ -38,53 +38,17 @@ namespace BayesianModeling.Utilities
                 new CommandBinding(ApplicationCommands.Paste,
                 new ExecutedRoutedEventHandler(OnExecutedPaste),
                 new CanExecuteRoutedEventHandler(OnCanExecutePaste)));
-        }
 
-        /// <summary>
-        /// Dependency property for display of row headers (T/F)
-        /// </summary>
-        public static DependencyProperty RowNumber = DependencyProperty.RegisterAttached("DisplayRowNumbers",
-            typeof(bool),
-            typeof(CustomDataGrid),
-            new FrameworkPropertyMetadata(false, ChangeRowNumberEvent));
-
-        public static bool GetDisplayRowNumbers(DependencyObject sender)
-        {
-            return ((bool)sender.GetValue(RowNumber));
-        }
-
-        public static void SetDisplayRowNumbers(DependencyObject sender, bool value)
-        {
-            sender.SetValue(RowNumber, value);
-        }
-
-        /// <summary>
-        /// Adding/Removing event
-        /// <param name="sender">
-        /// Event reference to data grid proper, used to traverse tree for individual grid rows
-        /// </param>
-        /// 
-        /// <param name="args">
-        /// Event arguments for changing row, provides reference for change (if new) and to header fields
-        /// </param>
-        /// </summary>
-        private static void ChangeRowNumberEvent(DependencyObject sender, DependencyPropertyChangedEventArgs args)
-        {
-            if ((bool)args.NewValue == false)
-                return;
-
-            ((DataGrid)sender).LoadingRow += (object target, DataGridRowEventArgs eArgs) =>
+            LoadingRow += (object target, DataGridRowEventArgs eArgs) =>
             {
                 eArgs.Row.Header = eArgs.Row.GetIndex();
             };
 
-            ((DataGrid)sender).ItemContainerGenerator.ItemsChanged += (object target, ItemsChangedEventArgs eArgs) =>
+            ItemContainerGenerator.ItemsChanged += (object target, ItemsChangedEventArgs eArgs) =>
             {
-                DataGrid mGrid = (DataGrid)sender;
-
-                foreach (var item in mGrid.Items)
+                foreach (var item in Items)
                 {
-                    DataGridRow row = (DataGridRow)mGrid.ItemContainerGenerator.ContainerFromItem(item);
+                    DataGridRow row = (DataGridRow) ItemContainerGenerator.ContainerFromItem(item);
 
                     if (row != null)
                     {
