@@ -11,16 +11,17 @@ Features include:
   - Wide range of model outputs/metrics, saveable in common spreadsheet file formats
 
 ### Version
-1.0.0.0
+1.0.0.42
 
 ### Referenced Works (F/OSS software)
-The Small N Stats Demand Calculator uses a number of open source projects to work properly:
+The Small N Stats Bayesian Model Selector uses a number of open source projects to work properly:
 * R Statistical Package - GPL v2 Licensed. Copyright (C) 2000-16. The R Core Team [Site](https://www.r-project.org/)
 * RdotNet: Interface for the R Statistical Package - New BSD License (BSD 2-Clause). Copyright(c) 2010, RecycleBin. All rights reserved [Github](https://github.com/jmp75/rdotnet)
 * RdotNet/Dynamic Interop - MIT Licensed. Copyright (c) 2015 Jean-Michel Perraud, Copyright (c) 2014 Daniel Collins, CSIRO, Copyright (c) 2013 Kosei, evolvedmicrobe. [Github](https://github.com/jmp75/dynamic-interop-dll)
 * ClosedXML - MIT Licensed. Copyright (c) 2010 Manuel De Leon. [Codeplex](http://closedxml.codeplex.com/SourceControl/latest)
 
 ### Referenced Works (R packages/scripts)
+The Bayesian Model Selector accesses the following R packages to perform statistical methods:
 * nls R Package - GPLv2 Licensed. Copyright (C) 1999-1999 Saikat DebRoy, Douglas M. Bates, Jose C. Pinheiro.
 * nls R Package - GPLv2 Licensed. Copyright (C) 2000-7. The R Core Team.
 * ggplot2 R Package - GPLv2 Licensed. Copyright (c) 2016, Hadley Wickham.
