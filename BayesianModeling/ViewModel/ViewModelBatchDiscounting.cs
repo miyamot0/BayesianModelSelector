@@ -694,9 +694,7 @@ namespace BayesianModeling.ViewModel
 
                     for (int j = lowColValue; j <= highColValue; j++)
                     {
-                        //mCell = DataGridTools.GetDataGridCell(mWindow.dataGrid, DataGridTools.GetDataGridRow(mWindow.dataGrid, i), j);
                         mCell = itemSource[i].values[j];
-                        //mDouble[j - lowColValue, i - lowRowValue] = (((TextBlock)mCell.Content)).Text.ToString();
                         mDouble[j - lowColValue, i - lowRowValue] = mCell;
                     }
                 }

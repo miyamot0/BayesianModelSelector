@@ -457,6 +457,8 @@ namespace BayesianModeling.ViewModel
                 licenseTitle = "License (GPLv2) - Gnome Icons",
                 licenseText = Properties.Resources.License_Gnome_Icons
             };
+            window.Owner = MainWindow;
+            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             window.Show();
         }
 
@@ -471,6 +473,8 @@ namespace BayesianModeling.ViewModel
                 licenseTitle = "License (GPLv2) - BDS Script",
                 licenseText = Properties.Resources.License_BDS
             };
+            window.Owner = MainWindow;
+            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             window.Show();
         }
 
@@ -485,6 +489,8 @@ namespace BayesianModeling.ViewModel
                 licenseTitle = "License (MIT) - Closed XML",
                 licenseText = Properties.Resources.License_ClosedXML
             };
+            window.Owner = MainWindow;
+            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             window.Show();
         }
 
@@ -499,6 +505,8 @@ namespace BayesianModeling.ViewModel
                 licenseTitle = "License (GPLv2) - NLS",
                 licenseText = Properties.Resources.License_NLS
             };
+            window.Owner = MainWindow;
+            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             window.Show();
         }
 
@@ -513,6 +521,8 @@ namespace BayesianModeling.ViewModel
                 licenseTitle = "License (GPLv2) - RdotNet",
                 licenseText = Properties.Resources.License_RdotNet
             };
+            window.Owner = MainWindow;
+            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             window.Show();
         }
 
@@ -527,6 +537,8 @@ namespace BayesianModeling.ViewModel
                 licenseTitle = "License (GPLv2+) - R",
                 licenseText = Properties.Resources.License_R
             };
+            window.Owner = MainWindow;
+            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             window.Show();
         }
 
@@ -541,6 +553,8 @@ namespace BayesianModeling.ViewModel
                 licenseTitle = "License (GPLv2) - ggplot2",
                 licenseText = Properties.Resources.License_ggplot2
             };
+            window.Owner = MainWindow;
+            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             window.Show();
         }
 
@@ -555,6 +569,8 @@ namespace BayesianModeling.ViewModel
                 licenseTitle = "License (GPLv2+) - gridExtra",
                 licenseText = Properties.Resources.License_Gridextra
             };
+            window.Owner = MainWindow;
+            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             window.Show();
         }
 
@@ -569,6 +585,8 @@ namespace BayesianModeling.ViewModel
                 licenseTitle = "License (MIT) - reshape2",
                 licenseText = Properties.Resources.License_reshape2
             };
+            window.Owner = MainWindow;
+            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             window.Show();
         }
 
