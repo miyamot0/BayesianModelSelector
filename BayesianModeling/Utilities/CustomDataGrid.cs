@@ -20,7 +20,6 @@
 using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows;
 using System.ComponentModel;
 using System.Windows.Data;
 using System.Windows.Controls.Primitives;
