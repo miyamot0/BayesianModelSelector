@@ -588,8 +588,6 @@ namespace BayesianModeling.ViewModel
         /// </summary>
         private void ViewLoaded()
         {
-            ShuttingDown = false;
-
             IntroWindow introWindow = new IntroWindow();
             introWindow.Owner = MainWindow;
             introWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
