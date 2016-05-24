@@ -140,7 +140,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Behaviors\ShutDownBehavior.cs" />
     <Compile Include="Mathematics\BayesianModelSelection.cs" />
     <Compile Include="Utilities\ClipboardTools.cs" />
     <Compile Include="Utilities\CustomDataGrid.cs" />

@@ -23,7 +23,6 @@
         xmlns:local="clr-namespace:BayesianModeling"
         xmlns:settings="clr-namespace:BayesianModeling.Properties"
         xmlns:custom="clr-namespace:BayesianModeling.Utilities"
-        xmlns:bx="clr-namespace:BayesianModeling.Behaviors"
         x:Class="BayesianModeling.MainWindow"
         mc:Ignorable="d"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
@@ -32,10 +31,6 @@
         Width="{Binding Source={x:Static settings:Settings.Default}, Path=MainWidth, Mode=TwoWay}"
         Top="{Binding Source={x:Static settings:Settings.Default}, Path=MainTop, Mode=TwoWay}" 
         Left="{Binding Source={x:Static settings:Settings.Default}, Path=MainLeft, Mode=TwoWay}"          >
-
-    <i:Interaction.Behaviors>
-        <bx:ShutDownBehavior ShuttingDownFlag="{Binding ShuttingDown}" />
-    </i:Interaction.Behaviors>
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
@@ -105,7 +100,8 @@
                     <Separator />
                     <MenuItem Header="_Close" 
                               x:Name="closeMenuItem" 
-                              Command="{Binding FileCloseCommand}">
+                              Command="{Binding FileCloseCommand}"
+                              CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}">
                         <MenuItem.Icon>
                             <Image Source="/Images/application-exit.png" />
                         </MenuItem.Icon>

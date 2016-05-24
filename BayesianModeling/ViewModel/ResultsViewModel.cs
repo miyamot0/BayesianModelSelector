@@ -31,17 +31,6 @@ namespace BayesianModeling.ViewModel
         public RelayCommand FileSaveCommand { get; set; }
         public RelayCommand FileCloseCommand { get; set; }
 
-        public bool shuttingDown = false;
-        public bool ShuttingDown
-        {
-            get { return shuttingDown; }
-            set
-            {
-                shuttingDown = value;
-                OnPropertyChanged("ShuttingDown");
-            }
-        }
-
         public ObservableCollection<RowViewModel> RowViewModels { get; set; }
         
         public ResultsViewModel()
@@ -49,14 +38,7 @@ namespace BayesianModeling.ViewModel
             RowViewModels = new ObservableCollection<RowViewModel>();
 
             FileSaveCommand = new RelayCommand(param => SaveFile(), param => true);
-            FileCloseCommand = new RelayCommand(param => CloseProgram(), param => true);
-
-            ShuttingDown = false;
-        }
-
-        private void CloseProgram()
-        {
-            ShuttingDown = true;
+            FileCloseCommand = new RelayCommand(param => CloseProgramWindow(param), param => true);
         }
 
         private void SaveFile()
@@ -85,6 +67,20 @@ namespace BayesianModeling.ViewModel
                     MessageBox.Show("We weren't able to save.  Is the target file either open, missing or in use?");
                     Console.WriteLine(e.ToString());
                 }
+            }
+        }
+
+        /// <summary>
+        /// Shutdown event
+        /// </summary>
+        /// <param name="param"></param>
+        private void CloseProgramWindow(object param)
+        {
+            var windowObj = param as Window;
+
+            if (windowObj != null)
+            {
+                windowObj.Close();
             }
         }
     }

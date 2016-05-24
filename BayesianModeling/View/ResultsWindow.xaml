@@ -23,16 +23,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BayesianModeling.View"
         xmlns:custom="clr-namespace:BayesianModeling.Utilities"
-        xmlns:bx="clr-namespace:BayesianModeling.Behaviors"
         mc:Ignorable="d"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         Title="ResultsWindow" 
         Height="400" 
         Width="400">
-
-    <i:Interaction.Behaviors>
-        <bx:ShutDownBehavior ShuttingDownFlag="{Binding ShuttingDown}" />
-    </i:Interaction.Behaviors>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -59,7 +54,8 @@
                     <Separator />
                     <MenuItem Header="_Close" 
 						x:Name="closeMenuItem" 
-						Command="{Binding FileCloseCommand}">
+                              Command="{Binding FileCloseCommand}"
+                              CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}">
                         <MenuItem.Icon>
                             <Image Source="/Images/application-exit.png" />
                         </MenuItem.Icon>
