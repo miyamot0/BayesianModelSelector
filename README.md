@@ -53,4 +53,4 @@ Want to contribute? Great! Emails or PM's are welcome.
 
 ### License
 ----
-GPL-Version 2
+Bayesian Model Selector - Copyright 2016, Shawn P. Gilroy. GPL-Version 2
