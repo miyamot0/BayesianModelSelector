@@ -20,14 +20,16 @@
 using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.ComponentModel;
-using System.Windows.Data;
 using System.Windows.Controls.Primitives;
+using System.Collections.ObjectModel;
+using BayesianModeling.ViewModel;
 
 namespace BayesianModeling.Utilities
 {
     public class CustomDataGrid : DataGrid
     {
+        private const int MaxColumns = 99;
+
         /// <summary>
         /// Extension of DataGrid control to include row numbers and on-demand paste operations
         /// </summary>
@@ -92,28 +94,25 @@ namespace BayesianModeling.Utilities
             int lowRow = Items.IndexOf(CurrentItem),        // Current highlighted cell's row
                 highRow = Items.Count - 1,                  // Highest row in table
                 lowCol = Columns.IndexOf(CurrentColumn),    // Current highlighted cell's column
-                highCol = Columns.Count - 1,                // Highest column index in tabl
                 pasteContentRowIterator = 0,
                 pasteContentColumnIterator = 0;
 
-            var rowSource = (IEditableCollectionView)CollectionViewSource.GetDefaultView(Items);
+            var itemSource = ItemsSource as ObservableCollection<RowViewModel>;
 
             for (int i = lowRow; (i <= highRow) && (pasteContentRowIterator < rowData.Count); i++)
             {
                 if (i == highRow)
                 {
-                    rowSource.AddNew();                     // Add new rows if more space needed
-                    if (pasteContentRowIterator + 1 < rowData.Count)
-                    {
-                        highRow++;                          // Update table row max
-                    }
+                    itemSource.Add(new RowViewModel());
+                    highRow = (pasteContentRowIterator + 1 < rowData.Count) ? highRow + 1 : highRow;
                 }
 
                 pasteContentColumnIterator = 0;
 
-                for (int j = lowCol; (j < highCol) && (pasteContentColumnIterator < rowData[pasteContentRowIterator].Length); j++)
+                for (int j = lowCol; (j < MaxColumns) && (pasteContentColumnIterator < rowData[pasteContentRowIterator].Length); j++)
                 {
-                    Items[i].GetType().GetProperty(DataGridTools.GetColumnName(j)).SetValue(Items[i], rowData[pasteContentRowIterator][pasteContentColumnIterator], null);
+                    itemSource[i].values[j] = rowData[pasteContentRowIterator][pasteContentColumnIterator];
+                    itemSource[i].ForcePropertyUpdate(j);
                     pasteContentColumnIterator++;
                 }
 
