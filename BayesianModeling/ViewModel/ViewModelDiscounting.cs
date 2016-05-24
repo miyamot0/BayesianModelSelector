@@ -692,6 +692,8 @@ namespace BayesianModeling.ViewModel
         /// </summary>
         private void CalculateScores()
         {
+            mWindow.dataGrid.CommitEdit();
+
             if (failed) return;
 
             List<double>[] array = GetRangedValues(lowColDelay, highColDelay, lowRowDelay, lowColValue, highColValue, lowRowValue);

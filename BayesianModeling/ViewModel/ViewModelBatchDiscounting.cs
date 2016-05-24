@@ -714,6 +714,8 @@ namespace BayesianModeling.ViewModel
         /// </summary>
         private void CalculateScores()
         {
+            mWindow.dataGrid.CommitEdit();
+
             if (failed) return;
 
             mWindow.OutputEvents("---------------------------------------------------");

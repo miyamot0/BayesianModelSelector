@@ -391,7 +391,7 @@ namespace BayesianModeling.ViewModel
         {
             if (MainWindow.dataGrid.SelectedCells.Count > 0)
             {
-                foreach (System.Windows.Controls.DataGridCellInfo obj in MainWindow.dataGrid.SelectedCells)
+                foreach (DataGridCellInfo obj in MainWindow.dataGrid.SelectedCells)
                 {
                     var rvm = obj.Item as RowViewModel;
 
@@ -428,7 +428,7 @@ namespace BayesianModeling.ViewModel
                 string holdClip = string.Join("\t", holdPreClip);
                 Clipboard.SetText(holdClip);
 
-                foreach (System.Windows.Controls.DataGridCellInfo obj in MainWindow.dataGrid.SelectedCells)
+                foreach (DataGridCellInfo obj in MainWindow.dataGrid.SelectedCells)
                 {
                     var rvm = obj.Item as RowViewModel;
 
