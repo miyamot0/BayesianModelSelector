@@ -132,17 +132,6 @@ namespace BayesianModeling.ViewModel
             }
         }
 
-        public bool shuttingDown = false;
-        public bool ShuttingDown
-        {
-            get { return shuttingDown; }
-            set
-            {
-                shuttingDown = value;
-                OnPropertyChanged("ShuttingDown");
-            }
-        }
-
         #endregion
 
         #region Commands
