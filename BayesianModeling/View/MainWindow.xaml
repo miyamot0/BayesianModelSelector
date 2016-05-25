@@ -81,6 +81,12 @@
                         <MenuItem.Icon>
                             <Image Source="/Images/document-open.png" />
                         </MenuItem.Icon>
+                        <MenuItem.ItemContainerStyle>
+                            <Style TargetType="{x:Type MenuItem}">
+                                <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                            </Style>
+                        </MenuItem.ItemContainerStyle>
                     </MenuItem>
                     <Separator />
                     <MenuItem Header="_Save" 
