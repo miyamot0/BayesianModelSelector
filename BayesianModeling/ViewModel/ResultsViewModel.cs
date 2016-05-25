@@ -28,11 +28,14 @@ namespace BayesianModeling.ViewModel
 {
     class ResultsViewModel : ViewModelBase
     {
+        
+        public ObservableCollection<RowViewModel> RowViewModels { get; set; }
+
+        /* IO Commands */
+        
         public RelayCommand FileSaveCommand { get; set; }
         public RelayCommand FileCloseCommand { get; set; }
 
-        public ObservableCollection<RowViewModel> RowViewModels { get; set; }
-        
         public ResultsViewModel()
         {
             RowViewModels = new ObservableCollection<RowViewModel>();
@@ -41,6 +44,9 @@ namespace BayesianModeling.ViewModel
             FileCloseCommand = new RelayCommand(param => CloseProgramWindow(param), param => true);
         }
 
+        /// <summary>
+        /// Save the current row's to file
+        /// </summary>
         private void SaveFile()
         {
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
@@ -71,7 +77,7 @@ namespace BayesianModeling.ViewModel
         }
 
         /// <summary>
-        /// Shutdown event
+        /// Shutdown command, receiving window as command parameter
         /// </summary>
         /// <param name="param"></param>
         private void CloseProgramWindow(object param)
