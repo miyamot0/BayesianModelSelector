@@ -262,7 +262,7 @@
             </custom:CustomDataGrid>
         </DockPanel>
 
-        <ScrollViewer HorizontalScrollBarVisibility="Visible" 
+        <ScrollViewer HorizontalScrollBarVisibility="Hidden" 
                       VerticalScrollBarVisibility="Auto" 
                       x:Name="Scroller2"
                       Grid.Row="3">

@@ -29,7 +29,8 @@
     <StackPanel VerticalAlignment="Bottom"                     
                 Margin="5">
 
-        <ScrollViewer>
+        <ScrollViewer
+            VerticalScrollBarVisibility="Hidden">
             <TextBlock x:Name="MessageLabel" 
                    ScrollViewer.HorizontalScrollBarVisibility="Visible"
                    ScrollViewer.VerticalScrollBarVisibility="Auto"
