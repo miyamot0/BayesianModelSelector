@@ -258,7 +258,6 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <None Include="Resources\License_ClosedXML.txt" />
     <None Include="Resources\License.txt" />
     <None Include="Resources\License_BDS.txt" />
     <Content Include="LICENSE.txt">
