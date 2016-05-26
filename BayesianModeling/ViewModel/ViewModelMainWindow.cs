@@ -183,6 +183,7 @@ namespace BayesianModeling.ViewModel
         /* Logic */
 
         bool haveFileLoaded = false;
+        bool failed = false;
         string path = "";
         public static int RowSpans = 50;
         public static int ColSpans = 100;
@@ -593,8 +594,6 @@ namespace BayesianModeling.ViewModel
             introWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             introWindow.Show();
 
-            bool failed = false;
-
             SendMessageToOutput("Welcome to Bayesian discounting model selector!");
             SendMessageToOutput("");
             SendMessageToOutput("All view elements loaded");
@@ -633,6 +632,7 @@ namespace BayesianModeling.ViewModel
 
             if (failed)
             {
+                SendMessageToOutput("R Installation not found, please install in order to continue.");
                 if (MessageBox.Show("R was not found on your computer.  Do you want to be directed to the R web site for more information?", "R Not Found", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                 {
                     Process.Start("https://www.r-project.org/");
@@ -694,6 +694,17 @@ namespace BayesianModeling.ViewModel
         /// </summary>
         private void OpenDiscountingWindow()
         {
+            if (failed)
+            {
+                SendMessageToOutput("R Installation not found, please install in order to continue.");
+                if (MessageBox.Show("R was not found on your computer.  Do you want to be directed to the R web site for more information?", "R Not Found", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                {
+                    Process.Start("https://www.r-project.org/");
+                }
+
+                return;
+            }
+
             var mWin = new DiscountingWindow();
             mWin.Owner = MainWindow;
             mWin.DataContext = new ViewModelDiscounting()
@@ -709,6 +720,17 @@ namespace BayesianModeling.ViewModel
         /// </summary>
         private void OpenBatchDiscountingWindow()
         {
+            if (failed)
+            {
+                SendMessageToOutput("R Installation not found, please install in order to continue.");
+                if (MessageBox.Show("R was not found on your computer.  Do you want to be directed to the R web site for more information?", "R Not Found", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                {
+                    Process.Start("https://www.r-project.org/");
+                }
+
+                return;
+            }
+
             var mWin = new BatchDiscountingWindow();
             mWin.Owner = MainWindow;
             mWin.DataContext = new ViewModelBatchDiscounting()
