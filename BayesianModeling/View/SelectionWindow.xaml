@@ -25,6 +25,7 @@
         mc:Ignorable="d"
         Title="Choice Prompt" 
         Height="150" 
+        WindowStartupLocation="CenterOwner"
         Width="350">
     <StackPanel VerticalAlignment="Bottom"                     
                 Margin="5">

@@ -27,10 +27,9 @@
         mc:Ignorable="d"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         Title="{Binding Title}"
+        WindowStartupLocation="CenterOwner"
         Height="{Binding Source={x:Static settings:Settings.Default}, Path=MainHeight, Mode=TwoWay}"
-        Width="{Binding Source={x:Static settings:Settings.Default}, Path=MainWidth, Mode=TwoWay}"
-        Top="{Binding Source={x:Static settings:Settings.Default}, Path=MainTop, Mode=TwoWay}" 
-        Left="{Binding Source={x:Static settings:Settings.Default}, Path=MainLeft, Mode=TwoWay}"          >
+        Width="{Binding Source={x:Static settings:Settings.Default}, Path=MainWidth, Mode=TwoWay}">
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">

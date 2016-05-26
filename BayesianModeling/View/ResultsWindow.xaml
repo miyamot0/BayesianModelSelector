@@ -26,6 +26,7 @@
         mc:Ignorable="d"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         Title="ResultsWindow" 
+        WindowStartupLocation="CenterOwner"
         Height="400" 
         Width="400">
 

@@ -29,9 +29,8 @@
         mc:Ignorable="d"
         Title="Discounting Analyses" 
         Height="450" 
-        Width="425"
-        Top="{Binding Source={x:Static settings:Settings.Default}, Path=DiscountTop, Mode=TwoWay}" 
-        Left="{Binding Source={x:Static settings:Settings.Default}, Path=DiscountLeft, Mode=TwoWay}">
+        WindowStartupLocation="CenterOwner"
+        Width="425">
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">

@@ -11,41 +11,18 @@
     <Setting Name="MainHeight" Type="System.Double" Scope="User">
       <Value Profile="(Default)">400</Value>
     </Setting>
-    <Setting Name="MainTop" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">100</Value>
-    </Setting>
-    <Setting Name="MainLeft" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">100</Value>
-    </Setting>
     <Setting Name="ResultWidth" Type="System.Double" Scope="User">
       <Value Profile="(Default)">400</Value>
     </Setting>
     <Setting Name="ResultHeight" Type="System.Double" Scope="User">
       <Value Profile="(Default)">400</Value>
     </Setting>
-    <Setting Name="ResultTop" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">100</Value>
-    </Setting>
-    <Setting Name="ResultLeft" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">100</Value>
-    </Setting>
-    <Setting Name="DiscountTop" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">100</Value>
-    </Setting>
-    <Setting Name="DiscountLeft" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">100</Value>
-    </Setting>
     <Setting Name="Updated" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="BatchDiscountTop" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">100</Value>
-    </Setting>
-    <Setting Name="BatchDiscountLeft" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">100</Value>
-    </Setting>
     <Setting Name="RecentFiles" Type="System.String" Scope="User">
-      <Value Profile="(Default)"> </Value>
+      <Value Profile="(Default)">
+                </Value>
     </Setting>
   </Settings>
 </SettingsFile>

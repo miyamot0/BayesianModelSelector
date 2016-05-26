@@ -28,6 +28,7 @@
         ResizeMode="NoResize"
         Height="625" 
         Width="450"
+        WindowStartupLocation="CenterOwner"
         Loaded="Window_Loaded">
     <Grid>
         <FlowDocumentScrollViewer VerticalScrollBarVisibility="Disabled"

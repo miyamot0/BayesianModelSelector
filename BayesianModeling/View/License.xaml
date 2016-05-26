@@ -26,6 +26,7 @@
         Icon="/Images/text-x-preview.png"
         Title="{Binding LicenseTitle}" 
         Height="300" 
+        WindowStartupLocation="CenterOwner"
         Width="525">
     <Grid>
         <ScrollViewer

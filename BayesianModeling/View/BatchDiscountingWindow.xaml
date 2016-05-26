@@ -29,9 +29,8 @@
         mc:Ignorable="d"
         Height="425" 
         Width="425"
-        Title="Batch Discounting Analyses"
-        Top="{Binding Source={x:Static settings:Settings.Default}, Path=BatchDiscountTop, Mode=TwoWay}" 
-        Left="{Binding Source={x:Static settings:Settings.Default}, Path=BatchDiscountLeft, Mode=TwoWay}">
+        WindowStartupLocation="CenterOwner"
+        Title="Batch Discounting Analyses">
 
     <Window.Style>
         <Style TargetType="Window">

@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:BayesianModeling.View"
         mc:Ignorable="d"
         Title="RangePrompt" 
+        WindowStartupLocation="CenterOwner"
         Height="150" 
         Width="300">
     <StackPanel VerticalAlignment="Bottom" 
