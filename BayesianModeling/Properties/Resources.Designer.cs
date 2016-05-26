@@ -5,7 +5,7 @@
 //
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
-// </auto-generated> 
+// </auto-generated>
 //------------------------------------------------------------------------------
 
 namespace BayesianModeling.Properties {
@@ -159,6 +159,22 @@ namespace BayesianModeling.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Version 2.1, February 1999
+        ///
+        ///Copyright (C) 1991, 1999 Free Software Foundation, Inc. 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA Everyone is permitted to copy and distribute verbatim copies of this license document, but changing it is not allowed.
+        ///[This is the first released version of the Lesser GPL. It also counts as the successor of the GNU Library Public License, version 2, hence the version number 2.1.]
+        ///
+        ///Preamble
+        ///
+        ///The licenses for most software are designed to take away your freedom to  [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string License_EPPlus {
+            get {
+                return ResourceManager.GetString("License_EPPlus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 		    GNU GENERAL PUBLIC LICENSE
         ///		       Version 2, June 1991
         ///
@@ -281,7 +297,7 @@ namespace BayesianModeling.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to YEAR: 2008-2014
-        ///COPYRIGHT HOLDER: Hadley Wickham.
+        ///COPYRIGHT HOLDER: Hadley Wickham .
         /// </summary>
         public static string License_reshape2 {
             get {

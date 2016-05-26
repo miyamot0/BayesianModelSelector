@@ -178,8 +178,8 @@
                                 <Image Source="/Images/text-x-preview.png" />
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Header="Closed XML License (MIT)" 
-                                  Command="{Binding ClosedXMLLicenseWindowCommand}">
+                        <MenuItem Header="EPPlus License (LGPL)" 
+                                  Command="{Binding EPPLicenseWindowCommand}">
                             <MenuItem.Icon>
                                 <Image Source="/Images/text-x-preview.png" />
                             </MenuItem.Icon>
