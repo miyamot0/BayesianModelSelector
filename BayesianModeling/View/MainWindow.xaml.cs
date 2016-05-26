@@ -15,8 +15,9 @@
     You should have received a copy of the GNU General Public License
     along with Bayesian Model Selector.  If not, see <http://www.gnu.org/licenses/gpl-2.0.html>.
 
- */ 
+ */
 
+using BayesianModeling.ViewModel;
 using Microsoft.Win32;
 using System.IO;
 using System.Windows;
@@ -73,5 +74,30 @@ namespace BayesianModeling
             outputWindow2.Document.Blocks.Clear();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            var viewModel = (ViewModelMainWindow) DataContext;
+
+            if (viewModel.ViewLoadedCommand.CanExecute(null))
+                viewModel.ViewLoadedCommand.Execute(null);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            var viewModel = (ViewModelMainWindow)DataContext;
+
+            if (viewModel.ViewClosingCommand.CanExecute(null))
+                viewModel.ViewClosingCommand.Execute(null);
+        }
     }
 }

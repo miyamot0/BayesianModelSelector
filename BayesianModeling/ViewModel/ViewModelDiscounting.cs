@@ -247,6 +247,15 @@ namespace BayesianModeling.ViewModel
         /* UI Logic */
 
         private bool outputFigures = false;
+        public bool OutputFigures
+        {
+            get { return outputFigures; }
+            set
+            {
+                outputFigures = value;
+                OnPropertyChanged("OutputFigures");
+            }
+        }
         private bool outputWorkbook = false;
         bool failed;
 
@@ -255,6 +264,8 @@ namespace BayesianModeling.ViewModel
         /// </summary>
         public ViewModelDiscounting()
         {
+            NoiseModel = HyperbolicModel = ExponentialModel = QuasiHyperbolicModel = MyerHyperboloidModel = RachHyperboloidModel = true;
+
             ViewLoadedCommand = new RelayCommand(param => ViewLoaded(), param => true);
             ViewClosingCommand = new RelayCommand(param => ViewClosed(), param => true);
             GetDelaysRangeCommand = new RelayCommand(param => GetDelaysRange(), param => true);
@@ -626,6 +637,16 @@ namespace BayesianModeling.ViewModel
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public string ConvertBoolToString(bool value)
+        {
+            return value == true ? "1" : "0";
+        }
+
+        /// <summary>
         /// Walk through ranged values as needed, finding necessary pairs
         /// </summary>
         /// <param name="startColDelay">
@@ -771,7 +792,16 @@ namespace BayesianModeling.ViewModel
                 engine.Evaluate(BayesianModelSelection.GetFranckFunction());
                 
                 engine.Evaluate("datHack<-data.frame(X = mDelays, Y = mIndiffs, ses=mSes)");
-                engine.Evaluate("output <- BDS(datHack)");
+
+                string evalStatement = string.Format("output <-BDS(datHack, Noise={0},Mazur={1},Exponential={2},Rachlin={3},GreenMyerson={4},BD={5})",
+                    1,
+                    ConvertBoolToString(HyperbolicModel),
+                    ConvertBoolToString(ExponentialModel),
+                    ConvertBoolToString(RachHyperboloidModel),
+                    ConvertBoolToString(MyerHyperboloidModel),
+                    ConvertBoolToString(QuasiHyperbolicModel));
+
+                engine.Evaluate(evalStatement);
 
                 engine.Evaluate("ainslieK <- as.numeric(output[[2]]['Mazur.lnk'])");
                 engine.Evaluate("samuelsonK <- as.numeric(output[[3]]['exp.lnk'])");

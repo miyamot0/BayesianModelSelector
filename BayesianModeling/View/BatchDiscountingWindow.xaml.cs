@@ -17,6 +17,7 @@
      
 */
 
+using BayesianModeling.ViewModel;
 using System.Windows;
 
 namespace BayesianModeling.View
@@ -29,6 +30,22 @@ namespace BayesianModeling.View
         public BatchDiscountingWindow()
         {
             InitializeComponent();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            var viewModel = (ViewModelBatchDiscounting)DataContext;
+
+            if (viewModel.ViewLoadedCommand.CanExecute(null))
+                viewModel.ViewLoadedCommand.Execute(null);
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            var viewModel = (ViewModelBatchDiscounting)DataContext;
+
+            if (viewModel.ViewClosingCommand.CanExecute(null))
+                viewModel.ViewClosingCommand.Execute(null);
         }
     }
 }

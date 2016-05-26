@@ -24,7 +24,6 @@
         xmlns:local="clr-namespace:BayesianModeling.View"
         xmlns:custom="clr-namespace:BayesianModeling.Utilities"
         mc:Ignorable="d"
-        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         Title="ResultsWindow" 
         WindowStartupLocation="CenterOwner"
         Height="400" 

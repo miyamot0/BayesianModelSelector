@@ -264,6 +264,8 @@ namespace BayesianModeling.ViewModel
         /// </summary>
         public ViewModelBatchDiscounting()
         {
+            NoiseModel = HyperbolicModel = ExponentialModel = QuasiHyperbolicModel = MyerHyperboloidModel = RachHyperboloidModel = true;
+
             ViewLoadedCommand = new RelayCommand(param => ViewLoaded(), param => true);
             ViewClosingCommand = new RelayCommand(param => ViewClosed(), param => true);
             GetDelaysRangeCommand = new RelayCommand(param => GetDelaysRange(), param => true);
@@ -709,6 +711,16 @@ namespace BayesianModeling.ViewModel
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public string ConvertBoolToString(bool value)
+        {
+            return value == true ? "1" : "0";
+        }
+
+        /// <summary>
         /// Command-call to calculate based on supplied ranges and reference values (max value).
         /// Will reference user-selected options (figures, outputs, etc.) throughout calls to R
         /// </summary>
@@ -842,7 +854,15 @@ namespace BayesianModeling.ViewModel
                     }
 
                     engine.Evaluate("datHack<-data.frame(X = mDelays, Y = mIndiffs, ses=mSes)");
-                    engine.Evaluate("output <- BDS(datHack)");
+                    string evalStatement = string.Format("output <-BDS(datHack, Noise={0},Mazur={1},Exponential={2},Rachlin={3},GreenMyerson={4},BD={5})",
+                        1,
+                        ConvertBoolToString(HyperbolicModel),
+                        ConvertBoolToString(ExponentialModel),
+                        ConvertBoolToString(RachHyperboloidModel),
+                        ConvertBoolToString(MyerHyperboloidModel),
+                        ConvertBoolToString(QuasiHyperbolicModel));
+
+                    engine.Evaluate(evalStatement);
                     //engine.Evaluate("ainslieK <- as.numeric(output[[2]]['Mazur.lnk'])");
                     //engine.Evaluate("samuelsonK <- as.numeric(output[[3]]['exp.lnk'])");
                     //engine.Evaluate("beta <- as.numeric(output[[9]]['BD.beta'])");
