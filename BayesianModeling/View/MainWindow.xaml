@@ -30,7 +30,7 @@
         WindowStartupLocation="CenterOwner"
         Height="{Binding Source={x:Static settings:Settings.Default}, Path=MainHeight, Mode=TwoWay}"
         Width="{Binding Source={x:Static settings:Settings.Default}, Path=MainWidth, Mode=TwoWay}">
-
+   
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding ViewLoadedCommand}"/>
@@ -80,12 +80,6 @@
                         <MenuItem.Icon>
                             <Image Source="/Images/document-open.png" />
                         </MenuItem.Icon>
-                        <MenuItem.ItemContainerStyle>
-                            <Style TargetType="{x:Type MenuItem}">
-                                <Setter Property="HorizontalContentAlignment" Value="Left"/>
-                                <Setter Property="VerticalContentAlignment" Value="Center"/>
-                            </Style>
-                        </MenuItem.ItemContainerStyle>
                     </MenuItem>
                     <Separator />
                     <MenuItem Header="_Save" 

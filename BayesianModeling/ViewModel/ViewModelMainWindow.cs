@@ -695,7 +695,6 @@ namespace BayesianModeling.ViewModel
         private void OpenDiscountingWindow()
         {
             var mWin = new DiscountingWindow();
-            mWin.Topmost = true;
             mWin.Owner = MainWindow;
             mWin.DataContext = new ViewModelDiscounting()
             {
@@ -711,7 +710,6 @@ namespace BayesianModeling.ViewModel
         private void OpenBatchDiscountingWindow()
         {
             var mWin = new BatchDiscountingWindow();
-            mWin.Topmost = true;
             mWin.Owner = MainWindow;
             mWin.DataContext = new ViewModelBatchDiscounting()
             {
@@ -728,8 +726,6 @@ namespace BayesianModeling.ViewModel
         {
             var mWin = new InformationWindow();
             mWin.Owner = MainWindow;
-            mWin.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            mWin.Topmost = true;
             mWin.Show();
         }
 
