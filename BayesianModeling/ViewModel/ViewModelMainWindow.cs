@@ -841,6 +841,8 @@ namespace BayesianModeling.ViewModel
                         path = Path.GetDirectoryName(saveFileDialog1.FileName);
 
                         haveFileLoaded = true;
+                        
+                        AddToRecents(@saveFileDialog1.FileName);
                     }
                     catch (Exception e)
                     {
@@ -897,7 +899,7 @@ namespace BayesianModeling.ViewModel
 
                     haveFileLoaded = true;
 
-
+                    AddToRecents(@saveFileDialog1.FileName);
                 }
                 catch (Exception e)
                 {
