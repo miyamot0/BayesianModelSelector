@@ -62,32 +62,32 @@ namespace BayesianModeling.Utilities
         /// <summary>
         /// Command binding event call to CanExecute parameters
         /// </summary>
-        private static void OnCanExecutePaste(object sender, CanExecuteRoutedEventArgs paras)
+        private static void OnCanExecutePaste(object sender, CanExecuteRoutedEventArgs eArgs)
         {
-            ((CustomDataGrid)sender).OnCanExecutePaste(paras);
+            ((CustomDataGrid)sender).OnCanExecutePaste(eArgs);
         }
 
         /// <summary>
         /// Method returning (if not null) that action can be executed and is handled
         /// </summary>
-        protected virtual void OnCanExecutePaste(CanExecuteRoutedEventArgs paras)
+        protected virtual void OnCanExecutePaste(CanExecuteRoutedEventArgs eArgs)
         {
-            paras.CanExecute = (CurrentCell != null);
-            paras.Handled = true;
+            eArgs.CanExecute = (CurrentCell != null);
+            eArgs.Handled = true;
         }
 
         /// <summary>
         /// Command binding event call to Execute parameters/methods
         /// </summary>
-        private static void OnExecutedPaste(object sender, ExecutedRoutedEventArgs paras)
+        private static void OnExecutedPaste(object sender, ExecutedRoutedEventArgs eArgs)
         {
-            ((CustomDataGrid)sender).OnExecutedPaste(paras);
+            ((CustomDataGrid)sender).OnExecutedPaste(eArgs);
         }
 
         /// <summary>
         /// Paste operation, parsing clipboard information into collection of string arrays, iterating through cells and updating as needed
         /// </summary>
-        protected virtual void OnExecutedPaste(ExecutedRoutedEventArgs paras)
+        protected virtual void OnExecutedPaste(ExecutedRoutedEventArgs eArgs)
         {
             List<string[]> rowData = ClipboardTools.ReadAndParseClipboardData();
 
