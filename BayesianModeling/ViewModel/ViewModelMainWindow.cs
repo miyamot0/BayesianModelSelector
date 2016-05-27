@@ -160,8 +160,8 @@ namespace BayesianModeling.ViewModel
         public RelayCommand NlsLicenseWindowCommand { get; set; }
         public RelayCommand Ggplot2LicenseWindowCommand { get; set; }
         public RelayCommand GridExtraLicenseWindowCommand { get; set; }
-
         public RelayCommand Reshape2LicenseWindowCommand { get; set; }
+        public RelayCommand ScalesLicenseWindowCommand { get; set; }
         public RelayCommand GnomeIconLicenseWindowCommand { get; set; }
         public RelayCommand BDSLicenseWindowCommand { get; set; }
         public RelayCommand EPPLicenseWindowCommand { get; set; }
@@ -279,6 +279,8 @@ namespace BayesianModeling.ViewModel
             Ggplot2LicenseWindowCommand = new RelayCommand(param => Ggplot2LicenseInformationWindow(), param => true);
             GridExtraLicenseWindowCommand = new RelayCommand(param => GridExtraLicenseInformationWindow(), param => true);            
             Reshape2LicenseWindowCommand = new RelayCommand(param => Reshape2LicenseInformationWindow(), param => true);
+            ScalesLicenseWindowCommand = new RelayCommand(param => ScalesLicenseInformationWindow(), param => true);
+            
             GnomeIconLicenseWindowCommand = new RelayCommand(param => GnomeIconLicenseInformationWindow(), param => true);
             BDSLicenseWindowCommand = new RelayCommand(param => BDSLicenseWindow(), param => true);
             EPPLicenseWindowCommand = new RelayCommand(param => EPPLicenseWindow(), param => true);
@@ -576,6 +578,22 @@ namespace BayesianModeling.ViewModel
             window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             window.Show();
         }
+        
+        /// <summary>
+        /// License window
+        /// </summary>
+        private void ScalesLicenseInformationWindow()
+        {
+            var window = new License();
+            window.DataContext = new ViewModelLicense
+            {
+                licenseTitle = "License (MIT) - scales",
+                licenseText = "blank atm"
+            };
+            window.Owner = MainWindow;
+            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            window.Show();
+        }
 
         #endregion Licences
 
@@ -663,6 +681,7 @@ namespace BayesianModeling.ViewModel
                 SendMessageToOutput("ggplot2 R Package - GPLv2 Licensed. Copyright (c) 2016, Hadley Wickham.");
                 SendMessageToOutput("gridExtra R Package - GPLv2+ Licensed. Copyright (c) 2016, Baptiste Auguie.");
                 SendMessageToOutput("reshape2 R Package - MIT Licensed. Copyright (c) 2014, Hadley Wickham.");
+                SendMessageToOutput("scales R Package - MIT Licensed. Copyright (c) 2010-2014, Hadley Wickham.");
                 SendMessageToOutput("EPPlus - LGPL Licensed. Copyright (c) 2016 Jan Källman.");
                 SendMessageToOutput("BDS R Script - GPLv2 Licensed. Copyright (c) 2016, Chris Franck.");
                 SendMessageToOutput("Gnome Icon Set - GPLv2 Licensed.");
