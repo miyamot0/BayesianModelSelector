@@ -16,6 +16,8 @@
     along with Bayesian Model Selector.  If not, see <http://www.gnu.org/licenses/gpl-2.0.html>.
 
     This file uses R.NET Community to leverage interactions with the R program
+    
+    This file uses EPPlus to leverage reading/exporting to spreadsheet formats
 
     ============================================================================
 
