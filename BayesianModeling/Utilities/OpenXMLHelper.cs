@@ -37,17 +37,143 @@
      
 */
 
+using BayesianModeling.View;
 using BayesianModeling.ViewModel;
+using Microsoft.VisualBasic.FileIO;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
+using System.Windows;
 
 namespace BayesianModeling.Utilities
 {
     public class OpenXMLHelper
     {
+
+        /// <summary>
+        /// Reads from CSV file
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns>
+        /// Observable collection for main view
+        /// </returns>
+        public static ObservableCollection<RowViewModel> ReadFromCSVFile(string filePath)
+        {
+            ObservableCollection<RowViewModel> temp = new ObservableCollection<RowViewModel>();
+
+            using (TextFieldParser parser = new TextFieldParser(filePath))
+            {
+                parser.TextFieldType = FieldType.Delimited;
+                parser.SetDelimiters(",");
+
+                while (!parser.EndOfData)
+                {
+                    string[] fields = parser.ReadFields();
+
+                    RowViewModel mModel = new RowViewModel();
+                    for (int i = 0; i < fields.Length && i < 100; i++)
+                    {
+                        mModel.values[i] = fields[i];
+                    }
+
+                    temp.Add(mModel);
+
+                }
+            }
+
+            return temp;
+        }
+
+        /// <summary>
+        /// Reads from XLSX file
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns>
+        /// Observable collection for main view
+        /// </returns>
+        public static ObservableCollection<RowViewModel> ReadFromExcelFile(string filePath, out string sheet)
+        {
+            FileInfo existingFile = new FileInfo(filePath);
+            ObservableCollection<RowViewModel> temp = new ObservableCollection<RowViewModel>();
+            sheet = string.Empty;
+
+            using (ExcelPackage package = new ExcelPackage(existingFile))
+            {
+                var wsMult = package.Workbook.Worksheets;
+
+                List<string> workSheets = new List<string>();
+
+                foreach (ExcelWorksheet sheetPeek in wsMult)
+                {
+                    workSheets.Add(sheetPeek.Name);
+                }
+
+                string[] workSheetsArray = workSheets.ToArray();
+
+                var sheetWindow = new SelectionWindow(workSheetsArray, workSheetsArray[0]);
+                sheetWindow.Title = "Pick a sheet";
+                sheetWindow.MessageLabel.Text = "Select which spreadsheet to load";
+                sheetWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                sheetWindow.Topmost = true;
+
+                int output = -1;
+
+                if (sheetWindow.ShowDialog() == true)
+                {
+                    output = sheetWindow.MessageOptions.SelectedIndex + 1;
+
+                    sheet = workSheetsArray[sheetWindow.MessageOptions.SelectedIndex];
+                }
+
+                if (output == -1)
+                {
+                    return null;
+                }
+
+                var ws = package.Workbook.Worksheets[sheetWindow.MessageOptions.SelectedIndex + 1];
+
+                int currRows = 50;
+
+                for (int i = 0; i < currRows; i++)
+                {
+                    temp.Add(new RowViewModel());
+                }
+
+                var cellsUsed = ws.Cells;
+
+                foreach (var cell in cellsUsed)
+                {
+                    var colStr = DataGridTools.GetColumnIndex(new String(cell.Address.ToCharArray().Where(c => !Char.IsDigit(c)).ToArray()));
+                    var rowStr = int.Parse(new String(cell.Address.ToCharArray().Where(c => Char.IsDigit(c)).ToArray()));
+
+                    if (rowStr >= currRows)
+                    {
+                        while (currRows < rowStr)
+                        {
+                            temp.Add(new RowViewModel());
+                            currRows++;
+                        }
+                    }
+
+                    if (colStr - 1 >= 99)
+                    {
+                        continue;
+                    }
+
+                    if (cell.Text.Length > 0)
+                    {
+                        temp[rowStr - 1].values[colStr] = cell.Text;
+                    }
+                }
+
+            }
+
+            return temp;
+        }
+
         /// <summary>
         /// Write contents of RowModels to spreadsheet
         /// <param name="rowCollection">

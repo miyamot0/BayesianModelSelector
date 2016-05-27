@@ -71,9 +71,7 @@
 
 using BayesianModeling.Utilities;
 using BayesianModeling.View;
-using Microsoft.VisualBasic.FileIO;
 using Microsoft.Win32;
-using OfficeOpenXml;
 using RDotNet;
 using System;
 using System.Collections.Generic;
@@ -978,115 +976,19 @@ namespace BayesianModeling.ViewModel
                 {
                     if (mExt.Equals(".xlsx"))
                     {
-                        FileInfo existingFile = new FileInfo(openFileDialog1.FileName);
+                        ObservableCollection<RowViewModel> temp = OpenXMLHelper.ReadFromExcelFile(openFileDialog1.FileName, out workingSheet);
+                        RowViewModels = new ObservableCollection<RowViewModel>(temp);
 
-                        using (ExcelPackage package = new ExcelPackage(existingFile))
-                        {
-                            var wsMult = package.Workbook.Worksheets;
-
-                            List<string> workSheets = new List<string>();
-
-                            foreach (ExcelWorksheet sheetPeek in wsMult)
-                            {
-                                workSheets.Add(sheetPeek.Name);
-                            }
-
-                            string[] workSheetsArray = workSheets.ToArray();
-
-                            var sheetWindow = new SelectionWindow(workSheetsArray, workSheetsArray[0]);
-                            sheetWindow.Title = "Pick a sheet";
-                            sheetWindow.MessageLabel.Text = "Select which spreadsheet to load";
-                            sheetWindow.Owner = MainWindow;
-                            sheetWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-                            sheetWindow.Topmost = true;
-
-                            int output = -1;
-
-                            if (sheetWindow.ShowDialog() == true)
-                            {
-                                output = sheetWindow.MessageOptions.SelectedIndex + 1;
-
-                                workingSheet = workSheetsArray[sheetWindow.MessageOptions.SelectedIndex];
-                            }
-
-                            if (output == -1)
-                            {
-                                return;
-                            }
-
-                            var ws = package.Workbook.Worksheets[sheetWindow.MessageOptions.SelectedIndex + 1];
-
-                            RowViewModels.Clear();
-
-                            int currRows = 50;
-
-                            ObservableCollection<RowViewModel> temp = new ObservableCollection<RowViewModel>();
-                            for (int i = 0; i < currRows; i++)
-                            {
-                                temp.Add(new RowViewModel());
-                            }
-
-                            var cellsUsed = ws.Cells;
-
-                            foreach (var cell in cellsUsed)
-                            {
-                                var colStr = DataGridTools.GetColumnIndex(new String(cell.Address.ToCharArray().Where(c => !Char.IsDigit(c)).ToArray()));
-                                var rowStr = int.Parse(new String(cell.Address.ToCharArray().Where(c => Char.IsDigit(c)).ToArray()));
-
-                                if (rowStr >= currRows)
-                                {
-                                    while (currRows < rowStr)
-                                    {
-                                        temp.Add(new RowViewModel());
-                                        currRows++;
-                                    }
-                                }
-
-                                if (colStr - 1 >= ColSpans)
-                                {
-                                    continue;
-                                }
-
-                                if (cell.Text.Length > 0)
-                                {
-                                    temp[rowStr - 1].values[colStr] = cell.Text;
-                                }
-                            }
-
-                            RowViewModels = new ObservableCollection<RowViewModel>(temp);
-
-                            UpdateTitle(openFileDialog1.SafeFileName);
-                            haveFileLoaded = true;
-                        }
+                        UpdateTitle(openFileDialog1.SafeFileName);
+                        haveFileLoaded = true;
                     }
                     else if (mExt.Equals(".csv"))
                     {
-                        using (TextFieldParser parser = new TextFieldParser(@openFileDialog1.FileName))
-                        {
-                            parser.TextFieldType = FieldType.Delimited;
-                            parser.SetDelimiters(",");
+                        ObservableCollection<RowViewModel> temp = OpenXMLHelper.ReadFromCSVFile(openFileDialog1.FileName);
+                        RowViewModels = new ObservableCollection<RowViewModel>(temp);
 
-                            RowViewModels.Clear();
-
-                            while (!parser.EndOfData)
-                            {
-                                string[] fields = parser.ReadFields();
-
-                                RowViewModel mModel = new RowViewModel();
-                                for (int i = 0; i < fields.Length && i < 100; i++)
-                                {
-                                    mModel.values[i] = fields[i];
-                                }
-                                RowViewModels.Add(mModel);
-
-                            }
-
-                            workingSheet = "Model Selector";
-
-                            UpdateTitle(openFileDialog1.SafeFileName);
-                            haveFileLoaded = true;
-                        }
-
+                        UpdateTitle(openFileDialog1.SafeFileName);
+                        haveFileLoaded = true;
                     }
 
                     AddToRecents(@openFileDialog1.FileName);
@@ -1129,116 +1031,19 @@ namespace BayesianModeling.ViewModel
             {
                 if (mExt.Equals(".xlsx"))
                 {
-                    FileInfo existingFile = new FileInfo(filePath);
+                    ObservableCollection<RowViewModel> temp = OpenXMLHelper.ReadFromExcelFile(filePath, out workingSheet);
+                    RowViewModels = new ObservableCollection<RowViewModel>(temp);
 
-                    using (ExcelPackage package = new ExcelPackage(existingFile))
-                    {
-                        var wsMult = package.Workbook.Worksheets;
-
-                        List<string> workSheets = new List<string>();
-
-                        foreach (ExcelWorksheet sheetPeek in wsMult)
-                        {
-                            workSheets.Add(sheetPeek.Name);
-                        }
-
-                        string[] workSheetsArray = workSheets.ToArray();
-
-                        var sheetWindow = new SelectionWindow(workSheetsArray, workSheetsArray[0]);
-                        sheetWindow.Title = "Pick a sheet";
-                        sheetWindow.MessageLabel.Text = "Select which spreadsheet to load";
-                        sheetWindow.Owner = MainWindow;
-                        sheetWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-                        sheetWindow.Topmost = true;
-
-                        int output = -1;
-
-                        if (sheetWindow.ShowDialog() == true)
-                        {
-                            output = sheetWindow.MessageOptions.SelectedIndex + 1;
-
-                            workingSheet = workSheetsArray[sheetWindow.MessageOptions.SelectedIndex];
-                        }
-
-                        if (output == -1)
-                        {
-                            return;
-                        }
-
-                        var ws = package.Workbook.Worksheets[sheetWindow.MessageOptions.SelectedIndex + 1];
-
-                        RowViewModels.Clear();
-
-                        int currRows = 50;
-
-                        ObservableCollection<RowViewModel> temp = new ObservableCollection<RowViewModel>();
-                        for (int i = 0; i < currRows; i++)
-                        {
-                            temp.Add(new RowViewModel());
-                        }
-
-                        var cellsUsed = ws.Cells;
-
-                        foreach (var cell in cellsUsed)
-                        {
-                            var colStr = DataGridTools.GetColumnIndex(new String(cell.Address.ToCharArray().Where(c => !Char.IsDigit(c)).ToArray()));
-                            var rowStr = int.Parse(new String(cell.Address.ToCharArray().Where(c => Char.IsDigit(c)).ToArray()));
-
-                            if (rowStr >= currRows)
-                            {
-                                while (currRows < rowStr)
-                                {
-                                    temp.Add(new RowViewModel());
-                                    currRows++;
-                                }
-                            }
-
-                            if (colStr - 1 >= ColSpans)
-                            {
-                                continue;
-                            }
-
-                            if (cell.Text.Length > 0)
-                            {
-                                temp[rowStr - 1].values[colStr] = cell.Text;
-                            }
-
-                        }
-
-                        RowViewModels = new ObservableCollection<RowViewModel>(temp);
-
-                        UpdateTitle(existingFile.Name);
-                        haveFileLoaded = true;
-                    }
+                    UpdateTitle(Path.GetFileName(filePath));
+                    haveFileLoaded = true;
                 }
                 else if (mExt.Equals(".csv"))
                 {
-                    using (TextFieldParser parser = new TextFieldParser(@filePath))
-                    {
-                        parser.TextFieldType = FieldType.Delimited;
-                        parser.SetDelimiters(",");
+                    ObservableCollection<RowViewModel> temp = OpenXMLHelper.ReadFromCSVFile(@filePath);
+                    RowViewModels = new ObservableCollection<RowViewModel>(temp);
 
-                        RowViewModels.Clear();
-
-                        while (!parser.EndOfData)
-                        {
-                            string[] fields = parser.ReadFields();
-
-                            RowViewModel mModel = new RowViewModel();
-                            for (int i = 0; i < fields.Length && i < 100; i++)
-                            {
-                                mModel.values[i] = fields[i];
-                            }
-                            RowViewModels.Add(mModel);
-
-                        }
-
-                        workingSheet = "Model Selector";
-
-                        UpdateTitle(Path.GetFileName(@filePath));
-                        haveFileLoaded = true;
-                    }
-
+                    UpdateTitle(Path.GetFileName(filePath));
+                    haveFileLoaded = true;
                 }
 
                 AddToRecents(@filePath);
