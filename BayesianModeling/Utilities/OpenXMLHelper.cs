@@ -24,18 +24,16 @@
     Copyright (c) 2016 Jan Källman
 
     EPPlus is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation.
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2.
 
     EPPlus is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
+    You should have received a copy of the GNU General Public License
     along with EPPlus.  If not, see <http://epplus.codeplex.com/license>.
-
-    This file uses EPP to leverage interactions with OOXML documents
      
 */
 
@@ -126,9 +124,7 @@ namespace BayesianModeling.Utilities
                 {
                     for (int j = 0; j < 100; j++)
                     {
-//                        ws.Cells[i + 1, j + 1].Style.
                         ws.Cells[i + 1, j + 1].Value = rowCollection[i].values[j];
-                        //Console.WriteLine("Row: {0} Column: {1} Value: {2}", i, j, rowCollection[i].values[j].ToString());
                     }
                 }
 
