@@ -588,7 +588,7 @@ namespace BayesianModeling.ViewModel
             window.DataContext = new ViewModelLicense
             {
                 licenseTitle = "License (MIT) - scales",
-                licenseText = "blank atm"
+                licenseText = Properties.Resources.License_Scales
             };
             window.Owner = MainWindow;
             window.WindowStartupLocation = WindowStartupLocation.CenterOwner;

@@ -141,14 +141,19 @@ namespace BayesianModeling.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Version 2.1, February 1999
+        ///   Looks up a localized string similar to 		    GNU GENERAL PUBLIC LICENSE
+        ///		       Version 2, June 1991
         ///
-        ///Copyright (C) 1991, 1999 Free Software Foundation, Inc. 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA Everyone is permitted to copy and distribute verbatim copies of this license document, but changing it is not allowed.
-        ///[This is the first released version of the Lesser GPL. It also counts as the successor of the GNU Library Public License, version 2, hence the version number 2.1.]
+        /// Copyright (C) 1989, 1991 Free Software Foundation, Inc.
+        ///                       59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+        /// Everyone is permitted to copy and distribute verbatim copies
+        /// of this license document, but changing it is not allowed.
         ///
-        ///Preamble
+        ///			    Preamble
         ///
-        ///The licenses for most software are designed to take away your freedom to  [rest of string was truncated]&quot;;.
+        ///  The licenses for most software are designed to take away your
+        ///freedom to share and change it.  By contrast, the GNU General Public
+        ///License is intended to guara [rest of string was truncated]&quot;;.
         /// </summary>
         public static string License_EPPlus {
             get {
@@ -284,6 +289,24 @@ namespace BayesianModeling.Properties {
         public static string License_reshape2 {
             get {
                 return ResourceManager.GetString("License_reshape2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to scales (R package) is distributed under this license:
+        ///
+        ///Copyright 2010-2014 Hadley Wickham
+        ///
+        ///Permission is hereby granted, free of charge, to any person obtaining a 
+        ///copy of this software and associated documentation files (the &quot;Software&quot;), 
+        ///to deal in the Software without restriction, including without limitation 
+        ///the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+        ///and/or sell copies of the Software, and to permit persons to whom the 
+        ///Software is furnished to do so, subject to  [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string License_Scales {
+            get {
+                return ResourceManager.GetString("License_Scales", resourceCulture);
             }
         }
         
