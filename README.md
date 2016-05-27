@@ -27,6 +27,7 @@ The Bayesian Model Selector accesses the following R packages to perform statist
 * ggplot2 R Package - GPLv2 Licensed. Copyright (c) 2016, Hadley Wickham.
 * gridExtra R Package - GPLv2+ Licensed. Copyright (c) 2016, Baptiste Auguie.
 * reshape2 R Package - MIT Licensed. Copyright (c) 2014, Hadley Wickham.
+* scales R Package - MIT Licensed. Copyright (c) 2010-2014, Hadley Wickham.
 * BDS R Script - GPLv2 Licensed. Copyright (c) 2016, Dr. Chris Franck, Virginia Tech - Department of Statistics.
 
 ### Referenced Works (academic works)
