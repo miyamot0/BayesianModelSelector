@@ -475,7 +475,7 @@ namespace BayesianModeling.ViewModel
             var window = new License();
             window.DataContext = new ViewModelLicense
             {
-                licenseTitle = "License (LGPL) - EPPlus",
+                licenseTitle = "License (GPLv2) - EPPlus",
                 licenseText = Properties.Resources.License_EPPlus
             };
             window.Owner = MainWindow;
@@ -507,7 +507,7 @@ namespace BayesianModeling.ViewModel
             var window = new License();
             window.DataContext = new ViewModelLicense
             {
-                licenseTitle = "License (GPLv2) - RdotNet",
+                licenseTitle = "License (BSD 2-clause) - RdotNet",
                 licenseText = Properties.Resources.License_RdotNet
             };
             window.Owner = MainWindow;
@@ -539,7 +539,7 @@ namespace BayesianModeling.ViewModel
             var window = new License();
             window.DataContext = new ViewModelLicense
             {
-                licenseTitle = "License (GPLv2) - ggplot2",
+                licenseTitle = "License (GPLv2+) - ggplot2",
                 licenseText = Properties.Resources.License_ggplot2
             };
             window.Owner = MainWindow;
@@ -675,14 +675,14 @@ namespace BayesianModeling.ViewModel
                 SendMessageToOutput("A listing of all referenced software, with licensing, has been displayed above.");
                 SendMessageToOutput("TLDR: Bayesian Model Selector is made possible by the following software.");
                 SendMessageToOutput("");
-                SendMessageToOutput("R Statistical Package - GPL v2 Licensed. Copyright (C) 2000-16. The R Core Team");
-                SendMessageToOutput("nls R Package - GPLv2 Licensed. Copyright (C) 1999-1999 Saikat DebRoy, Douglas M. Bates, Jose C. Pinheiro.");
-                SendMessageToOutput("nls R Package - GPLv2 Licensed. Copyright (C) 2000-7. The R Core Team.");
-                SendMessageToOutput("ggplot2 R Package - GPLv2 Licensed. Copyright (c) 2016, Hadley Wickham.");
+                SendMessageToOutput("R Statistical Package - GPL v2+ Licensed. Copyright (C) 2000-16. The R Core Team");
+                SendMessageToOutput("nls R Package - GPLv2+ Licensed. Copyright (C) 1999-1999 Saikat DebRoy, Douglas M. Bates, Jose C. Pinheiro.");
+                SendMessageToOutput("nls R Package - GPLv2+ Licensed. Copyright (C) 2000-7. The R Core Team.");
+                SendMessageToOutput("ggplot2 R Package - GPLv2+ Licensed. Copyright (c) 2016, Hadley Wickham.");
                 SendMessageToOutput("gridExtra R Package - GPLv2+ Licensed. Copyright (c) 2016, Baptiste Auguie.");
                 SendMessageToOutput("reshape2 R Package - MIT Licensed. Copyright (c) 2014, Hadley Wickham.");
                 SendMessageToOutput("scales R Package - MIT Licensed. Copyright (c) 2010-2014, Hadley Wickham.");
-                SendMessageToOutput("EPPlus - LGPL Licensed. Copyright (c) 2016 Jan Källman.");
+                SendMessageToOutput("EPPlus - GPLv2 Licensed. Copyright (c) 2016 Jan Källman.");
                 SendMessageToOutput("BDS R Script - GPLv2 Licensed. Copyright (c) 2016, Chris Franck.");
                 SendMessageToOutput("Gnome Icon Set - GPLv2 Licensed.");
                 SendMessageToOutput("RdotNet: Interface for the R Statistical Package - New BSD License (BSD 2-Clause). Copyright(c) 2010, RecycleBin. All rights reserved.");
