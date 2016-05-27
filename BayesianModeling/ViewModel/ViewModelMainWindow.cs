@@ -612,7 +612,7 @@ namespace BayesianModeling.ViewModel
             SendMessageToOutput("All view elements loaded");
             SendMessageToOutput("");
 
-            StreamReader licenseFile = new StreamReader(@"LICENSE.txt");
+            StringReader licenseFile = new StringReader(Properties.Resources.License);
 
             string line;
 
