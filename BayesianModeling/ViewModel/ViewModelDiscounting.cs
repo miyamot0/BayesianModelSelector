@@ -820,7 +820,7 @@ namespace BayesianModeling.ViewModel
                 indiffValues = engine.CreateNumericVector(yRangeNew);
                 engine.SetSymbol("mIndiff", indiffValues);
 
-                engine.Evaluate("endDelay <- max(mDelays)*10");
+                engine.Evaluate("endDelay <- max(mDelays)");
             }
             catch (ParseException pe)
             {

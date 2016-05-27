@@ -113,12 +113,11 @@ logChart <- ggplot() +
   theme(panel.grid.minor = element_blank()) +
   ggtitle("Fitted Discounting Functions\n") +
   ylab("Value") +
-  scale_x_log10(
-    breaks = scales::trans_breaks("log10", function(x) 10^x),
-    labels = scales::trans_format("log10", scales::math_format(10^.x))
-  ) +  
+  scale_x_continuous(trans = 'log',
+                        breaks = scales::trans_breaks('log', function(x) exp(x)),
+                        labels = scales::trans_format('log', scales::math_format(.x))) +
   annotation_logticks(sides = "b") +
-  xlab("log(Delay)") +
+  xlab("ln(Delay)") +
   theme(legend.title = element_blank()) +
   theme(legend.position = "bottom") +
   theme(legend.direction = "vertical") + 
