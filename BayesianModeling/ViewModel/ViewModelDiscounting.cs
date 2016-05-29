@@ -637,7 +637,7 @@ namespace BayesianModeling.ViewModel
         }
 
         /// <summary>
-        /// 
+        /// Take bool value, return "1" for true and "0" for false
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
