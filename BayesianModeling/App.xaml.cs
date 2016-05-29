@@ -32,11 +32,10 @@ namespace BayesianModeling
             base.OnStartup(e);
             MainWindow window = new MainWindow();
             window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            ViewModelMainWindow mainVM = new ViewModelMainWindow
+            window.DataContext = new ViewModelMainWindow
             {
                 MainWindow = window
             };
-            window.DataContext = mainVM;
 
             window.Show();
         }
