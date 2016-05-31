@@ -25,6 +25,8 @@
 library(ggplot2)
 library(reshape2)
 
+options(device="CairoWin")
+
 barGraph = data.frame(Noise=output[[1]]['noise.prob'],
                       Hyperbolic=output[[2]]['Mazur.prob'],
                       Exponential=output[[3]]['exp.prob'],

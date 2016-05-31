@@ -863,14 +863,6 @@ namespace BayesianModeling.ViewModel
                         ConvertBoolToString(QuasiHyperbolicModel));
 
                     engine.Evaluate(evalStatement);
-                    //engine.Evaluate("ainslieK <- as.numeric(output[[2]]['Mazur.lnk'])");
-                    //engine.Evaluate("samuelsonK <- as.numeric(output[[3]]['exp.lnk'])");
-                    //engine.Evaluate("beta <- as.numeric(output[[9]]['BD.beta'])");
-                    //engine.Evaluate("delta <- as.numeric(output[[9]]['BD.delta'])");
-                    //engine.Evaluate("myersonK <- as.numeric(output[[4]]['MG.lnk'])");
-                    //engine.Evaluate("myersonS <- as.numeric(output[[4]]['MG.s'])");
-                    //engine.Evaluate("rachlinK <- as.numeric(output[[5]]['Rachlin.lnk'])");
-                    //engine.Evaluate("rachlinS <- as.numeric(output[[5]]['Rachlin.s'])");
 
                     double noiseProb = double.Parse(engine.Evaluate("as.numeric(output[[1]]['noise.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
                     double hyperProb = double.Parse(engine.Evaluate("as.numeric(output[[2]]['Mazur.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
@@ -934,6 +926,7 @@ namespace BayesianModeling.ViewModel
                 }
                 catch (ParseException pe)
                 {
+                    Logging.SubmitError("ViewModelBatchDiscounting", pe.ToString());
                     mWindow.OutputEvents(pe.ToString());
                 }
 

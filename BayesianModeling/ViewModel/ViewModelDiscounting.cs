@@ -940,6 +940,7 @@ namespace BayesianModeling.ViewModel
                 }
                 catch (Exception e)
                 {
+                    Logging.SubmitError("ViewModelDiscounting", e.ToString());
                     mWindow.OutputEvents(e.ToString());
                 }
 

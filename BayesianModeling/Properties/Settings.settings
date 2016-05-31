@@ -21,8 +21,10 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="RecentFiles" Type="System.String" Scope="User">
-      <Value Profile="(Default)">
-                </Value>
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="GUID" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

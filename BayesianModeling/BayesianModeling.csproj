@@ -139,6 +139,7 @@
     <Compile Include="Utilities\ClipboardTools.cs" />
     <Compile Include="Utilities\CustomDataGrid.cs" />
     <Compile Include="Utilities\DataGridTools.cs" />
+    <Compile Include="Utilities\Logging.cs" />
     <Compile Include="Utilities\OpenXMLHelper.cs" />
     <Compile Include="Utilities\RelayCommand.cs" />
     <Compile Include="Utilities\Settings.cs" />
