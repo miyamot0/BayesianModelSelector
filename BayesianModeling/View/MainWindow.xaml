@@ -54,158 +54,85 @@
                     <MenuItem Header="_New" 
                               x:Name="newMenuItem" 
                               Command="{Binding FileNewCommand}">
-                        <MenuItem.Icon>
-                            <Image Source="/Images/document-new.png" />
-                        </MenuItem.Icon>
                     </MenuItem>
                     <Separator />
                     <MenuItem Header="_Open" 
                               x:Name="openMenuItem" 
                               Command="{Binding FileOpenCommand}">
-                        <MenuItem.Icon>
-                            <Image Source="/Images/document-open.png" />
-                        </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Header="_Recent" 
 						x:Name="recentMenuItem"
                         ItemsSource="{Binding RecentStuff}">
-                        <MenuItem.Icon>
-                            <Image Source="/Images/document-open.png" />
-                        </MenuItem.Icon>
                     </MenuItem>
                     <Separator />
                     <MenuItem Header="_Save" 
                               x:Name="saveMenuItem" 
                               Command="{Binding FileSaveCommand}">
-                        <MenuItem.Icon>
-                            <Image Source="/Images/document-save.png" />
-                        </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Header="_Save As" 
                               x:Name="saveAsMenuItem" 
                               Command="{Binding FileSaveAsCommand}">
-                        <MenuItem.Icon>
-                            <Image Source="/Images/document-save-as.png" />
-                        </MenuItem.Icon>
                     </MenuItem>
                     <Separator />
                     <MenuItem Header="_Close" 
                               x:Name="closeMenuItem" 
                               Command="{Binding FileCloseCommand}"
                               CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}">
-                        <MenuItem.Icon>
-                            <Image Source="/Images/application-exit.png" />
-                        </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>
 
                 <MenuItem Header="_Modeling">
                     <MenuItem Header="_Discounting Model Selection" 
                               Command="{Binding DiscountingWindowCommand}">
-                        <MenuItem.Icon>
-                            <Image Source="/Images/applications-science.png" />
-                        </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Header="_Batch Discounting Model Selection" 
                               Command="{Binding BatchDiscountingWindowCommand}">
-                        <MenuItem.Icon>
-                            <Image Source="/Images/applications-other.png" />
-                        </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>
 
                 <MenuItem Header="_Logs">
                     <MenuItem Header="_Save Log Output" 
                               Command="{Binding SaveLogsWindowCommand}">
-                        <MenuItem.Icon>
-                            <Image Source="/Images/edit-copy.png" />
-                        </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Header="_Clear Logs" 
                               Command="{Binding ClearLogsWindowCommand}">
-                        <MenuItem.Icon>
-                            <Image Source="/Images/edit-clear.png" />
-                        </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>
 
                 <MenuItem Header="_Information">
                     <MenuItem Header="_Licenses">
-                        <MenuItem.Icon>
-                            <Image Source="/Images/text-x-preview.png" />
-                        </MenuItem.Icon>
                         <MenuItem Header="R License (GPL-v2)" 
                                   Command="{Binding RLicenseWindowCommand}">
-                            <MenuItem.Icon>
-                                <Image Source="/Images/text-x-preview.png" />
-                            </MenuItem.Icon>
                         </MenuItem>
                         <MenuItem Header="R.Net License (BSD 2-Clause)" 
                                   Command="{Binding RdotNetLicenseWindowCommand}">
-                            <MenuItem.Icon>
-                                <Image Source="/Images/text-x-preview.png" />
-                            </MenuItem.Icon>
                         </MenuItem>
                         <MenuItem Header="nls (R Package) License (GPL-v2)" 
                                   Command="{Binding NlsLicenseWindowCommand}">
-                            <MenuItem.Icon>
-                                <Image Source="/Images/text-x-preview.png" />
-                            </MenuItem.Icon>
-                        </MenuItem> 
+                        </MenuItem>
                         <MenuItem Header="ggplot2 (R Package) License (GPL-v2)" 
                                   Command="{Binding Ggplot2LicenseWindowCommand}">
-                            <MenuItem.Icon>
-                                <Image Source="/Images/text-x-preview.png" />
-                            </MenuItem.Icon>
                         </MenuItem>
                         <MenuItem Header="gridExtra (R Package) License (GPL-v2+)" 
                                   Command="{Binding GridExtraLicenseWindowCommand}">
-                            <MenuItem.Icon>
-                                <Image Source="/Images/text-x-preview.png" />
-                            </MenuItem.Icon>
                         </MenuItem>
                         <MenuItem Header="reshape2 (R Package) License (MIT)" 
                                   Command="{Binding Reshape2LicenseWindowCommand}">
-                            <MenuItem.Icon>
-                                <Image Source="/Images/text-x-preview.png" />
-                            </MenuItem.Icon>
                         </MenuItem>
                         <MenuItem Header="scales (R Package) License (MIT)" 
                                   Command="{Binding ScalesLicenseWindowCommand}">
-                            <MenuItem.Icon>
-                                <Image Source="/Images/text-x-preview.png" />
-                            </MenuItem.Icon>
                         </MenuItem>
                         <MenuItem Header="Cairo (R Package) License (GPL-v2+)" 
                                   Command="{Binding CairoLicenseWindowCommand}">
-                            <MenuItem.Icon>
-                                <Image Source="/Images/text-x-preview.png" />
-                            </MenuItem.Icon>
                         </MenuItem>
                         <MenuItem Header="EPPlus License (LGPL)" 
                                   Command="{Binding EPPLicenseWindowCommand}">
-                            <MenuItem.Icon>
-                                <Image Source="/Images/text-x-preview.png" />
-                            </MenuItem.Icon>
                         </MenuItem>
                         <MenuItem Header="BDS (R Script) License (GPL-v2)" 
                                   Command="{Binding BDSLicenseWindowCommand}">
-                            <MenuItem.Icon>
-                                <Image Source="/Images/text-x-preview.png" />
-                            </MenuItem.Icon>
-                        </MenuItem>
-
-                        <MenuItem Header="Gnome Icon Set License (GPL-v2)" 
-                                  Command="{Binding GnomeIconLicenseWindowCommand}">
-                            <MenuItem.Icon>
-                                <Image Source="/Images/text-x-preview.png" />
-                            </MenuItem.Icon>
                         </MenuItem>
                     </MenuItem>
                     <MenuItem Header="_Credits" x:Name="credits" Command="{Binding InformationWindowCommand}">
-                        <MenuItem.Icon>
-                            <Image Source="/Images/x-office-address-book.png" />
-                        </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>
             </Menu>

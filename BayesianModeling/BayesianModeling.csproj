@@ -32,7 +32,7 @@
     <SuiteName>Discounting Model Selector</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>48</ApplicationRevision>
+    <ApplicationRevision>49</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -315,38 +315,6 @@
     <Resource Include="Resources\License_reshape2.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\application-exit.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\document-new.png" />
-    <Resource Include="Images\document-open.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\document-save-as.png" />
-    <Resource Include="Images\document-save.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\text-x-preview.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\x-office-address-book.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\edit-clear.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\edit-copy.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\applications-science.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\applications-other.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\License_Gnome_Icons.txt" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

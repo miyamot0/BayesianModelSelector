@@ -161,7 +161,6 @@ namespace BayesianModeling.ViewModel
         public RelayCommand Reshape2LicenseWindowCommand { get; set; }
         public RelayCommand ScalesLicenseWindowCommand { get; set; }
         public RelayCommand CairoLicenseWindowCommand { get; set; }
-        public RelayCommand GnomeIconLicenseWindowCommand { get; set; }
         public RelayCommand BDSLicenseWindowCommand { get; set; }
         public RelayCommand EPPLicenseWindowCommand { get; set; }
 
@@ -281,7 +280,6 @@ namespace BayesianModeling.ViewModel
             ScalesLicenseWindowCommand = new RelayCommand(param => ScalesLicenseInformationWindow(), param => true);
             CairoLicenseWindowCommand = new RelayCommand(param => CairoLicenseInformationWindow(), param => true);
 
-            GnomeIconLicenseWindowCommand = new RelayCommand(param => GnomeIconLicenseInformationWindow(), param => true);
             BDSLicenseWindowCommand = new RelayCommand(param => BDSLicenseWindow(), param => true);
             EPPLicenseWindowCommand = new RelayCommand(param => EPPLicenseWindow(), param => true);
 
@@ -440,22 +438,6 @@ namespace BayesianModeling.ViewModel
         #endregion
 
         #region Licenses
-
-        /// <summary>
-        /// License window
-        /// </summary>
-        private void GnomeIconLicenseInformationWindow()
-        {
-            var window = new License();
-            window.DataContext = new ViewModelLicense
-            {
-                licenseTitle = "License (GPLv2) - Gnome Icons",
-                licenseText = Properties.Resources.License_Gnome_Icons
-            };
-            window.Owner = MainWindow;
-            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            window.Show();
-        }
 
         /// <summary>
         /// License window
@@ -709,7 +691,6 @@ namespace BayesianModeling.ViewModel
                 SendMessageToOutput("Cairo R Package - GPLv2 Licensed. Copyright (c) 2015, Simon Urbanek, Jeffrey Horner.");
                 SendMessageToOutput("EPPlus - GPLv2 Licensed. Copyright (c) 2016 Jan Källman.");
                 SendMessageToOutput("BDS R Script - GPLv2 Licensed. Copyright (c) 2016, Chris Franck.");
-                SendMessageToOutput("Gnome Icon Set - GPLv2 Licensed.");
                 SendMessageToOutput("RdotNet: Interface for the R Statistical Package - New BSD License (BSD 2-Clause). Copyright(c) 2010, RecycleBin. All rights reserved.");
                 SendMessageToOutput("");
 
