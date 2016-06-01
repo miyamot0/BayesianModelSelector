@@ -663,6 +663,7 @@ namespace BayesianModeling.ViewModel
             }
             catch (Exception e)
             {
+                Logging.SubmitError("ViewLoadedMain", e.ToString());
                 SendMessageToOutput("R failed to load.  Error code: " + e.ToString());
                 failed = true;
             }
@@ -714,18 +715,6 @@ namespace BayesianModeling.ViewModel
 
                 SendMessageToOutput("License information is also provided in Information > Licenses > ... as well as in the install directory of this program (under Resources).");
             }
-
-
-            Process[] processlist = Process.GetProcesses();
-
-            foreach (Process process in processlist)
-            {
-                if (!String.IsNullOrEmpty(process.MainWindowTitle))
-                {
-                    Console.WriteLine("Process: {0} ID: {1} Window title: {2}", process.ProcessName, process.Id, process.MainWindowTitle);
-                }
-            }
-
         }
 
         /// <summary>
