@@ -127,8 +127,6 @@ logChart <- ggplot() +
   theme(panel.grid.major = element_blank()) +
   guides(col = guide_legend(ncol = 3)) 
   
-grDevices::windows.options(width = 8, height = 8, rescale = c("fixed"))
-
 dev.new()
 print(ggBar)
 

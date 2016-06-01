@@ -160,6 +160,7 @@ namespace BayesianModeling.ViewModel
         public RelayCommand GridExtraLicenseWindowCommand { get; set; }
         public RelayCommand Reshape2LicenseWindowCommand { get; set; }
         public RelayCommand ScalesLicenseWindowCommand { get; set; }
+        public RelayCommand CairoLicenseWindowCommand { get; set; }
         public RelayCommand GnomeIconLicenseWindowCommand { get; set; }
         public RelayCommand BDSLicenseWindowCommand { get; set; }
         public RelayCommand EPPLicenseWindowCommand { get; set; }
@@ -278,7 +279,8 @@ namespace BayesianModeling.ViewModel
             GridExtraLicenseWindowCommand = new RelayCommand(param => GridExtraLicenseInformationWindow(), param => true);            
             Reshape2LicenseWindowCommand = new RelayCommand(param => Reshape2LicenseInformationWindow(), param => true);
             ScalesLicenseWindowCommand = new RelayCommand(param => ScalesLicenseInformationWindow(), param => true);
-            
+            CairoLicenseWindowCommand = new RelayCommand(param => CairoLicenseInformationWindow(), param => true);
+
             GnomeIconLicenseWindowCommand = new RelayCommand(param => GnomeIconLicenseInformationWindow(), param => true);
             BDSLicenseWindowCommand = new RelayCommand(param => BDSLicenseWindow(), param => true);
             EPPLicenseWindowCommand = new RelayCommand(param => EPPLicenseWindow(), param => true);
@@ -599,6 +601,22 @@ namespace BayesianModeling.ViewModel
             window.Show();
         }
 
+        /// <summary>
+        /// License window
+        /// </summary>
+        private void CairoLicenseInformationWindow()
+        {
+            var window = new License();
+            window.DataContext = new ViewModelLicense
+            {
+                licenseTitle = "License (GPLv2+) - Cairo",
+                licenseText = Properties.Resources.License_Cairo
+            };
+            window.Owner = MainWindow;
+            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            window.Show();
+        }
+
         #endregion Licences
 
         #region Triggers
@@ -667,6 +685,7 @@ namespace BayesianModeling.ViewModel
                     engine.Evaluate("if (!require(ggplot2)) { install.packages('ggplot2', repos = 'http://cran.us.r-project.org') }");
                     engine.Evaluate("if (!require(reshape2)) { install.packages('reshape2', repos = 'http://cran.us.r-project.org') }");
                     engine.Evaluate("if (!require(gridExtra)) { install.packages('gridExtra', repos = 'http://cran.us.r-project.org') }");
+                    engine.Evaluate("if (!require(Cairo)) { install.packages('Cairo', repos = 'http://cran.us.r-project.org') }");
 
                     SendMessageToOutput("All required packages have been found.  Ready to proceed.");
                 }
@@ -686,6 +705,7 @@ namespace BayesianModeling.ViewModel
                 SendMessageToOutput("gridExtra R Package - GPLv2+ Licensed. Copyright (c) 2016, Baptiste Auguie.");
                 SendMessageToOutput("reshape2 R Package - MIT Licensed. Copyright (c) 2014, Hadley Wickham.");
                 SendMessageToOutput("scales R Package - MIT Licensed. Copyright (c) 2010-2014, Hadley Wickham.");
+                SendMessageToOutput("Cairo R Package - GPLv2 Licensed. Copyright (c) 2015, Simon Urbanek, Jeffrey Horner.");
                 SendMessageToOutput("EPPlus - GPLv2 Licensed. Copyright (c) 2016 Jan Källman.");
                 SendMessageToOutput("BDS R Script - GPLv2 Licensed. Copyright (c) 2016, Chris Franck.");
                 SendMessageToOutput("Gnome Icon Set - GPLv2 Licensed.");
@@ -694,6 +714,18 @@ namespace BayesianModeling.ViewModel
 
                 SendMessageToOutput("License information is also provided in Information > Licenses > ... as well as in the install directory of this program (under Resources).");
             }
+
+
+            Process[] processlist = Process.GetProcesses();
+
+            foreach (Process process in processlist)
+            {
+                if (!String.IsNullOrEmpty(process.MainWindowTitle))
+                {
+                    Console.WriteLine("Process: {0} ID: {1} Window title: {2}", process.ProcessName, process.Id, process.MainWindowTitle);
+                }
+            }
+
         }
 
         /// <summary>

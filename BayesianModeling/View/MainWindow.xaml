@@ -176,6 +176,12 @@
                                 <Image Source="/Images/text-x-preview.png" />
                             </MenuItem.Icon>
                         </MenuItem>
+                        <MenuItem Header="Cairo (R Package) License (GPL-v2+)" 
+                                  Command="{Binding CairoLicenseWindowCommand}">
+                            <MenuItem.Icon>
+                                <Image Source="/Images/text-x-preview.png" />
+                            </MenuItem.Icon>
+                        </MenuItem>
                         <MenuItem Header="EPPlus License (LGPL)" 
                                   Command="{Binding EPPLicenseWindowCommand}">
                             <MenuItem.Icon>
