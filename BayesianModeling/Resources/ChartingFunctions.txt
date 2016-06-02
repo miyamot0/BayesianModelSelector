@@ -138,4 +138,5 @@ require('base64enc')
 barString <- base64encode(readBin(tempf1, 'raw', file.info(tempf1)[1, 'size']), 'txt')
 lineString <- base64encode(readBin(tempf2, 'raw', file.info(tempf2)[1, 'size']), 'txt')
 
-
+unlink(tempf1)
+unlink(tempf2)
