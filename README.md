@@ -19,7 +19,6 @@ The Small N Stats Bayesian Model Selector uses a number of open source projects 
 * RdotNet: Interface for the R Statistical Package - New BSD License (BSD 2-Clause). Copyright(c) 2010, RecycleBin. All rights reserved [Github](https://github.com/jmp75/rdotnet)
 * RdotNet/Dynamic Interop - MIT Licensed. Copyright (c) 2015 Jean-Michel Perraud, Copyright (c) 2014 Daniel Collins, CSIRO, Copyright (c) 2013 Kosei, evolvedmicrobe. [Github](https://github.com/jmp75/dynamic-interop-dll)
 * EPPlus - GPLv2 Licensed. Copyright (c) 2016 Jan Källman. [Codeplex](http://epplus.codeplex.com/)
-* Gnome Icon Set - GPLv2 Licensed.
 
 ### Referenced Works (R packages/scripts)
 The Bayesian Model Selector accesses the following R packages to perform statistical methods:
