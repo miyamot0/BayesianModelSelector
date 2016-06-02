@@ -11,7 +11,7 @@ Features include:
   - Wide range of model outputs/metrics, saveable in common spreadsheet file formats
 
 ### Version
-1.0.0.42
+1.0.0.45
 
 ### Referenced Works (F/OSS software)
 The Small N Stats Bayesian Model Selector uses a number of open source projects to work properly:
@@ -27,9 +27,9 @@ The Bayesian Model Selector accesses the following R packages to perform statist
 * nls R Package - GPLv2 Licensed. Copyright (C) 2000-7. The R Core Team.
 * ggplot2 R Package - GPLv2 Licensed. Copyright (c) 2016, Hadley Wickham.
 * gridExtra R Package - GPLv2+ Licensed. Copyright (c) 2016, Baptiste Auguie.
+* base64enc R Package - GPLv2 Licensed. Copyright (c) 2015, Simon Urbanek
 * reshape2 R Package - MIT Licensed. Copyright (c) 2014, Hadley Wickham.
 * scales R Package - MIT Licensed. Copyright (c) 2010-2014, Hadley Wickham.
-* Cairo R Package - GPLv2 Licensed. Copyright (c) 2015, Simon Urbanek, Jeffrey Horner
 * BDS R Script - GPLv2 Licensed. Copyright (c) 2016, Dr. Chris Franck, Virginia Tech - Department of Statistics.
 
 ### Referenced Works (academic works)
