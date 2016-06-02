@@ -269,6 +269,7 @@
     <None Include="Resources\License_Gridextra.txt" />
     <None Include="Resources\License_EPPlus.txt" />
     <None Include="Resources\License_Scales.txt" />
+    <None Include="Resources\License_base64enc.txt" />
     <Content Include="Source\BayesianModelSelector-master.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

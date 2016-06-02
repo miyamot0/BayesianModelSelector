@@ -25,6 +25,7 @@ EPPlus - input/output for spreadsheet data
 nls - R package - fitting of non-linear models in R
 ggplot2 - R package - visualization of fitted models in R
 gridExtra - R package - visualization of plots in R
+base64enc - R package - base64 encoding for transmitting plots
 reshape2 - R package - organization and shaping of data in R
 scales - R package - visualization of plots in R
 BDS - R script - procedure for bayesian model comparisons using bayesian information criterion
@@ -152,6 +153,24 @@ Public License for more details.
 
 You should have received a copy of the GNU General Public License along
 with gridExtra. If not, see <http://www.gnu.org/licenses/>.
+
+============================================================================
+
+base64enc (R Package) is distributed under this license:
+
+Copyright (C) 2015 Simon Urbanek
+
+base64enc is free software: you can redistribute it and/or modify it 
+under the terms of the GNU General Public License as published by the 
+Free Software Foundation, version 2.
+
+base64enc is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with base64enc. If not, see <http://www.gnu.org/licenses/>.
 
 ============================================================================
 

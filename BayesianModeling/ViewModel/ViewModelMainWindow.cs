@@ -158,6 +158,7 @@ namespace BayesianModeling.ViewModel
         public RelayCommand NlsLicenseWindowCommand { get; set; }
         public RelayCommand Ggplot2LicenseWindowCommand { get; set; }
         public RelayCommand GridExtraLicenseWindowCommand { get; set; }
+        public RelayCommand BaseEncodeLicenseWindowCommand { get; set; }
         public RelayCommand Reshape2LicenseWindowCommand { get; set; }
         public RelayCommand ScalesLicenseWindowCommand { get; set; }
         public RelayCommand BDSLicenseWindowCommand { get; set; }
@@ -274,7 +275,8 @@ namespace BayesianModeling.ViewModel
             RdotNetLicenseWindowCommand = new RelayCommand(param => RdotNetLicenseInformationWindow(), param => true);
             NlsLicenseWindowCommand = new RelayCommand(param => NlsLicenseInformationWindow(), param => true);
             Ggplot2LicenseWindowCommand = new RelayCommand(param => Ggplot2LicenseInformationWindow(), param => true);
-            GridExtraLicenseWindowCommand = new RelayCommand(param => GridExtraLicenseInformationWindow(), param => true);            
+            GridExtraLicenseWindowCommand = new RelayCommand(param => GridExtraLicenseInformationWindow(), param => true);
+            BaseEncodeLicenseWindowCommand = new RelayCommand(param => BaseEncodeLicenseInformationWindow(), param => true);
             Reshape2LicenseWindowCommand = new RelayCommand(param => Reshape2LicenseInformationWindow(), param => true);
             ScalesLicenseWindowCommand = new RelayCommand(param => ScalesLicenseInformationWindow(), param => true);
 
@@ -552,6 +554,22 @@ namespace BayesianModeling.ViewModel
         /// <summary>
         /// License window
         /// </summary>
+        private void BaseEncodeLicenseInformationWindow()
+        {
+            var window = new License();
+            window.DataContext = new ViewModelLicense
+            {
+                licenseTitle = "License (GPLv2+) - base64enc",
+                licenseText = Properties.Resources.License_base64enc
+            };
+            window.Owner = MainWindow;
+            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            window.Show();
+        }
+
+        /// <summary>
+        /// License window
+        /// </summary>
         private void Reshape2LicenseInformationWindow()
         {
             var window = new License();
@@ -667,6 +685,7 @@ namespace BayesianModeling.ViewModel
                 SendMessageToOutput("nls R Package - GPLv2+ Licensed. Copyright (C) 2000-7. The R Core Team.");
                 SendMessageToOutput("ggplot2 R Package - GPLv2+ Licensed. Copyright (c) 2016, Hadley Wickham.");
                 SendMessageToOutput("gridExtra R Package - GPLv2+ Licensed. Copyright (c) 2016, Baptiste Auguie.");
+                SendMessageToOutput("base64enc R Package - GPLv2+ Licensed. Copyright (c) 2015, Simon Urbanek.");
                 SendMessageToOutput("reshape2 R Package - MIT Licensed. Copyright (c) 2014, Hadley Wickham.");
                 SendMessageToOutput("scales R Package - MIT Licensed. Copyright (c) 2010-2014, Hadley Wickham.");
                 SendMessageToOutput("EPPlus - GPLv2 Licensed. Copyright (c) 2016 Jan Källman.");

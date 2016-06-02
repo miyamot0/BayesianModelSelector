@@ -116,6 +116,9 @@
                         <MenuItem Header="gridExtra (R Package) License (GPL-v2+)" 
                                   Command="{Binding GridExtraLicenseWindowCommand}">
                         </MenuItem>
+                        <MenuItem Header="base64enc (R Package) License (GPL-v2+)" 
+                                  Command="{Binding BaseEncodeLicenseWindowCommand}">
+                        </MenuItem>
                         <MenuItem Header="reshape2 (R Package) License (MIT)" 
                                   Command="{Binding Reshape2LicenseWindowCommand}">
                         </MenuItem>
