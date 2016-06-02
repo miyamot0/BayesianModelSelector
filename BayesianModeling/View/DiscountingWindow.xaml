@@ -23,7 +23,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BayesianModeling.View"  
         ResizeMode="NoResize"
-        Icon="/Images/applications-science.png"
         mc:Ignorable="d"
         Title="Discounting Analyses" 
         Height="450" 

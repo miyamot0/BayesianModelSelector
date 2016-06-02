@@ -24,7 +24,6 @@
         xmlns:local="clr-namespace:BayesianModeling.View"
         xmlns:settings="clr-namespace:BayesianModeling.Properties"    
         ResizeMode="NoResize"
-        Icon="/Images/applications-other.png"
         mc:Ignorable="d"
         Height="425" 
         Width="425"

@@ -156,6 +156,9 @@
     <Compile Include="View\DiscountingWindow.xaml.cs">
       <DependentUpon>DiscountingWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\ImageWindow.xaml.cs">
+      <DependentUpon>ImageWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\InformationWindow.xaml.cs">
       <DependentUpon>InformationWindow.xaml</DependentUpon>
     </Compile>
@@ -176,6 +179,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\DiscountingWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ImageWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -262,7 +269,6 @@
     <None Include="Resources\License_Gridextra.txt" />
     <None Include="Resources\License_EPPlus.txt" />
     <None Include="Resources\License_Scales.txt" />
-    <None Include="Resources\License_Cairo.txt" />
     <Content Include="Source\BayesianModelSelector-master.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

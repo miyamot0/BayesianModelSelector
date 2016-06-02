@@ -25,8 +25,6 @@
 library(ggplot2)
 library(reshape2)
 
-options(device="CairoWin")
-
 barGraph = data.frame(Noise=output[[1]]['noise.prob'],
                       Hyperbolic=output[[2]]['Mazur.prob'],
                       Exponential=output[[3]]['exp.prob'],
@@ -127,8 +125,17 @@ logChart <- ggplot() +
   theme(panel.grid.major = element_blank()) +
   guides(col = guide_legend(ncol = 3)) 
   
-dev.new()
-print(ggBar)
 
-dev.new()
+png(tempf1 <- tempfile(fileext = '.png'), width = 6, height = 6, units = 'in', res = 300)
+print(ggBar)
+dev.off()
+
+png(tempf2 <- tempfile(fileext = '.png'), width = 6, height = 6, units = 'in', res = 300)
 print(logChart)
+dev.off()
+
+require('base64enc')
+barString <- base64encode(readBin(tempf1, 'raw', file.info(tempf1)[1, 'size']), 'txt')
+lineString <- base64encode(readBin(tempf2, 'raw', file.info(tempf2)[1, 'size']), 'txt')
+
+

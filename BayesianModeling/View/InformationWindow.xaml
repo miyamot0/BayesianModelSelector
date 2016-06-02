@@ -25,7 +25,6 @@
         mc:Ignorable="d"
         Title="Information Window" 
         Height="550" 
-        Icon="/Images/x-office-address-book.png"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
         Width="450">

@@ -47,7 +47,7 @@
     ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
     OF SUCH DAMAGE.
 
- */ 
+ */
 
 using BayesianModeling.Mathematics;
 using BayesianModeling.Utilities;
@@ -61,6 +61,8 @@ using System.Windows.Media;
 using System;
 using System.Windows.Controls;
 using System.Collections.ObjectModel;
+using System.Windows.Media.Imaging;
+using System.IO;
 
 namespace BayesianModeling.ViewModel
 {
@@ -937,6 +939,37 @@ namespace BayesianModeling.ViewModel
                     engine.Evaluate("library(gridExtra)");
 
                     engine.Evaluate(BayesianModelSelection.GetLogChartFunction());
+
+                    string output = engine.Evaluate("barString").AsVector().First().ToString();
+
+                    byte[] bytes = Convert.FromBase64String(output);
+
+                    BitmapImage bi = new BitmapImage();
+                    bi.BeginInit();
+                    bi.StreamSource = new MemoryStream(bytes);
+                    bi.EndInit();
+
+
+                    var iWindow = new ImageWindow();
+                    iWindow.imageHolder.Source = bi;
+                    iWindow.images = bi;
+                    iWindow.Show();
+
+                    string output2 = engine.Evaluate("lineString").AsVector().First().ToString();
+
+                    byte[] bytes2 = Convert.FromBase64String(output2);
+
+                    BitmapImage bi2 = new BitmapImage();
+                    bi2.BeginInit();
+                    bi2.StreamSource = new MemoryStream(bytes2);
+                    bi2.EndInit();
+
+
+                    var iWindow2 = new ImageWindow();
+                    iWindow2.imageHolder.Source = bi2;
+                    iWindow2.images = bi2;
+                    iWindow2.Show();
+
                 }
                 catch (Exception e)
                 {

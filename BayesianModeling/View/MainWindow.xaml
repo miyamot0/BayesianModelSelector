@@ -122,9 +122,6 @@
                         <MenuItem Header="scales (R Package) License (MIT)" 
                                   Command="{Binding ScalesLicenseWindowCommand}">
                         </MenuItem>
-                        <MenuItem Header="Cairo (R Package) License (GPL-v2+)" 
-                                  Command="{Binding CairoLicenseWindowCommand}">
-                        </MenuItem>
                         <MenuItem Header="EPPlus License (LGPL)" 
                                   Command="{Binding EPPLicenseWindowCommand}">
                         </MenuItem>

@@ -1,0 +1,29 @@
+﻿<Window x:Class="BayesianModeling.View.ImageWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BayesianModeling.View"
+        xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
+        mc:Ignorable="d"
+        Title="ImageWindow"
+        Height="600" 
+        Width="600">
+
+    <Window.Resources>
+        <ContextMenu x:Key="SaveContextMenu">
+            <MenuItem Header="Save To File" 
+                      Click="saveMenuItem_Click"/>
+            <MenuItem Header="Close"
+                      Click="closeMenuItem_Click"/>
+        </ContextMenu>
+    </Window.Resources>
+
+    <Grid x:Name="imageGrid"
+            DockPanel.Dock="Bottom">
+
+        <Image x:Name="imageHolder" 
+               Stretch="Uniform"
+               ContextMenu="{StaticResource SaveContextMenu}" ></Image>
+    </Grid>
+</Window>
