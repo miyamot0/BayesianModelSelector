@@ -41,6 +41,7 @@ namespace BayesianModeling
         public MainWindow()
         {
             InitializeComponent();
+            System.Diagnostics.PresentationTraceSources.DataBindingSource.Switch.Level = System.Diagnostics.SourceLevels.Critical;
         }
 
         /// <summary>

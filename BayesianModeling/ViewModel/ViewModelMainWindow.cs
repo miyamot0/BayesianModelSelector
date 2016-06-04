@@ -309,6 +309,7 @@ namespace BayesianModeling.ViewModel
                 Properties.Settings.Default.GUID = Guid.NewGuid().ToString();
                 Properties.Settings.Default.Save();
             }
+
         }
 
         #region UI
