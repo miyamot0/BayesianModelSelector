@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="ApplicationTitle" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Bayesian Model Selection</Value>
+      <Value Profile="(Default)">Bayesian Model Selector</Value>
     </Setting>
     <Setting Name="MainWidth" Type="System.Double" Scope="User">
       <Value Profile="(Default)">400</Value>

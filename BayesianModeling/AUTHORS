@@ -1,0 +1,47 @@
+﻿####################
+ABOUT:             #
+####################
+
+Bayesian Model Selector is developed by Shawn Gilroy <shawn(dot)gilroy(at)temple(dot)edu>
+
+Various supporting components are licensed under individual licenses.
+
+The R statistical program is licensed under the GPL, version 2, Copyright (C) 2000-16. The R Core Team
+	You can visit the R program website here:
+	https://www.r-project.org/
+
+The RdotNet Community Program is licensed under the new BSD License (2-Clause), Copyright(c) 2010, RecycleBin. All rights reserved
+	You can visit the RdotNet Community program website here:
+	http://rdotnet.codeplex.com/
+
+The EPPlus program is licensed under the GPL, version 2, Copyright (c) 2016 Jan Källman
+	You can visit the EPPlus program website here:
+	http://epplus.codeplex.com/
+
+The nls R Package is licensed under the GPL, version 2, Copyright (C) 1999-1999 Saikat DebRoy, Douglas M. Bates, Jose C. Pinheiro; Copyright (C) 2000-7. The R Core Team
+	You can visit the nls package website here:
+	http://epplus.codeplex.com/
+
+The BDS R Script is licensed under the GPL, version 2, Copyright (c) 2016, Chris Franck
+	You may view the script and license here:
+	https://github.com/miyamot0/BayesianModelSelector/blob/master/BayesianModeling/Resources/FranckComputation.txt
+
+The ggplot2 R Package is licensed under the GPL, version 2, Copyright (c) 2016, Hadley Wickham
+	You can visit the ggplot2 package website here:
+	https://cran.r-project.org/web/packages/ggplot2/
+
+The gridExtra R Package is licensed under the GPL, version 2, Copyright (c) 2016, Baptiste Auguie
+	You can visit the gridExtra package website here:
+	https://cran.r-project.org/web/packages/gridExtra/
+
+The base64enc R Package is licensed under the GPL, version 2, Copyright (c) 2015, Simon Urbanek
+	You can visit the base64enc package website here:
+	https://cran.r-project.org/web/packages/base64enc/
+
+The reshape2 R Package is licensed under the MIT license, Copyright (c) 2014, Hadley Wickham
+	You can visit the reshape2 package website here:
+	https://cran.r-project.org/web/packages/reshape2/
+
+The scales R Package is licensed under the MIT license, Copyright (c) 2010-2014, Hadley Wickham
+	You can visit the scales package website here:
+	https://cran.r-project.org/web/packages/scales/
