@@ -159,6 +159,7 @@ namespace BayesianModeling.ViewModel
 
         public RelayCommand RLicenseWindowCommand { get; set; }
         public RelayCommand RdotNetLicenseWindowCommand { get; set; }
+        public RelayCommand SharpVectorGraphicsLicenseWindowCommand { get; set; }
         public RelayCommand NlsLicenseWindowCommand { get; set; }
         public RelayCommand Ggplot2LicenseWindowCommand { get; set; }
         public RelayCommand GridExtraLicenseWindowCommand { get; set; }
@@ -277,6 +278,7 @@ namespace BayesianModeling.ViewModel
 
             RLicenseWindowCommand = new RelayCommand(param => RLicenseInformationWindow(), param => true);
             RdotNetLicenseWindowCommand = new RelayCommand(param => RdotNetLicenseInformationWindow(), param => true);
+            SharpVectorGraphicsLicenseWindowCommand = new RelayCommand(param => SharpVectorGraphicsLicenseInformationWindow(), param => true);
             NlsLicenseWindowCommand = new RelayCommand(param => NlsLicenseInformationWindow(), param => true);
             Ggplot2LicenseWindowCommand = new RelayCommand(param => Ggplot2LicenseInformationWindow(), param => true);
             GridExtraLicenseWindowCommand = new RelayCommand(param => GridExtraLicenseInformationWindow(), param => true);
@@ -510,6 +512,22 @@ namespace BayesianModeling.ViewModel
         /// <summary>
         /// License window
         /// </summary>
+        private void SharpVectorGraphicsLicenseInformationWindow()
+        {
+            var window = new License();
+            window.DataContext = new ViewModelLicense
+            {
+                licenseTitle = "License (BSD 3-clause) - SharpVectors",
+                licenseText = Properties.Resources.License_SharpVectorGraphics
+            };
+            window.Owner = MainWindow;
+            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            window.Show();
+        }
+
+        /// <summary>
+        /// License window
+        /// </summary>
         private void RLicenseInformationWindow()
         {
             var window = new License();
@@ -695,6 +713,7 @@ namespace BayesianModeling.ViewModel
                 SendMessageToOutput("EPPlus - GPLv2 Licensed. Copyright (c) 2016 Jan Källman.");
                 SendMessageToOutput("BDS R Script - GPLv2 Licensed. Copyright (c) 2016, Chris Franck.");
                 SendMessageToOutput("RdotNet: Interface for the R Statistical Package - New BSD License (BSD 2-Clause). Copyright(c) 2010, RecycleBin. All rights reserved.");
+                SendMessageToOutput("SharpVectors: Library for rendering SVG - New BSD License (BSD 3-Clause). Copyright(c) 2010, SharpVectorGraphics. All rights reserved.");
                 SendMessageToOutput("");
 
                 SendMessageToOutput("License information is also provided in Information > Licenses > ... as well as in the install directory of this program (under Resources).");

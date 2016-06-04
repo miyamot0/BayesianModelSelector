@@ -26,10 +26,10 @@
 //----------------------------------------------------------------------------------------------
 
 using Microsoft.Win32;
+using SharpVectors.Converters;
+using SharpVectors.Renderers.Wpf;
 using System.IO;
 using System.Windows;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace BayesianModeling.View
 {
@@ -38,7 +38,7 @@ namespace BayesianModeling.View
     /// </summary>
     public partial class ImageWindow : Window
     {
-        public BitmapImage images;
+        public string filePath = null;
 
         public ImageWindow()
         {
@@ -54,45 +54,31 @@ namespace BayesianModeling.View
 
             string mExt = Path.GetExtension(saveFileDialog1.FileName);
 
-            RenderTargetBitmap bitmap = new RenderTargetBitmap((int)imageGrid.ActualWidth, (int)imageGrid.ActualHeight, 96, 96, PixelFormats.Pbgra32);
-            bitmap.Render(imageGrid);
-            BitmapFrame frame = BitmapFrame.Create(bitmap);
+            WpfDrawingSettings settings = new WpfDrawingSettings();
+            settings.IncludeRuntime = true;
+            settings.TextAsGeometry = false;
+
+            ImageSvgConverter converter = new ImageSvgConverter(settings);
 
             if (mExt.Equals(".jpg"))
             {
-                using (var fileStream = new FileStream(saveFileDialog1.FileName, FileMode.Create))
-                {
-                    BitmapEncoder encoder = new JpegBitmapEncoder();
-                    encoder.Frames.Add(BitmapFrame.Create(images));
-                    encoder.Save(fileStream);
-                }
+                converter.EncoderType = ImageEncoderType.JpegBitmap;
+                converter.Convert(filePath, saveFileDialog1.FileName);
             }
             else if (mExt.Equals(".png"))
             {
-                using (var fileStream = new FileStream(saveFileDialog1.FileName, FileMode.Create))
-                {
-                    BitmapEncoder encoder = new PngBitmapEncoder();
-                    encoder.Frames.Add(BitmapFrame.Create(images));
-                    encoder.Save(fileStream);
-                }
+                converter.EncoderType = ImageEncoderType.PngBitmap;
+                converter.Convert(filePath, saveFileDialog1.FileName);
             }
             else if (mExt.Equals(".gif"))
             {
-                using (var fileStream = new FileStream(saveFileDialog1.FileName, FileMode.Create))
-                {
-                    BitmapEncoder encoder = new GifBitmapEncoder();
-                    encoder.Frames.Add(BitmapFrame.Create(images));
-                    encoder.Save(fileStream);
-                }
+                converter.EncoderType = ImageEncoderType.GifBitmap;
+                converter.Convert(filePath, saveFileDialog1.FileName);
             }
             else if (mExt.Equals(".tiff"))
             {
-                using (var fileStream = new FileStream(saveFileDialog1.FileName, FileMode.Create))
-                {
-                    BitmapEncoder encoder = new TiffBitmapEncoder();
-                    encoder.Frames.Add(BitmapFrame.Create(images));
-                    encoder.Save(fileStream);
-                }
+                converter.EncoderType = ImageEncoderType.TiffBitmap;
+                converter.Convert(filePath, saveFileDialog1.FileName);
             }
         }
 

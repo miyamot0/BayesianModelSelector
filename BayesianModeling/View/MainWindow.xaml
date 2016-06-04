@@ -107,6 +107,9 @@
                         <MenuItem Header="R.Net License (BSD 2-Clause)" 
                                   Command="{Binding RdotNetLicenseWindowCommand}">
                         </MenuItem>
+                        <MenuItem Header="SharpVectors License (BSD 3-Clause)" 
+                                  Command="{Binding SharpVectorGraphicsLicenseWindowCommand}">
+                        </MenuItem>
                         <MenuItem Header="nls (R Package) License (GPL-v2)" 
                                   Command="{Binding NlsLicenseWindowCommand}">
                         </MenuItem>

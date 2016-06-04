@@ -69,6 +69,8 @@ using System.Windows.Controls;
 using System.Collections.ObjectModel;
 using System.Windows.Media.Imaging;
 using System.IO;
+using SharpVectors.Renderers.Wpf;
+using SharpVectors.Converters;
 
 namespace BayesianModeling.ViewModel
 {
@@ -266,6 +268,7 @@ namespace BayesianModeling.ViewModel
         }
         private bool outputWorkbook = false;
         bool failed;
+        string path1 = null, path2 = null;
 
         /// <summary>
         /// Public constructor
@@ -476,6 +479,16 @@ namespace BayesianModeling.ViewModel
         /// </summary>
         private void ViewClosed()
         {
+            if (path1 != null && File.Exists(path1))
+            {
+                File.Delete(path1);
+            }
+
+            if (path2 != null && File.Exists(path2))
+            {
+                File.Delete(path2);
+            }
+
             Properties.Settings.Default.Save();
         }
 
@@ -946,36 +959,56 @@ namespace BayesianModeling.ViewModel
 
                     engine.Evaluate(BayesianModelSelection.GetLogChartFunction());
 
+                    WpfDrawingSettings settings = new WpfDrawingSettings();
+                    settings.IncludeRuntime = true;
+                    settings.TextAsGeometry = false;
+
                     string output = engine.Evaluate("barString").AsVector().First().ToString();
 
-                    byte[] bytes = Convert.FromBase64String(output);
+                        byte[] bytes = Convert.FromBase64String(output);
 
-                    BitmapImage bi = new BitmapImage();
-                    bi.BeginInit();
-                    bi.StreamSource = new MemoryStream(bytes);
-                    bi.EndInit();
+                        path1 = Path.GetTempFileName();
 
+                        if (File.Exists(path1))
+                        {
+                            File.Delete(path1);
+                        }
 
-                    var iWindow = new ImageWindow();
-                    iWindow.imageHolder.Source = bi;
-                    iWindow.images = bi;
-                    iWindow.Show();
+                        File.WriteAllBytes(path1, bytes);
+
+                        FileSvgReader converter1 = new FileSvgReader(settings);
+                        DrawingGroup drawing1 = converter1.Read(path1);
+
+                        if (drawing1 != null)
+                        {
+                            var iWindow1 = new ImageWindow();
+                            iWindow1.filePath = path1;
+                            iWindow1.imageHolder.Source = new DrawingImage(drawing1);
+                            iWindow1.Show();
+                        }
 
                     string output2 = engine.Evaluate("lineString").AsVector().First().ToString();
 
-                    byte[] bytes2 = Convert.FromBase64String(output2);
+                        byte[] bytes2 = Convert.FromBase64String(output2);
+                        path2 = Path.GetTempFileName();
 
-                    BitmapImage bi2 = new BitmapImage();
-                    bi2.BeginInit();
-                    bi2.StreamSource = new MemoryStream(bytes2);
-                    bi2.EndInit();
+                        if (File.Exists(path2))
+                        {
+                            File.Delete(path2);
+                        }
 
+                        File.WriteAllBytes(path2, bytes2);
+                    
+                        FileSvgReader converter2 = new FileSvgReader(settings);
+                        DrawingGroup drawing2 = converter2.Read(path2);
 
-                    var iWindow2 = new ImageWindow();
-                    iWindow2.imageHolder.Source = bi2;
-                    iWindow2.images = bi2;
-                    iWindow2.Show();
-
+                        if (drawing2 != null)
+                        {
+                            var iWindow2 = new ImageWindow();
+                            iWindow2.filePath = path2;
+                            iWindow2.imageHolder.Source = new DrawingImage(drawing2);
+                            iWindow2.Show();
+                        }
                 }
                 catch (Exception e)
                 {
