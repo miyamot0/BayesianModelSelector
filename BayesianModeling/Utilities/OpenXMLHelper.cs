@@ -1,41 +1,47 @@
-﻿/* 
-    Copyright 2016 Shawn Gilroy
-
-    This file is part of Bayesian Model Selector.
-
-    Bayesian Model Selector is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, version 2.
-
-    Bayesian Model Selector is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Bayesian Model Selector.  If not, see <http://www.gnu.org/licenses/gpl-2.0.html>.
-
-    This project utilizes EPPlus to leverage interactions with OpenXML formats
-
-    ============================================================================
-
-    EPPlus is distributed under this license:
-
-    Copyright (c) 2016 Jan Källman
-
-    EPPlus is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, version 2.
-
-    EPPlus is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with EPPlus.  If not, see <http://epplus.codeplex.com/license>.
-     
-*/
+﻿//----------------------------------------------------------------------------------------------
+// <copyright file="CustomDataGrid.cs" 
+// Copyright 2016 Shawn Gilroy
+//
+// This file is part of Bayesian Model Selector.
+//
+// Bayesian Model Selector is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, version 2.
+//
+// Bayesian Model Selector is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Bayesian Model Selector.  If not, see http://www.gnu.org/licenses/. 
+// </copyright>
+//
+// <summary>
+// The Bayesian Model Selector is a tool to assist researchers in behavior economics.
+// 
+// Email: shawn(dot)gilroy(at)temple.edu
+//
+// Bayesian Model Selector utilizes EPPlus to leverage interactions with XML file formats
+//
+//    EPPlus is distributed under the GPL license, version 2:
+//
+//    Copyright (c) 2016 Jan Källman
+//
+//    EPPlus is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, version 2.
+//
+//    EPPlus is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with EPPlus.  If not, see <http://epplus.codeplex.com/license>.
+//
+// </summary>
+//----------------------------------------------------------------------------------------------
 
 using BayesianModeling.View;
 using BayesianModeling.ViewModel;

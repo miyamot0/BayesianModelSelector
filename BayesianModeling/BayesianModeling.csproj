@@ -32,7 +32,7 @@
     <SuiteName>Discounting Model Selector</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>50</ApplicationRevision>
+    <ApplicationRevision>51</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -263,9 +263,9 @@
     <AppDesigner Include="Properties\" />
     <None Include="Resources\License.txt" />
     <None Include="Resources\License_BDS.txt" />
-    <Content Include="LICENSE.txt">
+    <None Include="COPYING">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </None>
     <None Include="Resources\License_Gridextra.txt" />
     <None Include="Resources\License_EPPlus.txt" />
     <None Include="Resources\License_Scales.txt" />
