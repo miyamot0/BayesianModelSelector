@@ -148,6 +148,11 @@
                     <MenuItem Header="_Credits" x:Name="credits" Command="{Binding InformationWindowCommand}">
                     </MenuItem>
                 </MenuItem>
+                <MenuItem Header="_Help">
+                    <MenuItem Header="_FAQ"
+                              Command="{Binding HelpCommand}">
+                    </MenuItem>
+                </MenuItem>
             </Menu>
 
             <custom:CustomDataGrid x:Name="dataGrid" 

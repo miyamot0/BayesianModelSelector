@@ -146,6 +146,7 @@ namespace BayesianModeling.ViewModel
         public RelayCommand FileCloseCommand { get; set; }
         public RelayCommand FileSaveNoDialogCommand { get; set; }
         public RelayCommand RecentsClearCommand { get; set; }
+        public RelayCommand HelpCommand { get; set; }
 
         /* Loading Commands */
 
@@ -209,6 +210,8 @@ namespace BayesianModeling.ViewModel
 
             FileSaveNoDialogCommand = new RelayCommand(param => SaveFileWithoutDialog(), param => true);
             FileOpenNoDialogCommand = new RelayCommand(param => FileOpenNoDialog(param), param => true);
+            
+            HelpCommand = new RelayCommand(param => OpenHelpWindow(), param => true);
 
             RecentsClearCommand = new RelayCommand(param => ClearRecents(), param => true);
 
@@ -874,6 +877,16 @@ namespace BayesianModeling.ViewModel
         private void OpenInformationWindow()
         {
             var mWin = new InformationWindow();
+            mWin.Owner = MainWindow;
+            mWin.Show();
+        }
+
+        /// <summary>
+        /// Help window
+        /// </summary>
+        private void OpenHelpWindow()
+        {
+            var mWin = new HelpWindow();
             mWin.Owner = MainWindow;
             mWin.Show();
         }

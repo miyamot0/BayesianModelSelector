@@ -1,0 +1,68 @@
+﻿<Window x:Class="BayesianModeling.View.HelpWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BayesianModeling.View"
+        mc:Ignorable="d"
+        Title="Help Window" 
+        Height="550" 
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        Width="450">
+    <Grid>
+        <FlowDocumentScrollViewer>
+            <FlowDocument>
+                <Paragraph>
+                    <InlineUIContainer>
+                        <Image Source="/Resources/SNS.png" Width="90" Height="90" Margin="0,0,5,0" />
+                    </InlineUIContainer>
+                    <Run Text=" "/>
+                    <Run BaselineAlignment="Center" FontSize="22" Text="Frequently Asked Questions"/>
+                </Paragraph>
+                
+                <Paragraph>
+                    <Bold>
+                        <Run Text="The program says R isn't installed?"/>
+                    </Bold>
+                    <LineBreak/>
+                    <LineBreak/>
+                    <Run Text="The program queries the registry to see if the R program is installed (the registry actually tells the program where to find R.)" />
+                    <Run Text="You need to manually install R (preferably as administrator) prior to starting this program." />
+                    <Run Text="Starting this program without R will limit all functionality." />
+                </Paragraph>
+
+                <Paragraph>
+                    <Bold>
+                        <Run Text="When first loading up, a window asks me about using a 'Personal Library'?"/>
+                    </Bold>
+                    <LineBreak/>
+                    <LineBreak/>
+                    <Run Text="This is R asking where to install packages to.  If you didn't install R as an administrator, R isn't going to be able to write to the Program Files location." />
+                    <Run Text="This isn't a major deal, if you select 'Yes' to using a personal library, R will use a folder in 'My Documents' to the same end.  Either way works, as long as one of them can be installed to." />
+
+                </Paragraph>
+
+                <Paragraph>
+                    <Bold>
+                        <Run Text="Items on the startup window are still colored red?"/>
+                    </Bold>
+                    <LineBreak/>
+                    <LineBreak/>
+                    <Run Text="The program will talk to R to check that it has the packages it needs to run." />
+                    <Run Text="The BMS will install these packages at the outset, so that future use will not need the internet for anything except to update." />
+                </Paragraph>
+
+                <Paragraph>
+                    <Bold>
+                        <Run Text="I get an error in the output?"/>
+                    </Bold>
+                    <LineBreak/>
+                    <LineBreak/>
+                    <Run Text="The BMS operates in a general fashion with R.  There are literally hundreds of R versions out there and depending your particular version, there may be variability in how it behaves." />
+                    <Run Text="Generally, you should attempt to re-start the program so that it has a chance to fetch the needed packages.  If this doesn't help, email shawn(dot)gilroy(at)temple(dot)edu your specific log."/>
+                </Paragraph>
+            </FlowDocument>
+        </FlowDocumentScrollViewer>
+    </Grid>
+</Window>
