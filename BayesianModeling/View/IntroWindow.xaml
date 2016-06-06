@@ -51,26 +51,51 @@
                 </Paragraph>
                 <Paragraph>
                     In order to use this program to function, you will need 
-                    the following:
+                    the following (Green items are found):
                 </Paragraph>
                 <List>
-                    <ListItem>
+                    <ListItem x:Name="checkNet" TextBlock.Foreground="Red">
                         <Paragraph>
                             Microsoft .NET Framework (at least 4.0)
                         </Paragraph>
                     </ListItem>
-                    <ListItem>
+                    <ListItem x:Name="checkR" TextBlock.Foreground="Red">
                         <Paragraph>
                             The
-                            <Hyperlink NavigateUri="https://www.r-project.org/"
+                            <Hyperlink x:Name="checkR2"
+                                       NavigateUri="https://www.r-project.org/"
+                                       TextBlock.Foreground="Red"
                                        RequestNavigate="Hyperlink_RequestNavigate">R Statistical Package</Hyperlink>
                         </Paragraph>
                     </ListItem>
-                    <ListItem>
+                    <ListItem x:Name="checkGgplot" TextBlock.Foreground="Red">
+                        <Paragraph>
+                            ggplot2 (R package)
+                        </Paragraph>
+                    </ListItem>
+                    <ListItem x:Name="checkReshape2" TextBlock.Foreground="Red">
+                        <Paragraph>
+                            reshape2 (R package)
+                        </Paragraph>
+                    </ListItem>
+                    <ListItem x:Name="checkGridExtra" TextBlock.Foreground="Red">
+                        <Paragraph>
+                            gridExtra (R package)
+                        </Paragraph>
+                    </ListItem>
+                    <ListItem x:Name="checkBase64enc" TextBlock.Foreground="Red">
+                        <Paragraph>
+                            base64enc (R package)
+                        </Paragraph>
+                    </ListItem>
+                    <!--
+                    <ListItem x:Name="checkAll" TextBlock.Foreground="Red">
                         <Paragraph>
                             Initial internet access (to make sure several R packages are installed/updated).
                         </Paragraph>
+
                     </ListItem>
+                    -->
                 </List>
                 <Paragraph>
                     This is an open-sourced project and all source material (including R scripts for direct use) 

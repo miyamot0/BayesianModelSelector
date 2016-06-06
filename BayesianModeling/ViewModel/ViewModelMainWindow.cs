@@ -86,6 +86,7 @@ using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Threading;
 
 namespace BayesianModeling.ViewModel
@@ -654,6 +655,8 @@ namespace BayesianModeling.ViewModel
 
             try
             {
+                introWindow.checkNet.Foreground = Brushes.Green;
+
                 REngine.SetEnvironmentVariables();
 
                 SendMessageToOutput("Attempting to link with R installation.");
@@ -664,6 +667,9 @@ namespace BayesianModeling.ViewModel
 
                 engine.Initialize();
                 engine.AutoPrint = false;
+
+                introWindow.checkR.Foreground = Brushes.Green;
+                introWindow.checkR2.Foreground = Brushes.Green;
 
             }
             catch (Exception e)
@@ -688,10 +694,81 @@ namespace BayesianModeling.ViewModel
                     SendMessageToOutput("");
                     SendMessageToOutput("R is found and running");
 
-                    engine.Evaluate("if (!require(ggplot2)) { install.packages('ggplot2', repos = 'http://cran.us.r-project.org') }");
-                    engine.Evaluate("if (!require(reshape2)) { install.packages('reshape2', repos = 'http://cran.us.r-project.org') }");
-                    engine.Evaluate("if (!require(gridExtra)) { install.packages('gridExtra', repos = 'http://cran.us.r-project.org') }");
-                    engine.Evaluate("if (!require(base64enc)) { install.packages('base64enc', repos = 'http://cran.us.r-project.org') }");
+                    bool loadedGgplot = engine.Evaluate("require(ggplot2)").AsLogical().First();
+
+                    if (loadedGgplot)
+                    {
+                        introWindow.checkGgplot.Foreground = Brushes.Green;
+                    }
+                    else 
+                    {
+                        SendMessageToOutput("Attempting to install ggplot2 packages for first time!");
+                        engine.Evaluate("if (!require(ggplot2)) { install.packages('ggplot2', repos = 'http://cran.us.r-project.org') }");
+
+                        loadedGgplot = engine.Evaluate("require(ggplot2)").AsLogical().First();
+
+                        if (loadedGgplot)
+                        {
+                            introWindow.checkGgplot.Foreground = Brushes.Green;
+                        }
+                    }
+
+                    bool loadedReshape = engine.Evaluate("require(reshape2)").AsLogical().First();
+
+                    if (loadedReshape)
+                    {
+                        introWindow.checkReshape2.Foreground = Brushes.Green;
+                    }
+                    else
+                    {
+                        SendMessageToOutput("Attempting to install reshape2 packages for first time!");
+                        engine.Evaluate("if (!require(reshape2)) { install.packages('reshape2', repos = 'http://cran.us.r-project.org') }");
+
+                        loadedReshape = engine.Evaluate("require(reshape2)").AsLogical().First();
+
+                        if (loadedReshape)
+                        {
+                            introWindow.checkReshape2.Foreground = Brushes.Green;
+                        }
+                    }
+
+                    bool loadedGrid = engine.Evaluate("require(gridExtra)").AsLogical().First();
+
+                    if (loadedGrid)
+                    {
+                        introWindow.checkGridExtra.Foreground = Brushes.Green;
+                    }
+                    else
+                    {
+                        SendMessageToOutput("Attempting to install gridExtra packages for first time!");
+                        engine.Evaluate("if (!require(gridExtra)) { install.packages('gridExtra', repos = 'http://cran.us.r-project.org') }");
+
+                        loadedGrid = engine.Evaluate("require(gridExtra)").AsLogical().First();
+
+                        if (loadedGrid)
+                        {
+                            introWindow.checkGridExtra.Foreground = Brushes.Green;
+                        }
+                    }
+
+                    bool loadedBase64 = engine.Evaluate("require(base64enc)").AsLogical().First();
+
+                    if (loadedBase64)
+                    {
+                        introWindow.checkBase64enc.Foreground = Brushes.Green;
+                    }
+                    else
+                    {
+                        SendMessageToOutput("Attempting to install base64enc packages for first time!");
+                        engine.Evaluate("if (!require(base64enc)) { install.packages('base64enc', repos = 'http://cran.us.r-project.org') }");
+
+                        loadedBase64 = engine.Evaluate("require(base64enc)").AsLogical().First();
+
+                        if (loadedBase64)
+                        {
+                            introWindow.checkBase64enc.Foreground = Brushes.Green;
+                        }
+                    }
 
                     SendMessageToOutput("All required packages have been found.  Ready to proceed.");
                 }
@@ -728,7 +805,11 @@ namespace BayesianModeling.ViewModel
         private void ViewClosed()
         {
             Properties.Settings.Default.Save();
-            engine.Dispose();
+
+            if (!failed)
+            {
+                engine.Dispose();
+            }
         }
 
         #endregion Triggers
