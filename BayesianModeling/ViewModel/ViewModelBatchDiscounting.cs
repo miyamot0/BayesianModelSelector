@@ -896,7 +896,7 @@ namespace BayesianModeling.ViewModel
                         mVM.RowViewModels[0].values[5] = "Myerson-Hyperboloid - ln(k): ";
                         mVM.RowViewModels[0].values[6] = "Myerson-Hyperboloid - s: ";
                         mVM.RowViewModels[0].values[7] = "Rachlin-Hyperboloid - ln(k): ";
-                        mVM.RowViewModels[0].values[8] = "Rachlin-Hyperboloid - s): ";
+                        mVM.RowViewModels[0].values[8] = "Rachlin-Hyperboloid - s: ";
                         mVM.RowViewModels[0].values[9] = "Model Competition (#1)";
                         mVM.RowViewModels[0].values[10] = "#2";
                         mVM.RowViewModels[0].values[11] = "#3";
