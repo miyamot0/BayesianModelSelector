@@ -49,6 +49,7 @@ Bayesian Model Selector is a ClickOnce application, the program will automatical
 All downloads, if/when posted, will be hosted at [Small N Stats](http://www.smallnstats.com/BayesianSelector.html). 
 
 ### Changelog
+ * 1.0.0.57 - New interactive UI for new installers (Color coded for clarity), fixed bug on startup if R not present
  * 1.0.0.56 - Fix for missing dependency (new graphics), formatting for older machines (non-Aero)
 
 ### Development
