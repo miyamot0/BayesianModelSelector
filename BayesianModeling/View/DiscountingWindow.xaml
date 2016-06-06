@@ -111,6 +111,7 @@
                 Focusable="False"
                 AcceptsTab="False"
                 ToolTip="Click button to select delay points"
+                VerticalContentAlignment="Center"
                 Text="{Binding Delays}"
                 Background="{Binding Path=DelaysBrush}">
                 <TextBox.ContextMenu>
@@ -139,6 +140,7 @@
                 AcceptsTab="False"
                 ToolTip="Click button to select value points"
                 Text="{Binding Values}"
+                VerticalContentAlignment="Center"
                 Background="{Binding Path=ValuesBrush}">
                 <TextBox.ContextMenu>
                     <ContextMenu>
@@ -162,6 +164,7 @@
                 Grid.Column="2"
                 Grid.ColumnSpan="2"
                 Margin="10"
+                VerticalContentAlignment="Center"
                 Text="{Binding MaxValue}">
             </TextBox>
 
