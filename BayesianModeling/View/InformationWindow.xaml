@@ -43,15 +43,20 @@
                     <Bold>
                         <Run Text="Bayesian Model Selection"/>
                     </Bold>
-                    <Run Text=" procedure is an implementation of earlier work by Chris Franck et al., 2015. A link to the original work is included below:"/>
+                    <Run Text=" procedure is an implementation of earlier work by Chris Franck et al., 2015 designed to aid in the selection of a temporal discounting model. This work was designed using the Bayesian Information Criterion as a means for comparison between between discounting models"/>
+                    <LineBreak/>
+                    <LineBreak/>
+                    <Run Text="A link to the original work is included in the credits below:" />
                 </Paragraph>
                 <Paragraph>
+                    The 
                     <Bold>
                         <Hyperlink NavigateUri="http://www.smallnstats.com/">
                             <Run Text="Small n Stats"/>
                         </Hyperlink>
                     </Bold>
-                    <Run Text=", references an on-going project developed/maintained by Shawn P. Gilroy. This project aims to increase the accesibility of mathematical methods in the behavioral sciences.  The current project utilizes peer reviewed works and these are indicated below."/>
+                    <Run Text=" project references an on-going endeavor to expand upon the tools available to researchers and practitioners in the behavioral sciences."/>
+                    <Run Text="Small n Stats is developed and maintained by Shawn P. Gilroy." />
                 </Paragraph>
                 <Paragraph>
                     <Bold>
@@ -67,9 +72,7 @@
                             <LineBreak/>
                         </Paragraph>
                     </ListItem>
-
                 </List>
-
             </FlowDocument>
         </FlowDocumentScrollViewer>
     </Grid>
