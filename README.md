@@ -11,7 +11,7 @@ Features include:
   - Wide range of model outputs/metrics, saveable in common spreadsheet file formats
 
 ### Version
-1.0.0.45
+1.0.0.56
 
 ### Referenced Works (F/OSS software)
 The Small N Stats Bayesian Model Selector uses a number of open source projects to work properly:
@@ -47,6 +47,9 @@ Bayesian Model Selector is a ClickOnce application, the program will automatical
 
 ### Download
 All downloads, if/when posted, will be hosted at [Small N Stats](http://www.smallnstats.com/BayesianSelector.html). 
+
+### Changelog
+ * 1.0.0.56 - Fix for missing dependency (new graphics), formatting for older machines (non-Aero)
 
 ### Development
 Want to contribute? Great! Emails or PM's are welcome.
