@@ -1016,6 +1016,7 @@ namespace BayesianModeling.ViewModel
                         {
                             var iWindow1 = new ImageWindow();
                             iWindow1.filePath = path1;
+                            iWindow1.Owner = mWindow;
                             iWindow1.imageHolder.Source = new DrawingImage(drawing1);
                             iWindow1.Show();
                         }
@@ -1039,6 +1040,7 @@ namespace BayesianModeling.ViewModel
                         {
                             var iWindow2 = new ImageWindow();
                             iWindow2.filePath = path2;
+                            iWindow2.Owner = mWindow;
                             iWindow2.imageHolder.Source = new DrawingImage(drawing2);
                             iWindow2.Show();
                         }
