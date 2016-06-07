@@ -11,9 +11,10 @@ Features include:
   - Wide range of model outputs/metrics, saveable in common spreadsheet file formats
 
 ### Version
-1.0.0.58
+1.0.0.59
 
 ### Changelog
+ * 1.0.0.59 - Interactive visuals for initial install, Saves .svg files natively
  * 1.0.0.58 - Add Help menu for basic troubleshooting and information for submitting logs
  * 1.0.0.57 - New interactive UI for new installers (Color coded for clarity), fixed bug on startup if R not present
  * 1.0.0.56 - Fix for missing dependency (new graphics), formatting for older machines (non-Aero)
