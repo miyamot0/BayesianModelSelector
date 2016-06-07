@@ -116,7 +116,7 @@ namespace BayesianModeling.View
             }
             else if (mExt.Equals(".svg"))
             {
-                File.Copy(filePath, saveFileDialog1.FileName);
+                File.Copy(filePath, saveFileDialog1.FileName, true);
             }
         }
 
