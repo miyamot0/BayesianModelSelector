@@ -697,6 +697,8 @@ namespace BayesianModeling.ViewModel
                     SendMessageToOutput("");
                     SendMessageToOutput("R is found and running");
 
+                    introWindow.loadText.Text = "Loading R Packages";
+
                     bool loadedGgplot = engine.Evaluate("require(ggplot2)").AsLogical().First();
 
                     if (loadedGgplot)
@@ -706,6 +708,7 @@ namespace BayesianModeling.ViewModel
                     else 
                     {
                         SendMessageToOutput("Attempting to install ggplot2 packages for first time!");
+                        introWindow.loadText.Text = "Downloading ggplot2...";
                         engine.Evaluate("if (!require(ggplot2)) { install.packages('ggplot2', repos = 'http://cran.us.r-project.org') }");
 
                         loadedGgplot = engine.Evaluate("require(ggplot2)").AsLogical().First();
@@ -716,6 +719,8 @@ namespace BayesianModeling.ViewModel
                         }
                     }
 
+                    introWindow.loadText.Text = "Loading R Packages";
+
                     bool loadedReshape = engine.Evaluate("require(reshape2)").AsLogical().First();
 
                     if (loadedReshape)
@@ -725,6 +730,7 @@ namespace BayesianModeling.ViewModel
                     else
                     {
                         SendMessageToOutput("Attempting to install reshape2 packages for first time!");
+                        introWindow.loadText.Text = "Downloading reshape2...";
                         engine.Evaluate("if (!require(reshape2)) { install.packages('reshape2', repos = 'http://cran.us.r-project.org') }");
 
                         loadedReshape = engine.Evaluate("require(reshape2)").AsLogical().First();
@@ -735,6 +741,8 @@ namespace BayesianModeling.ViewModel
                         }
                     }
 
+                    introWindow.loadText.Text = "Loading R Packages";
+
                     bool loadedGrid = engine.Evaluate("require(gridExtra)").AsLogical().First();
 
                     if (loadedGrid)
@@ -744,6 +752,7 @@ namespace BayesianModeling.ViewModel
                     else
                     {
                         SendMessageToOutput("Attempting to install gridExtra packages for first time!");
+                        introWindow.loadText.Text = "Downloading gridExtra...";
                         engine.Evaluate("if (!require(gridExtra)) { install.packages('gridExtra', repos = 'http://cran.us.r-project.org') }");
 
                         loadedGrid = engine.Evaluate("require(gridExtra)").AsLogical().First();
@@ -754,6 +763,8 @@ namespace BayesianModeling.ViewModel
                         }
                     }
 
+                    introWindow.loadText.Text = "Loading R Packages";
+
                     bool loadedBase64 = engine.Evaluate("require(base64enc)").AsLogical().First();
 
                     if (loadedBase64)
@@ -763,6 +774,7 @@ namespace BayesianModeling.ViewModel
                     else
                     {
                         SendMessageToOutput("Attempting to install base64enc packages for first time!");
+                        introWindow.loadText.Text = "Downloading base64enc...";
                         engine.Evaluate("if (!require(base64enc)) { install.packages('base64enc', repos = 'http://cran.us.r-project.org') }");
 
                         loadedBase64 = engine.Evaluate("require(base64enc)").AsLogical().First();
@@ -773,7 +785,14 @@ namespace BayesianModeling.ViewModel
                         }
                     }
 
-                    SendMessageToOutput("All required packages have been found.  Ready to proceed.");
+                    introWindow.loadText.Text = "Loading R Packages";
+
+                    if (loadedGgplot && loadedGrid && loadedReshape && loadedBase64 && !failed)
+                    {
+                        introWindow.loadText.Text = "All necessary components found!";
+                        introWindow.loadText.Foreground = Brushes.Green;
+                        SendMessageToOutput("All required packages have been found.  Ready to proceed.");
+                    }
                 }
                 else
                 {
