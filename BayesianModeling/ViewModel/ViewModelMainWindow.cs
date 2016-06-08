@@ -317,7 +317,6 @@ namespace BayesianModeling.ViewModel
             if (!Properties.Settings.Default.Licensing)
             {
                 var initWindow = new InitialLicense();
-                initWindow.initialLicenseText.Text = Properties.Resources.License;
                 if (initWindow.ShowDialog() == true)
                 {
                     Properties.Settings.Default.Licensing = true;

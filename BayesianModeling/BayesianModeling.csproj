@@ -32,7 +32,7 @@
     <SuiteName>Discounting Model Selector</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>61</ApplicationRevision>
+    <ApplicationRevision>62</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -318,6 +318,7 @@
     <None Include="Resources\License_base64enc.txt" />
     <None Include="AUTHORS" />
     <None Include="Resources\License_SharpVectorGraphics.txt" />
+    <None Include="Resources\LicenseGPL.txt" />
     <Content Include="Source\BayesianModelSelector-master.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
