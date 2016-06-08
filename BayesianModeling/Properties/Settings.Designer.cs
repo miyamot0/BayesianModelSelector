@@ -118,5 +118,17 @@ namespace BayesianModeling.Properties {
                 this["GUID"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Licensing {
+            get {
+                return ((bool)(this["Licensing"]));
+            }
+            set {
+                this["Licensing"] = value;
+            }
+        }
     }
 }

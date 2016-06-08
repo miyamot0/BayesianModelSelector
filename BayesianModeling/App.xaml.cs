@@ -25,6 +25,7 @@
 // </summary>
 //----------------------------------------------------------------------------------------------
 
+using BayesianModeling.View;
 using BayesianModeling.ViewModel;
 using System.Windows;
 
@@ -38,6 +39,7 @@ namespace BayesianModeling
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+
             MainWindow window = new MainWindow();
             window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             window.DataContext = new ViewModelMainWindow
@@ -46,6 +48,7 @@ namespace BayesianModeling
             };
 
             window.Show();
+
         }
     }
 }
