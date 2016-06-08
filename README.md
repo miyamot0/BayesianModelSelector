@@ -11,9 +11,10 @@ Features include:
   - Wide range of model outputs/metrics, saveable in common spreadsheet file formats
 
 ### Version
-1.0.0.61
+1.0.0.62
 
 ### Changelog
+ * 1.0.0.62 - Format licenses 
  * 1.0.0.61 - Initial licensing agreement prompt added
  * 1.0.0.60 - Overwrite bugs fixed
  * 1.0.0.59 - Interactive visuals for initial install, Saves .svg files natively
