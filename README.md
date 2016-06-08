@@ -11,9 +11,10 @@ Features include:
   - Wide range of model outputs/metrics, saveable in common spreadsheet file formats
 
 ### Version
-1.0.0.60
+1.0.0.61
 
 ### Changelog
+ * 1.0.0.61 - Initial licensing agreement prompt added
  * 1.0.0.60 - Overwrite bugs fixed
  * 1.0.0.59 - Interactive visuals for initial install, Saves .svg files natively
  * 1.0.0.58 - Add Help menu for basic troubleshooting and information for submitting logs
@@ -33,7 +34,7 @@ The Bayesian Model Selector accesses the following R packages to perform statist
 * nls R Package - GPLv2 Licensed. Copyright (C) 1999-1999 Saikat DebRoy, Douglas M. Bates, Jose C. Pinheiro.
 * nls R Package - GPLv2 Licensed. Copyright (C) 2000-7. The R Core Team.
 * ggplot2 R Package - GPLv2 Licensed. Copyright (c) 2016, Hadley Wickham.
-* gridExtra R Package - GPLv2+ Licensed. Copyright (c) 2016, Baptiste Auguie.
+* gridExtra R Package - GPLv2 Licensed. Copyright (c) 2016, Baptiste Auguie.
 * base64enc R Package - GPLv2 Licensed. Copyright (c) 2015, Simon Urbanek
 * reshape2 R Package - MIT Licensed. Copyright (c) 2014, Hadley Wickham.
 * scales R Package - MIT Licensed. Copyright (c) 2010-2014, Hadley Wickham.
