@@ -137,6 +137,17 @@ namespace BayesianModeling.ViewModel
                 OnPropertyChanged("Values");
             }
         }
+        
+        private string ids = "";
+        public string Ids
+        {
+            get { return ids; }
+            set
+            {
+                ids = value;
+                OnPropertyChanged("Ids");
+            }
+        }
 
         private string maxValue = "";
         public string MaxValue
@@ -249,6 +260,17 @@ namespace BayesianModeling.ViewModel
                 OnPropertyChanged("ValuesBrush");
             }
         }
+        
+        private Brush idBrush = Brushes.White;
+        public Brush IdBrush
+        {
+            get { return idBrush; }
+            set
+            {
+                idBrush = value;
+                OnPropertyChanged("IdBrush");
+            }
+        }
 
         int lowRowDelay = -1,
             highRowDelay = -1,
@@ -288,9 +310,11 @@ namespace BayesianModeling.ViewModel
 
         public RelayCommand DelayRangeCommand { get; set; }
         public RelayCommand ValueRangeCommand { get; set; }
+        public RelayCommand IdRangeCommand { get; set; }
 
         public RelayCommand GetDelaysRangeCommand { get; set; }
         public RelayCommand GetValuesRangeCommand { get; set; }
+        public RelayCommand GetIdRangeCommand { get; set; }
         public RelayCommand CalculateScoresCommand { get; set; }
         public RelayCommand FigureOutput { get; set; }
         public RelayCommand WorkbookOutput { get; set; }
@@ -331,6 +355,7 @@ namespace BayesianModeling.ViewModel
             ViewClosingCommand = new RelayCommand(param => ViewClosed(), param => true);
             GetDelaysRangeCommand = new RelayCommand(param => GetDelaysRange(), param => true);
             GetValuesRangeCommand = new RelayCommand(param => GetValuesRange(), param => true);
+            GetIdRangeCommand = new RelayCommand(param => GetIdRange(), param => true);
             CalculateScoresCommand = new RelayCommand(param => CalculateScores(), param => true);
 
             FigureOutput = new RelayCommand(param => UpdateFigureOutput(), param => true);
@@ -340,6 +365,7 @@ namespace BayesianModeling.ViewModel
 
             DelayRangeCommand = new RelayCommand(param => GetCustomDelays(), param => true);
             ValueRangeCommand = new RelayCommand(param => GetCustomValues(), param => true);
+            IdRangeCommand = new RelayCommand(param => GetCustomIds(), param => true);
 
             NoiseModelCommand = new RelayCommand(param => UpdateNoise(), param => true);
             ExponentialModelCommand = new RelayCommand(param => UpdateExponential(), param => true);
@@ -438,6 +464,52 @@ namespace BayesianModeling.ViewModel
                     else
                     {
                         MessageBox.Show("Please ensure that only a single row is selected");
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Parse error!");
+                }
+            }
+        }
+        
+        private void GetCustomIds()
+        {
+            var mWin = new RangePrompt();
+            mWin.Topmost = true;
+            mWin.Owner = windowRef;
+            mWin.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+
+            if (mWin.ShowDialog() == true)
+            {
+                string[] addresses = mWin.ResponseText.Split(':');
+
+                if (addresses.Length != 2) return;
+
+                var firstChars = new String(addresses[0].ToCharArray().Where(c => !Char.IsDigit(c)).ToArray());
+                var firstNums = new String(addresses[0].ToCharArray().Where(c => Char.IsDigit(c)).ToArray());
+
+                var secondChars = new String(addresses[1].ToCharArray().Where(c => !Char.IsDigit(c)).ToArray());
+                var secondNums = new String(addresses[1].ToCharArray().Where(c => Char.IsDigit(c)).ToArray());
+
+                int fNum, sNum;
+
+                if (int.TryParse(firstNums, out fNum) && int.TryParse(secondNums, out sNum) && firstChars.Length > 0 && secondChars.Length > 0)
+                {
+                    if ((sNum - fNum) == 0)
+                    {
+                        IdBrush = Brushes.LightGreen;
+                        Ids = firstChars + firstNums + ":" + secondChars + secondNums;
+
+                        lowColId = DataGridTools.GetColumnIndex(firstChars);
+                        highColId = DataGridTools.GetColumnIndex(secondChars);
+
+                        lowRowId = fNum;
+                        highRowId = sNum;
+                    }
+                    else
+                    {
+                        //MessageBox.Show("Please ensure that only a single row is selected");
                     }
                 }
                 else
@@ -678,6 +750,40 @@ namespace BayesianModeling.ViewModel
             ValuesBrush = Brushes.LightGreen;
             Values = DataGridTools.GetColumnName(lowColValue) + lowRowValue.ToString() + ":" + DataGridTools.GetColumnName(highColValue) + highRowValue.ToString();
         }
+        
+        private void DataGrid_PreviewMouseUp_Ids(object sender, MouseButtonEventArgs e)
+        {
+            List<DataGridCellInfo> cells = mWindow.dataGrid.SelectedCells.ToList();
+            var itemSource = mWindow.dataGrid.ItemsSource as ObservableCollection<RowViewModel>;
+
+            if (cells.Count < 1 || itemSource.Count < 1) return;
+
+            lowRowId = cells.Min(i => DataGridTools.GetIndexViewModel((RowViewModel)i.Item, itemSource));
+            highRowId = cells.Max(i => DataGridTools.GetIndexViewModel((RowViewModel)i.Item, itemSource));
+
+            lowColId = cells.Min(i => i.Column.DisplayIndex);
+            highColId = cells.Max(i => i.Column.DisplayIndex);
+
+            if ((highRowValue - lowRowValue) > 0)
+            {
+                DefaultFieldsToGray();
+
+                mWindow.dataGrid.PreviewMouseUp -= DataGrid_PreviewMouseUp_Ids;
+
+                lowColId = -1;
+                lowRowId = -1;
+                highColId = -1;
+                highRowId = -1;
+                MessageBox.Show("Please select a single horizontal row (increasing, from left to right).  You can have many columns, but just one row.");
+
+                return;
+            }
+
+            mWindow.dataGrid.PreviewMouseUp -= DataGrid_PreviewMouseUp_Ids;
+
+            IdBrush = Brushes.LightGreen;
+            Ids = DataGridTools.GetColumnName(lowColValue) + lowRowValue.ToString() + ":" + DataGridTools.GetColumnName(highColValue) + highRowValue.ToString();
+        }
 
         /// <summary>
         /// Call window reference (shameful deviation from MVVM) for Unveil's range PickRange function.
@@ -705,6 +811,16 @@ namespace BayesianModeling.ViewModel
             Values = "Select values on spreadsheet";
 
             mWindow.dataGrid.PreviewMouseUp += DataGrid_PreviewMouseUp_Values;
+        }
+        
+        private void GetIdRange()
+        {
+            DefaultFieldsToGray();
+
+            IdBrush = Brushes.Yellow;
+            Ids = "Select values on spreadsheet";
+
+            //mWindow.dataGrid.PreviewMouseUp += DataGrid_PreviewMouseUp_Values;            
         }
 
         /// <summary>
