@@ -260,6 +260,23 @@ namespace BayesianModeling.ViewModel
             lowColValue = -1,
             highColValue = -1;
 
+        // TODO custom ID range
+        int lowRowId = -1,
+            highRowId = -1,
+            lowColId = -1,
+            highColId = -1;
+
+        // TODO 
+        // Windows of parent only? if not, remove TOP altogether
+        // On select handle, disable cell select until drag handler returned?
+        // Stein Window, add ability to maximize
+        // Change log x = "Unit Price/X"
+        // Drop off change hundred in settings
+        // Degrees of precision
+        // Error out if ranges == same!
+        // Calculate BP1 BP0 before modification!
+        // antilog scale
+
         /* Math/Computation */
 
         REngine engine;
