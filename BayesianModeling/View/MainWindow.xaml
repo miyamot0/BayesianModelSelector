@@ -126,10 +126,10 @@
                         <MenuItem Header="ggplot2 (R Package) License (GPL-v2)" 
                                   Command="{Binding Ggplot2LicenseWindowCommand}">
                         </MenuItem>
-                        <MenuItem Header="gridExtra (R Package) License (GPL-v2+)" 
+                        <MenuItem Header="gridExtra (R Package) License (GPL-v2)" 
                                   Command="{Binding GridExtraLicenseWindowCommand}">
                         </MenuItem>
-                        <MenuItem Header="base64enc (R Package) License (GPL-v2+)" 
+                        <MenuItem Header="base64enc (R Package) License (GPL-v2)" 
                                   Command="{Binding BaseEncodeLicenseWindowCommand}">
                         </MenuItem>
                         <MenuItem Header="reshape2 (R Package) License (MIT)" 
@@ -138,7 +138,7 @@
                         <MenuItem Header="scales (R Package) License (MIT)" 
                                   Command="{Binding ScalesLicenseWindowCommand}">
                         </MenuItem>
-                        <MenuItem Header="EPPlus License (LGPL)" 
+                        <MenuItem Header="EPPlus License (GPL-v2)" 
                                   Command="{Binding EPPLicenseWindowCommand}">
                         </MenuItem>
                         <MenuItem Header="BDS (R Script) License (GPL-v2)" 
