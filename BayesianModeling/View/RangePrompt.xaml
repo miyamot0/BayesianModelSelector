@@ -12,7 +12,7 @@
     <StackPanel VerticalAlignment="Bottom" 
                     Margin="5"
                     FocusManager.FocusedElement="{Binding ElementName=RangeText}">
-        <TextBlock Text="Enter the custom Range (e.g., B1:B10)"
+        <TextBlock Text="Enter the custom Range (e.g., B0:AC0)"
                        Margin="5"/>
         <TextBox x:Name="RangeText"
                      Margin="5" />

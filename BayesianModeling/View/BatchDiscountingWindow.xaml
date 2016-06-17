@@ -113,12 +113,8 @@
                 ToolTip="Click button to select delay points"
                 Text="{Binding Delays}"
                 VerticalContentAlignment="Center"
-                Background="{Binding Path=DelaysBrush}">
-                <TextBox.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Header="Manually Type Range" Command="{Binding DelayRangeCommand}" />
-                    </ContextMenu>
-                </TextBox.ContextMenu>
+                Background="{Binding Path=DelaysBrush}"
+                MouseUp="TextBox_MouseUp">
             </TextBox>
 
             <Button Name="valuesButton" 
@@ -141,12 +137,8 @@
                 ToolTip="Click button to select value points"
                 Text="{Binding Values}"
                 VerticalContentAlignment="Center"
-                Background="{Binding Path=ValuesBrush}">
-                <TextBox.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Header="Manually Type Range" Command="{Binding ValueRangeCommand}" />
-                    </ContextMenu>
-                </TextBox.ContextMenu>
+                Background="{Binding Path=ValuesBrush}"
+                MouseUp="TextBox_MouseUp_1">
             </TextBox>
 
             <Label Grid.Row="3" 

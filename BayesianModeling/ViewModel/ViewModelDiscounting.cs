@@ -289,15 +289,15 @@ namespace BayesianModeling.ViewModel
             highColId = -1;
 
         // TODO 
-        // Windows of parent only? if not, remove TOP altogether
-        // On select handle, disable cell select until drag handler returned?
-        // Stein Window, add ability to maximize
-        // Change log x = "Unit Price/X"
-        // Drop off change hundred in settings
-        // Degrees of precision
+        // Done - Windows of parent only? if not, remove TOP altogether
+        // Done - On select handle, disable cell select until drag handler returned?
+        // Disregard - Stein Window, add ability to maximize
+        // Disregard - Change log x = "Unit Price/X"
+        // Disregard - Drop off change hundred in settings
+        // Disregard - Degrees of precision
         // Error out if ranges == same!
-        // Calculate BP1 BP0 before modification!
-        // antilog scale
+        // Disregard - Calculate BP1 BP0 before modification!
+        // Disregard - antilog scale
 
         /* Math/Computation */
 
@@ -472,7 +472,10 @@ namespace BayesianModeling.ViewModel
                 }
             }
         }
-        
+
+        /// <summary>
+        /// Query user for a range
+        /// </summary>
         private void GetCustomIds()
         {
             var mWin = new RangePrompt();
@@ -708,6 +711,7 @@ namespace BayesianModeling.ViewModel
             }
 
             mWindow.dataGrid.PreviewMouseUp -= DataGrid_PreviewMouseUp_Delays;
+            mWindow.dataGrid.IsReadOnly = false;
 
             DelaysBrush = Brushes.LightBlue;
 
@@ -746,11 +750,15 @@ namespace BayesianModeling.ViewModel
             }
 
             mWindow.dataGrid.PreviewMouseUp -= DataGrid_PreviewMouseUp_Values;
+            mWindow.dataGrid.IsReadOnly = false;
 
             ValuesBrush = Brushes.LightGreen;
             Values = DataGridTools.GetColumnName(lowColValue) + lowRowValue.ToString() + ":" + DataGridTools.GetColumnName(highColValue) + highRowValue.ToString();
         }
-        
+
+        /// <summary>
+        /// Delegate after highlighting takes place on datagrid (call back specific to ids).
+        /// </summary>
         private void DataGrid_PreviewMouseUp_Ids(object sender, MouseButtonEventArgs e)
         {
             List<DataGridCellInfo> cells = mWindow.dataGrid.SelectedCells.ToList();
@@ -780,6 +788,7 @@ namespace BayesianModeling.ViewModel
             }
 
             mWindow.dataGrid.PreviewMouseUp -= DataGrid_PreviewMouseUp_Ids;
+            mWindow.dataGrid.IsReadOnly = false;
 
             IdBrush = Brushes.LightGreen;
             Ids = DataGridTools.GetColumnName(lowColValue) + lowRowValue.ToString() + ":" + DataGridTools.GetColumnName(highColValue) + highRowValue.ToString();
@@ -797,6 +806,7 @@ namespace BayesianModeling.ViewModel
             Delays = "Select delays on spreadsheet";
 
             mWindow.dataGrid.PreviewMouseUp += DataGrid_PreviewMouseUp_Delays;
+            mWindow.dataGrid.IsReadOnly = true;
         }
 
         /// <summary>
@@ -811,8 +821,13 @@ namespace BayesianModeling.ViewModel
             Values = "Select values on spreadsheet";
 
             mWindow.dataGrid.PreviewMouseUp += DataGrid_PreviewMouseUp_Values;
+            mWindow.dataGrid.IsReadOnly = true;
         }
-        
+
+        /// <summary>
+        /// Call window reference (shameful deviation from MVVM) for Unveil's range PickRange function.
+        /// Successful (or failing) selections result in a range string in respective text fields for later parsing.
+        /// </summary>
         private void GetIdRange()
         {
             DefaultFieldsToGray();
@@ -820,7 +835,8 @@ namespace BayesianModeling.ViewModel
             IdBrush = Brushes.Yellow;
             Ids = "Select values on spreadsheet";
 
-            //mWindow.dataGrid.PreviewMouseUp += DataGrid_PreviewMouseUp_Values;            
+            mWindow.dataGrid.PreviewMouseUp += DataGrid_PreviewMouseUp_Ids;
+            mWindow.dataGrid.IsReadOnly = true;
         }
 
         /// <summary>

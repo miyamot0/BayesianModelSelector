@@ -55,5 +55,21 @@ namespace BayesianModeling.View
             if (viewModel.ViewClosingCommand.CanExecute(null))
                 viewModel.ViewClosingCommand.Execute(null);
         }
+
+        private void TextBox_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var viewModel = (ViewModelBatchDiscounting)DataContext;
+
+            if (viewModel.DelayRangeCommand.CanExecute(null))
+                viewModel.DelayRangeCommand.Execute(null);
+        }
+
+        private void TextBox_MouseUp_1(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var viewModel = (ViewModelBatchDiscounting)DataContext;
+
+            if (viewModel.ValueRangeCommand.CanExecute(null))
+                viewModel.ValueRangeCommand.Execute(null);
+        }
     }
 }
