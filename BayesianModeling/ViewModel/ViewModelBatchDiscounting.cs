@@ -745,7 +745,14 @@ namespace BayesianModeling.ViewModel
                 MessageBox.Show("Please review the the Delayed Amount number.  This must be a non-zero number.");
                 return;
             }
-            
+
+            if (Delays == Values)
+            {
+                mWindow.OutputEvents("Error while validating the ranges.  Did you select the same for each?");
+                MessageBox.Show("Please review the ranges.  These cannot be the same.");
+                return;
+            }
+
             List<double> xRange = new List<double>();
             xRange = GetRangedValues(lowColDelay, highColDelay, lowRowDelay);
 

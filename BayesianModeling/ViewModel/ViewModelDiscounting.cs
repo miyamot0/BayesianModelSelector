@@ -288,17 +288,6 @@ namespace BayesianModeling.ViewModel
             lowColId = -1,
             highColId = -1;
 
-        // TODO 
-        // Done - Windows of parent only? if not, remove TOP altogether
-        // Done - On select handle, disable cell select until drag handler returned?
-        // Disregard - Stein Window, add ability to maximize
-        // Disregard - Change log x = "Unit Price/X"
-        // Disregard - Drop off change hundred in settings
-        // Disregard - Degrees of precision
-        // Error out if ranges == same!
-        // Disregard - Calculate BP1 BP0 before modification!
-        // Disregard - antilog scale
-
         /* Math/Computation */
 
         REngine engine;
@@ -926,13 +915,20 @@ namespace BayesianModeling.ViewModel
 
             if (xRange == null || yRange == null) return;
 
+            if (xRange == yRange )
+            {
+                mWindow.OutputEvents("Error while validating the ranges.  Did you select the same for each?");
+                MessageBox.Show("Please review the ranges.  These cannot be the same.");
+                return;
+            }
+
             mWindow.OutputEvents("---------------------------------------------------");
             mWindow.OutputEvents("Checking user-supplied ranges and reference points.");
 
             if (!double.TryParse(MaxValue, out maxValueA) || maxValueA == 0)
             {
                 mWindow.OutputEvents("Error while validating the Delayed Amount.  Is this a non-zero number?");
-                MessageBox.Show("Please review the the Delayed Amount number.  This must be a non-zero number.");
+                MessageBox.Show("Please review the Delayed Amount number.  This must be a non-zero number.");
                 return;
             }
 
