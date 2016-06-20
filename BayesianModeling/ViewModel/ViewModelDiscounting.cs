@@ -784,7 +784,7 @@ namespace BayesianModeling.ViewModel
         }
 
         /// <summary>
-        /// Call window reference (shameful deviation from MVVM) for Unveil's range PickRange function.
+        /// Call window reference (shameful deviation from MVVM) for PickRange function.
         /// Successful (or failing) selections result in a range string in respective text fields for later parsing.
         /// </summary>
         private void GetDelaysRange()
@@ -799,7 +799,7 @@ namespace BayesianModeling.ViewModel
         }
 
         /// <summary>
-        /// Call window reference (shameful deviation from MVVM) for Unveil's range PickRange function.
+        /// Call window reference (shameful deviation from MVVM) for PickRange function.
         /// Successful (or failing) selections result in a range string in respective text fields for later parsing.
         /// </summary>
         private void GetValuesRange()
@@ -814,7 +814,7 @@ namespace BayesianModeling.ViewModel
         }
 
         /// <summary>
-        /// Call window reference (shameful deviation from MVVM) for Unveil's range PickRange function.
+        /// Call window reference (shameful deviation from MVVM) for PickRange function.
         /// Successful (or failing) selections result in a range string in respective text fields for later parsing.
         /// </summary>
         private void GetIdRange()
@@ -1075,20 +1075,64 @@ namespace BayesianModeling.ViewModel
 
             mVM.RowViewModels[0].values[0] = "Results of Bayesian Model Selector";
             mVM.RowViewModels[1].values[0] = "Single Series Analysis";
-            mVM.RowViewModels[0].values[1] = "Exponential - ln(k): ";
-            mVM.RowViewModels[1].values[1] = engine.Evaluate("as.numeric(output[[3]]['exp.lnk'])").AsVector().First().ToString();
-            mVM.RowViewModels[0].values[2] = "Hyperbolic - ln(k): ";
-            mVM.RowViewModels[1].values[2] = engine.Evaluate("as.numeric(output[[2]]['Mazur.lnk'])").AsVector().First().ToString();
+            mVM.RowViewModels[0].values[1] = "Exponential - k: ";
+
+            double modExp = double.NaN;
+            if (double.TryParse(engine.Evaluate("as.numeric(output[[3]]['exp.lnk'])").AsVector().First().ToString(), out modExp))
+            {
+                mVM.RowViewModels[1].values[1] = Math.Exp(modExp).ToString();
+            }
+            else
+            {
+                mVM.RowViewModels[1].values[1] = modExp.ToString();
+            }
+
+            //mVM.RowViewModels[1].values[1] = engine.Evaluate("as.numeric(output[[3]]['exp.lnk'])").AsVector().First().ToString();
+            mVM.RowViewModels[0].values[2] = "Hyperbolic - k: ";
+
+            double modHyp = double.NaN;
+            if (double.TryParse(engine.Evaluate("as.numeric(output[[2]]['Mazur.lnk'])").AsVector().First().ToString(), out modHyp))
+            {
+                mVM.RowViewModels[1].values[2] = Math.Exp(modHyp).ToString();
+            }
+            else
+            {
+                mVM.RowViewModels[1].values[2] = modHyp.ToString();
+            }
+
+            //mVM.RowViewModels[1].values[2] = engine.Evaluate("as.numeric(output[[2]]['Mazur.lnk'])").AsVector().First().ToString();
             mVM.RowViewModels[0].values[3] = "Quasi-Hyperbolic - beta: ";
             mVM.RowViewModels[1].values[3] = engine.Evaluate("as.numeric(output[[9]]['BD.beta'])").AsVector().First().ToString();
             mVM.RowViewModels[0].values[4] = "Quasi-Hyperbolic - delta: ";
             mVM.RowViewModels[1].values[4] = engine.Evaluate("as.numeric(output[[9]]['BD.delta'])").AsVector().First().ToString();
-            mVM.RowViewModels[0].values[5] = "Myerson-Hyperboloid - ln(k): ";
-            mVM.RowViewModels[1].values[5] = engine.Evaluate("as.numeric(output[[4]]['MG.lnk'])").AsVector().First().ToString();
+            mVM.RowViewModels[0].values[5] = "Myerson-Hyperboloid - k: ";
+
+            double modMG = double.NaN;
+            if (double.TryParse(engine.Evaluate("as.numeric(output[[4]]['MG.lnk'])").AsVector().First().ToString(), out modMG))
+            {
+                mVM.RowViewModels[1].values[5] = Math.Exp(modMG).ToString();
+            }
+            else
+            {
+                mVM.RowViewModels[1].values[5] = modMG.ToString();
+            }
+
+            //mVM.RowViewModels[1].values[5] = engine.Evaluate("as.numeric(output[[4]]['MG.lnk'])").AsVector().First().ToString();
             mVM.RowViewModels[0].values[6] = "Myerson-Hyperboloid - s: ";
             mVM.RowViewModels[1].values[6] = engine.Evaluate("as.numeric(output[[4]]['MG.s'])").AsVector().First().ToString();
-            mVM.RowViewModels[0].values[7] = "Rachlin-Hyperboloid - ln(k): ";
-            mVM.RowViewModels[1].values[7] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.lnk'])").AsVector().First().ToString();
+            mVM.RowViewModels[0].values[7] = "Rachlin-Hyperboloid - k: ";
+
+            double modR = double.NaN;
+            if (double.TryParse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.lnk'])").AsVector().First().ToString(), out modR))
+            {
+                mVM.RowViewModels[1].values[7] = Math.Exp(modR).ToString();
+            }
+            else
+            {
+                mVM.RowViewModels[1].values[7] = modR.ToString();
+            }
+
+            //mVM.RowViewModels[1].values[7] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.lnk'])").AsVector().First().ToString();
             mVM.RowViewModels[0].values[8] = "Rachlin-Hyperboloid - s: ";
             mVM.RowViewModels[1].values[8] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.s'])").AsVector().First().ToString();
             mVM.RowViewModels[0].values[9] = "Most competitive model: ";
