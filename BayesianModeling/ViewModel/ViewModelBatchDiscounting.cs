@@ -299,6 +299,7 @@ namespace BayesianModeling.ViewModel
             var mWin = new RangePrompt();
             mWin.Topmost = true;
             mWin.Owner = windowRef;
+            mWin.ResponseText = Delays;
             mWin.WindowStartupLocation = WindowStartupLocation.CenterOwner;
 
             if (mWin.ShowDialog() == true)
@@ -348,6 +349,7 @@ namespace BayesianModeling.ViewModel
             var mWin = new RangePrompt();
             mWin.Topmost = true;
             mWin.Owner = windowRef;
+            mWin.ResponseText = Values;
             mWin.WindowStartupLocation = WindowStartupLocation.CenterOwner;
 
             if (mWin.ShowDialog() == true)
