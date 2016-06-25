@@ -1244,6 +1244,8 @@ namespace BayesianModeling.ViewModel
 
                 mWindow.OutputEvents("Charting Completed!");
                 mWindow.OutputEvents("Please remember to cite the packages used in this process!");
+                mWindow.OutputEvents("Citation:: Gilroy, S. G., Franck, C. T. & Hantula, D. A. (2016). Technical Report: The Bayesian Model Selector: Statistical discounting software.");
+                mWindow.OutputEvents("Citation:: Franck, C. T., Koffarnus, M. N., House, L. L. & Bickel, W. K. (2015). Accurate characterization of delay discounting: a multiple model approach using approximate Bayesian model selection and a unified discounting measure. Journal of the Experimental Analysis of Behavior, 103(1), 218-233.");
                 mWindow.OutputEvents("Citation:: " + string.Join("", engine.Evaluate("citation()$textVersion").AsCharacter().ToArray()));
                 mWindow.OutputEvents("Citation:: " + string.Join("", engine.Evaluate("citation('ggplot2')$textVersion").AsCharacter().ToArray()));
                 mWindow.OutputEvents("Citation:: " + string.Join("", engine.Evaluate("citation('gridExtra')$textVersion").AsCharacter().ToArray()));
