@@ -1253,7 +1253,6 @@ namespace BayesianModeling.ViewModel
                 mWindow.OutputEvents("Citation:: " + string.Join("", engine.Evaluate("citation('reshape2')$textVersion").AsCharacter().ToArray()));
                 mWindow.OutputEvents("Citation:: " + string.Join("", engine.Evaluate("citation('scales')$textVersion").AsCharacter().ToArray()));
             }
-
         }
     }
 }
