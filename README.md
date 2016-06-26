@@ -11,9 +11,10 @@ Features include:
   - Wide range of model outputs/metrics, saveable in common spreadsheet file formats
 
 ### Version
-1.0.0.68
+1.0.0.69
 
 ### Changelog
+ * 1.0.0.69 - Finally fixed start menu word errors from pre-1.0.0.0
  * 1.0.0.68 - Few UI tweaks related to new combined VM/view
  * 1.0.0.67 - Limited refactor - Merge batched/single calculations to single VM to avoid redundancy
  * 1.0.0.66 - Error handling fix, bar plot tweaks
