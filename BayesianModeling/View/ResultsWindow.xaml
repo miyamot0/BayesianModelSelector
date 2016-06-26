@@ -79,6 +79,8 @@
                                     IsReadOnly="True"
                                     EnableRowVirtualization="True"
                                     EnableColumnVirtualization="True"
+                                    CanUserReorderColumns="False"
+                                    CanUserSortColumns="False"
                                     RowDetailsVisibilityMode="Visible"
                                     ClipboardCopyMode="ExcludeHeader"
                                     ItemsSource="{Binding RowViewModels}"

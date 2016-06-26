@@ -164,6 +164,8 @@
             <ComboBox Name="selectedModel"
                       SelectedValuePath="Content"
                       SelectedValue="{Binding ModeSelection}"
+                      VerticalContentAlignment="Center"
+                      HorizontalContentAlignment="Left"
                       Grid.Row="4" 
                       Grid.Column="2"
                       Grid.ColumnSpan="2"
