@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BayesianModeling.View"
         mc:Ignorable="d"
-        Title="Accept License"
+        Title="Bayesian Model Selector - Accept License"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         Height="500" 
