@@ -11,9 +11,10 @@ Features include:
   - Wide range of model outputs/metrics, saveable in common spreadsheet file formats
 
 ### Version
-1.0.0.65
+1.0.0.66
 
 ### Changelog
+ * 1.0.0.66 - Error handling fix, bar plot tweaks
  * 1.0.0.65 - Citation updates
  * 1.0.0.64 - UI tweaks, all parameters reported as lognormal
  * 1.0.0.63 - UI tweaks, more sanitizing of user input
