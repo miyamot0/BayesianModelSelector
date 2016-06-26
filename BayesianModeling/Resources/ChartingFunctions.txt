@@ -50,7 +50,8 @@ ggBar <- ggplot(barGraph.melt, aes(x = factor(variable), y=value)) +
   theme(panel.grid.minor = element_blank()) +
   theme(panel.grid.major = element_blank()) +
   theme(axis.title.x = element_blank()) +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+  theme(axis.ticks = element_blank())
 
 delaySeries = 1:endDelay
 expSeries = rep(NA,endDelay)
