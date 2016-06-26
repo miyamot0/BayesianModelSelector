@@ -1214,6 +1214,12 @@ namespace BayesianModeling.ViewModel
                 if (mExt.Equals(".xlsx"))
                 {
                     ObservableCollection<RowViewModel> temp = OpenXMLHelper.ReadFromExcelFile(filePath, out workingSheet);
+
+                    if (temp == null)
+                    {
+                        return;
+                    }
+
                     RowViewModels = new ObservableCollection<RowViewModel>(temp);
 
                     UpdateTitle(Path.GetFileName(filePath));
@@ -1222,6 +1228,12 @@ namespace BayesianModeling.ViewModel
                 else if (mExt.Equals(".csv"))
                 {
                     ObservableCollection<RowViewModel> temp = OpenXMLHelper.ReadFromCSVFile(@filePath);
+
+                    if (temp == null)
+                    {
+                        return;
+                    }
+
                     RowViewModels = new ObservableCollection<RowViewModel>(temp);
 
                     UpdateTitle(Path.GetFileName(filePath));

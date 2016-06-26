@@ -134,7 +134,7 @@ namespace BayesianModeling.Utilities
                     sheet = workSheetsArray[sheetWindow.MessageOptions.SelectedIndex];
                 }
 
-                if (output == -1)
+                if (output == -1 || !sheetWindow.hadClick)
                 {
                     return null;
                 }

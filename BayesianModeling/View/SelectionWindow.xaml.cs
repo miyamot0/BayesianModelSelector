@@ -34,6 +34,8 @@ namespace BayesianModeling.View
     /// </summary>
     public partial class SelectionWindow : Window
     {
+        public bool hadClick = false;
+
         public SelectionWindow(string[] options, string defaultItem)
         {
             InitializeComponent();
@@ -48,6 +50,7 @@ namespace BayesianModeling.View
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            hadClick = true;
             DialogResult = true;
         }
     }
