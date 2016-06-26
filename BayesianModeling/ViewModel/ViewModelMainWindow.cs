@@ -211,11 +211,8 @@ namespace BayesianModeling.ViewModel
             FileOpenNoDialogCommand = new RelayCommand(param => FileOpenNoDialog(param), param => true);
             
             HelpCommand = new RelayCommand(param => OpenHelpWindow(), param => true);
-
             RecentsClearCommand = new RelayCommand(param => ClearRecents(), param => true);
-
             RecentStuff = new ObservableCollection<MenuItem>();
-
             recentsArray = Properties.Settings.Default.RecentFiles.Trim().Split(';');
 
             List<string> workingRecents = recentsArray.Select(item => item).Where(item => item.Trim().Length > 1).ToList();
@@ -248,29 +245,15 @@ namespace BayesianModeling.ViewModel
 
             #endregion
 
-            #region LogCommands
+            #region UICommands
 
             SaveLogsWindowCommand = new RelayCommand(param => SaveLogs(), param => true);
             ClearLogsWindowCommand = new RelayCommand(param => ClearLogs(), param => true);
 
-            #endregion
-
-            #region GridCommands
-
             DeleteSelectedCommand = new RelayCommand(param => DeleteSelected(), param => true);
             CutSelectedCommand = new RelayCommand(param => CutSelected(), param => true);
-
-            #endregion
-
-            #region TriggerCommands
-
             ViewLoadedCommand = new RelayCommand(param => ViewLoaded(), param => true);
             ViewClosingCommand = new RelayCommand(param => ViewClosed(), param => true);
-
-            #endregion
-
-            #region UICommands
-            
             UnifiedDiscountingWindowCommand = new RelayCommand(param => OpenUnifiedDiscountingWindow(), param => true);
             InformationWindowCommand = new RelayCommand(param => OpenInformationWindow(), param => true);
 
@@ -287,7 +270,6 @@ namespace BayesianModeling.ViewModel
             BaseEncodeLicenseWindowCommand = new RelayCommand(param => BaseEncodeLicenseInformationWindow(), param => true);
             Reshape2LicenseWindowCommand = new RelayCommand(param => Reshape2LicenseInformationWindow(), param => true);
             ScalesLicenseWindowCommand = new RelayCommand(param => ScalesLicenseInformationWindow(), param => true);
-
             BDSLicenseWindowCommand = new RelayCommand(param => BDSLicenseWindow(), param => true);
             EPPLicenseWindowCommand = new RelayCommand(param => EPPLicenseWindow(), param => true);
 

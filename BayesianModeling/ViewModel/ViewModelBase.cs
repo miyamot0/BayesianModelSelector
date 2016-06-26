@@ -44,8 +44,8 @@ namespace BayesianModeling.ViewModel
             PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null)
             {
-                var e = new PropertyChangedEventArgs(propertyName);
-                handler(this, e);
+                var evnt = new PropertyChangedEventArgs(propertyName);
+                handler(this, evnt);
             }
         }
 

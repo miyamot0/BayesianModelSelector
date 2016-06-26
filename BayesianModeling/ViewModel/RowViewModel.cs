@@ -31,12 +31,10 @@ namespace BayesianModeling.ViewModel
 {
     public class RowViewModel : ViewModelBase
     {
-
-        public const int rowLimit = 100;
-        public string[] values = new string[rowLimit];
+        public string[] values = new string[100];
 
         /// <summary>
-        /// Instantiate each row with n (rowLimit) columns
+        /// Instantiate each row with n columns
         /// </summary>
         public RowViewModel()
         {
