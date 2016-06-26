@@ -1047,6 +1047,8 @@ namespace BayesianModeling.ViewModel
             mWindow.OutputEvents("Workbook output: true");
             mWindow.OutputEvents("Beginning Bayesian Computation...");
 
+            windowRef.calculateButton.IsEnabled = false;
+
             try
             {
                 engine.Evaluate("rm(list = setdiff(ls(), lsf.str()))");
@@ -1342,6 +1344,8 @@ namespace BayesianModeling.ViewModel
                 mWindow.OutputEvents("Citation:: " + string.Join("", engine.Evaluate("citation('reshape2')$textVersion").AsCharacter().ToArray()));
                 mWindow.OutputEvents("Citation:: " + string.Join("", engine.Evaluate("citation('scales')$textVersion").AsCharacter().ToArray()));
             }
+
+            windowRef.calculateButton.IsEnabled = true;
         }
 
         /// <summary>
@@ -1423,6 +1427,8 @@ namespace BayesianModeling.ViewModel
             mWindow.OutputEvents("All inputs passed verification.");
             mWindow.OutputEvents("---------------------------------------------------");
             mWindow.OutputEvents("Beginning Batched Computations...");
+
+            windowRef.calculateButton.IsEnabled = false;
 
             var mWin = new ResultsWindow();
             var mVM = new ResultsViewModel();
@@ -1617,6 +1623,8 @@ namespace BayesianModeling.ViewModel
             mWindow.OutputEvents("Citation:: " + string.Join("", engine.Evaluate("citation('scales')$textVersion").AsCharacter().ToArray()));
 
             mWin.Show();
+
+            windowRef.calculateButton.IsEnabled = true;
         }
     }
 }
