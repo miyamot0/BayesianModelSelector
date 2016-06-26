@@ -274,6 +274,8 @@ namespace BayesianModeling.ViewModel
         public RelayCommand MyersonHyperboloidModelCommand { get; set; }
         public RelayCommand RachlinHyperboloidModelCommand { get; set; }
 
+        private List<string> filesList = new List<string>();
+
         /* UI Logic */
 
         bool failed;
@@ -582,6 +584,17 @@ namespace BayesianModeling.ViewModel
         private void ViewClosed()
         {
             Properties.Settings.Default.Save();
+
+            if (filesList.Count > 0)
+            {
+                foreach (string str in filesList)
+                {
+                    if (File.Exists(str))
+                    {
+                        File.Delete(str);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -663,7 +676,6 @@ namespace BayesianModeling.ViewModel
 
             lowColDelay = cells.Min(i => i.Column.DisplayIndex);
             highColDelay = cells.Max(i => i.Column.DisplayIndex);
-
 
             if ((highRowDelay - lowRowDelay) > 0)
             {
@@ -757,6 +769,8 @@ namespace BayesianModeling.ViewModel
         /// </summary>
         private void GetDelaysRange()
         {
+            mWindow.dataGrid.CommitEdit();
+
             DefaultFieldsToGray();
 
             DelaysBrush = Brushes.Yellow;
@@ -771,6 +785,8 @@ namespace BayesianModeling.ViewModel
         /// </summary>
         private void GetBatchValuesRange()
         {
+            mWindow.dataGrid.CommitEdit();
+
             DefaultFieldsToGray();
 
             ValuesBrush = Brushes.Yellow;
@@ -785,6 +801,8 @@ namespace BayesianModeling.ViewModel
         /// </summary>
         private void GetValuesRange()
         {
+            mWindow.dataGrid.CommitEdit();
+
             DefaultFieldsToGray();
 
             ValuesBrush = Brushes.Yellow;
@@ -1178,7 +1196,6 @@ namespace BayesianModeling.ViewModel
                 mVM.RowViewModels[1].values[1] = modExp.ToString();
             }
 
-            //mVM.RowViewModels[1].values[1] = engine.Evaluate("as.numeric(output[[3]]['exp.lnk'])").AsVector().First().ToString();
             mVM.RowViewModels[0].values[2] = "Hyperbolic - k: ";
 
             double modHyp = double.NaN;
@@ -1191,7 +1208,6 @@ namespace BayesianModeling.ViewModel
                 mVM.RowViewModels[1].values[2] = modHyp.ToString();
             }
 
-            //mVM.RowViewModels[1].values[2] = engine.Evaluate("as.numeric(output[[2]]['Mazur.lnk'])").AsVector().First().ToString();
             mVM.RowViewModels[0].values[3] = "Quasi-Hyperbolic - beta: ";
             mVM.RowViewModels[1].values[3] = engine.Evaluate("as.numeric(output[[9]]['BD.beta'])").AsVector().First().ToString();
             mVM.RowViewModels[0].values[4] = "Quasi-Hyperbolic - delta: ";
@@ -1208,7 +1224,6 @@ namespace BayesianModeling.ViewModel
                 mVM.RowViewModels[1].values[5] = modMG.ToString();
             }
 
-            //mVM.RowViewModels[1].values[5] = engine.Evaluate("as.numeric(output[[4]]['MG.lnk'])").AsVector().First().ToString();
             mVM.RowViewModels[0].values[6] = "Myerson-Hyperboloid - s: ";
             mVM.RowViewModels[1].values[6] = engine.Evaluate("as.numeric(output[[4]]['MG.s'])").AsVector().First().ToString();
             mVM.RowViewModels[0].values[7] = "Rachlin-Hyperboloid - k: ";
@@ -1223,7 +1238,6 @@ namespace BayesianModeling.ViewModel
                 mVM.RowViewModels[1].values[7] = modR.ToString();
             }
 
-            //mVM.RowViewModels[1].values[7] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.lnk'])").AsVector().First().ToString();
             mVM.RowViewModels[0].values[8] = "Rachlin-Hyperboloid - s: ";
             mVM.RowViewModels[1].values[8] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.s'])").AsVector().First().ToString();
             mVM.RowViewModels[0].values[9] = "Most competitive model: ";
@@ -1296,7 +1310,7 @@ namespace BayesianModeling.ViewModel
                     {
                         var iWindow1 = new ImageWindow();
                         iWindow1.filePath = path1;
-                        iWindow1.Owner = mWindow;
+                        iWindow1.Owner = windowRef;
                         iWindow1.imageHolder.Source = new DrawingImage(drawing1);
                         iWindow1.Show();
                     }
@@ -1320,12 +1334,15 @@ namespace BayesianModeling.ViewModel
                     {
                         var iWindow2 = new ImageWindow();
                         iWindow2.filePath = path2;
-                        iWindow2.Owner = mWindow;
+                        iWindow2.Owner = windowRef;
                         iWindow2.imageHolder.Source = new DrawingImage(drawing2);
                         iWindow2.Show();
                     }
 
                     mWindow.OutputEvents("Charting Completed!");
+
+                    filesList.Add(path1);
+                    filesList.Add(path2);
 
                 }
                 catch (Exception e)
