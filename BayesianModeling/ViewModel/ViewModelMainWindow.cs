@@ -1247,14 +1247,14 @@ namespace BayesianModeling.ViewModel
                 CloseFileUIProgressWindow();
                 Logging.SubmitError("OpenFileNoDialog", e.ToString());
                 Console.WriteLine(e.ToString());
-                MessageBox.Show("We weren't able to save.  Is the target file either open, missing or in use?");
+                MessageBox.Show("We weren't able to open the file.  Is the target file either open, missing or in use?");
             }
             catch (Exception e)
             {
                 CloseFileUIProgressWindow();
                 Logging.SubmitError("OpenFileNoDialog", e.ToString());
                 Console.WriteLine(e.ToString());
-                MessageBox.Show("We weren't able to save.  Is the target file either open, missing or in use?");
+                MessageBox.Show("We weren't able to open the file.  Is the target file either open, missing or in use?");
             }
 
             CloseFileUIProgressWindow();
