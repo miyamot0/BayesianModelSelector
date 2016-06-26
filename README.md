@@ -11,9 +11,10 @@ Features include:
   - Wide range of model outputs/metrics, saveable in common spreadsheet file formats
 
 ### Version
-1.0.0.66
+1.0.0.67
 
 ### Changelog
+ * 1.0.0.67 - Limited refactor - Merge batched/single calculations to single VM to avoid redundancy
  * 1.0.0.66 - Error handling fix, bar plot tweaks
  * 1.0.0.65 - Citation updates
  * 1.0.0.64 - UI tweaks, all parameters reported as lognormal
