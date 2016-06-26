@@ -1,5 +1,5 @@
 ﻿//----------------------------------------------------------------------------------------------
-// <copyright file="ViewModelDiscounting.cs" 
+// <copyright file="ViewModelUnifiedDiscounting.cs" 
 // Copyright 2016 Shawn Gilroy
 //
 // This file is part of Bayesian Model Selector.
@@ -33,14 +33,14 @@
 //    
 //    Redistribution and use in source and binary forms, with or without modification, 
 //    are permitted provided that the following conditions are met:
-//    
+//
 //    Redistributions of source code must retain the above copyright notice, this list
 //    of conditions and the following disclaimer.
-//    
+//
 //    Redistributions in binary form must reproduce the above copyright notice, this 
 //    list of conditions and the following disclaimer in the documentation and/or other
 //    materials provided with the distribution.
-//    
+//
 //    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 //    ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 //    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
@@ -52,40 +52,6 @@
 //    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 //    OF SUCH DAMAGE.
 //
-// Bayesian Model Selector utilizes SharpVectors to render SVG file formats
-//
-//    SharpVectors is distributed under this license:
-//
-//    Copyright (c) 2010 SharpVectorGraphics
-//
-//    All rights reserved.
-//    
-//    Redistribution and use in source and binary forms, with or without modification,
-//    are permitted provided that the following conditions are met:
-//    
-//    Redistributions of source code must retain the above copyright notice,
-//    this list of conditions and the following disclaimer.
-//    
-//    Redistributions in binary form must reproduce the above copyright notice,
-//    this list of conditions and the following disclaimer in the documentation
-//    and/or other materials provided with the distribution.
-//    
-//    Neither the name of SharpVectorGraphics nor the names of its contributors
-//    may be used to endorse or promote products derived from this software
-//    without specific prior written permission.
-//    
-//    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-//    AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-//    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-//    DISCLAIMED.IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
-//    FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-//    DAMAGES(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-//    SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
-//    HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-//    STRICT LIABILITY, OR TORT(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
-//    WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
-//    OF SUCH DAMAGE.
-//
 // </summary>
 //----------------------------------------------------------------------------------------------
 
@@ -93,28 +59,26 @@ using BayesianModeling.Mathematics;
 using BayesianModeling.Utilities;
 using BayesianModeling.View;
 using RDotNet;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
-using System.Windows.Input;
-using System.Windows.Media;
+using SharpVectors.Converters;
+using SharpVectors.Renderers.Wpf;
 using System;
-using System.Windows.Controls;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using SharpVectors.Renderers.Wpf;
-using SharpVectors.Converters;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
 
 namespace BayesianModeling.ViewModel
 {
-    /// <summary>
-    /// MVVM-ish Interaction logic for DiscountingWindow.xaml.  
-    /// Separation of R-based calculations from View (as much as possible)
-    /// </summary>
-    class ViewModelDiscounting : ViewModelBase
+    class ViewModelUnifiedDiscounting : ViewModelBase
     {
+        #region Declarations
+
         public MainWindow mWindow { get; set; }
-        public DiscountingWindow windowRef { get; set; }
+        public UnifiedDiscountingWindow windowRef { get; set; }
 
         private string delays = "";
         public string Delays
@@ -137,30 +101,29 @@ namespace BayesianModeling.ViewModel
                 OnPropertyChanged("Values");
             }
         }
-        
-        private string ids = "";
-        public string Ids
+
+        private string delayedValue = "";
+        public string DelayedValue
         {
-            get { return ids; }
+            get { return delayedValue; }
             set
             {
-                ids = value;
-                OnPropertyChanged("Ids");
+                delayedValue = value;
+                OnPropertyChanged("DelayedValue");
             }
         }
 
-        private string maxValue = "";
-        public string MaxValue
+        private string modeSelection = "";
+        public string ModeSelection
         {
-            get { return maxValue; }
+            get { return modeSelection; }
             set
             {
-                maxValue = value;
-                OnPropertyChanged("MaxValue");
+                modeSelection = value;
+                OnPropertyChanged("ModeSelection");
+                UpdateStyles();
             }
         }
-
-        private double maxValueA = 0;
 
         private bool advancedMenu = false;
         public bool AdvancedMenu
@@ -260,17 +223,19 @@ namespace BayesianModeling.ViewModel
                 OnPropertyChanged("ValuesBrush");
             }
         }
-        
-        private Brush idBrush = Brushes.White;
-        public Brush IdBrush
+
+        private Brush delayedValueBrush = Brushes.White;
+        public Brush DelayedValueBrush
         {
-            get { return idBrush; }
+            get { return delayedValueBrush; }
             set
             {
-                idBrush = value;
-                OnPropertyChanged("IdBrush");
+                delayedValueBrush = value;
+                OnPropertyChanged("DelayedValueBrush");
             }
         }
+
+        private double MaxValueA = 0;
 
         int lowRowDelay = -1,
             highRowDelay = -1,
@@ -281,12 +246,6 @@ namespace BayesianModeling.ViewModel
             highRowValue = -1,
             lowColValue = -1,
             highColValue = -1;
-
-        // TODO custom ID range
-        int lowRowId = -1,
-            highRowId = -1,
-            lowColId = -1,
-            highColId = -1;
 
         /* Math/Computation */
 
@@ -299,11 +258,9 @@ namespace BayesianModeling.ViewModel
 
         public RelayCommand DelayRangeCommand { get; set; }
         public RelayCommand ValueRangeCommand { get; set; }
-        public RelayCommand IdRangeCommand { get; set; }
 
         public RelayCommand GetDelaysRangeCommand { get; set; }
         public RelayCommand GetValuesRangeCommand { get; set; }
-        public RelayCommand GetIdRangeCommand { get; set; }
         public RelayCommand CalculateScoresCommand { get; set; }
         public RelayCommand FigureOutput { get; set; }
         public RelayCommand WorkbookOutput { get; set; }
@@ -319,6 +276,9 @@ namespace BayesianModeling.ViewModel
 
         /* UI Logic */
 
+        bool failed;
+        string path1 = null, path2 = null;
+
         private bool outputFigures = false;
         public bool OutputFigures
         {
@@ -329,32 +289,28 @@ namespace BayesianModeling.ViewModel
                 OnPropertyChanged("OutputFigures");
             }
         }
-        private bool outputWorkbook = false;
-        bool failed;
-        string path1 = null, path2 = null;
+
+        private bool possibleFigures = false;
+        public bool PossibleFigures
+        {
+            get { return possibleFigures; }
+            set
+            {
+                possibleFigures = value;
+                OnPropertyChanged("PossibleFigures");
+            }
+        }
 
         /// <summary>
         /// Public constructor
         /// </summary>
-        public ViewModelDiscounting()
+        public ViewModelUnifiedDiscounting()
         {
             NoiseModel = HyperbolicModel = ExponentialModel = QuasiHyperbolicModel = MyerHyperboloidModel = RachHyperboloidModel = true;
 
             ViewLoadedCommand = new RelayCommand(param => ViewLoaded(), param => true);
             ViewClosingCommand = new RelayCommand(param => ViewClosed(), param => true);
-            GetDelaysRangeCommand = new RelayCommand(param => GetDelaysRange(), param => true);
-            GetValuesRangeCommand = new RelayCommand(param => GetValuesRange(), param => true);
-            GetIdRangeCommand = new RelayCommand(param => GetIdRange(), param => true);
-            CalculateScoresCommand = new RelayCommand(param => CalculateScores(), param => true);
-
-            FigureOutput = new RelayCommand(param => UpdateFigureOutput(), param => true);
-            WorkbookOutput = new RelayCommand(param => UpdateWorkbookOutput(), param => true);
-
             AdvancedSettings = new RelayCommand(param => UpdateSettings(), param => true);
-
-            DelayRangeCommand = new RelayCommand(param => GetCustomDelays(), param => true);
-            ValueRangeCommand = new RelayCommand(param => GetCustomValues(), param => true);
-            IdRangeCommand = new RelayCommand(param => GetCustomIds(), param => true);
 
             NoiseModelCommand = new RelayCommand(param => UpdateNoise(), param => true);
             ExponentialModelCommand = new RelayCommand(param => UpdateExponential(), param => true);
@@ -362,7 +318,18 @@ namespace BayesianModeling.ViewModel
             QuasiHyperbolicModelCommand = new RelayCommand(param => UpdateQuasiHyperbolic(), param => true);
             MyersonHyperboloidModelCommand = new RelayCommand(param => UpdateMyersonHyperboloid(), param => true);
             RachlinHyperboloidModelCommand = new RelayCommand(param => UpdateRachlinHyperboloid(), param => true);
+            
+            GetDelaysRangeCommand = new RelayCommand(param => GetDelaysRange(), param => true);            
+            DelayRangeCommand = new RelayCommand(param => GetCustomDelays(), param => true);
+
+            GetValuesRangeCommand = new RelayCommand(param => GetBatchValuesRange(), param => true);
+            CalculateScoresCommand = new RelayCommand(param => PreScoring(), param => true);
+            ValueRangeCommand = new RelayCommand(param => GetCustomBatchValues(), param => true);
         }
+
+        #endregion
+
+        #region ManualEntryWindows
 
         /// <summary>
         /// Query user for a range
@@ -467,11 +434,12 @@ namespace BayesianModeling.ViewModel
         /// <summary>
         /// Query user for a range
         /// </summary>
-        private void GetCustomIds()
+        private void GetCustomBatchValues()
         {
             var mWin = new RangePrompt();
             mWin.Topmost = true;
             mWin.Owner = windowRef;
+            mWin.ResponseText = Values;
             mWin.WindowStartupLocation = WindowStartupLocation.CenterOwner;
 
             if (mWin.ShowDialog() == true)
@@ -490,20 +458,20 @@ namespace BayesianModeling.ViewModel
 
                 if (int.TryParse(firstNums, out fNum) && int.TryParse(secondNums, out sNum) && firstChars.Length > 0 && secondChars.Length > 0)
                 {
-                    if ((sNum - fNum) == 0)
+                    if ((sNum - fNum) > 1)
                     {
-                        IdBrush = Brushes.LightGreen;
-                        Ids = firstChars + firstNums + ":" + secondChars + secondNums;
+                        ValuesBrush = Brushes.LightGreen;
+                        Values = firstChars + firstNums + ":" + secondChars + secondNums;
 
-                        lowColId = DataGridTools.GetColumnIndex(firstChars);
-                        highColId = DataGridTools.GetColumnIndex(secondChars);
+                        lowColValue = DataGridTools.GetColumnIndex(firstChars);
+                        highColValue = DataGridTools.GetColumnIndex(secondChars);
 
-                        lowRowId = fNum;
-                        highRowId = sNum;
+                        lowRowValue = fNum;
+                        highRowValue = sNum;
                     }
                     else
                     {
-                        //MessageBox.Show("Please ensure that only a single row is selected");
+                        MessageBox.Show("Please ensure that more than two rows are selected");
                     }
                 }
                 else
@@ -513,20 +481,35 @@ namespace BayesianModeling.ViewModel
             }
         }
 
-        /// <summary>
-        /// Command-based update of UI logic in VM
-        /// </summary>
-        private void UpdateFigureOutput()
-        {
-            outputFigures = !outputFigures;
-        }
+        #endregion
+
+        #region CheckBoxes
 
         /// <summary>
-        /// Command-based update of UI logic in VM
+        /// Calls to update after mode change
         /// </summary>
-        private void UpdateWorkbookOutput()
+        private void UpdateStyles()
         {
-            outputWorkbook = !outputWorkbook;
+            OutputFigures = false;
+            lowRowValue = highRowValue = lowColValue = highColValue = -1;
+            ValuesBrush = Brushes.LightGray;
+            Values = "";
+
+            mWindow.dataGrid.PreviewMouseUp -= DataGrid_PreviewMouseUp_Values;
+
+            if (ModeSelection == "Batched")
+            {
+                PossibleFigures = true;
+                GetValuesRangeCommand = new RelayCommand(param => GetBatchValuesRange(), param => true);
+                ValueRangeCommand = new RelayCommand(param => GetCustomBatchValues(), param => true);
+            }
+            else if (ModeSelection == "Single")
+            {
+                PossibleFigures = false;
+                GetValuesRangeCommand = new RelayCommand(param => GetValuesRange(), param => true);
+                ValueRangeCommand = new RelayCommand(param => GetCustomValues(), param => true);
+            }
+
         }
 
         /// <summary>
@@ -538,7 +521,6 @@ namespace BayesianModeling.ViewModel
             {
                 AdvancedMenu = !AdvancedMenu;
             }
-
         }
 
         /// <summary>
@@ -589,22 +571,16 @@ namespace BayesianModeling.ViewModel
             RachHyperboloidModel = !RachHyperboloidModel;
         }
 
+        #endregion
+
+        #region Events
+
         /// <summary>
         /// Command-based update of UI logic during close.
         /// Will retain window position in Settings.settings
         /// </summary>
         private void ViewClosed()
         {
-            if (path1 != null && File.Exists(path1))
-            {
-                File.Delete(path1);
-            }
-
-            if (path2 != null && File.Exists(path2))
-            {
-                File.Delete(path2);
-            }
-
             Properties.Settings.Default.Save();
         }
 
@@ -649,6 +625,8 @@ namespace BayesianModeling.ViewModel
             }
 
             DefaultFieldsToGray();
+
+            ModeSelection = "Batched";
         }
 
         /// <summary>
@@ -686,6 +664,7 @@ namespace BayesianModeling.ViewModel
             lowColDelay = cells.Min(i => i.Column.DisplayIndex);
             highColDelay = cells.Max(i => i.Column.DisplayIndex);
 
+
             if ((highRowDelay - lowRowDelay) > 0)
             {
                 DefaultFieldsToGray();
@@ -696,16 +675,15 @@ namespace BayesianModeling.ViewModel
                 lowRowDelay = -1;
                 highColDelay = -1;
                 highRowDelay = -1;
+
                 MessageBox.Show("Please select a single horizontal row (increasing, from left to right).  You can have many columns, but just one row.");
 
                 return;
             }
 
             mWindow.dataGrid.PreviewMouseUp -= DataGrid_PreviewMouseUp_Delays;
-            mWindow.dataGrid.IsReadOnly = false;
 
             DelaysBrush = Brushes.LightBlue;
-
             Delays = DataGridTools.GetColumnName(lowColDelay) + lowRowDelay.ToString() + ":" + DataGridTools.GetColumnName(highColDelay) + highRowDelay.ToString();
         }
 
@@ -725,65 +703,53 @@ namespace BayesianModeling.ViewModel
             lowColValue = cells.Min(i => i.Column.DisplayIndex);
             highColValue = cells.Max(i => i.Column.DisplayIndex);
 
-            if ((highRowValue - lowRowValue) > 0)
+            bool single = (ModeSelection == "Single") ? true : false;
+
+            if (single)
             {
-                DefaultFieldsToGray();
+                if ((highRowValue - lowRowValue) > 0)
+                {
+                    DefaultFieldsToGray();
 
-                mWindow.dataGrid.PreviewMouseUp -= DataGrid_PreviewMouseUp_Values;
+                    mWindow.dataGrid.PreviewMouseUp -= DataGrid_PreviewMouseUp_Values;
 
-                lowColValue = -1;
-                lowRowValue = -1;
-                highColValue = -1;
-                highRowValue = -1;
-                MessageBox.Show("Please select a single horizontal row (increasing, from left to right).  You can have many columns, but just one row.");
+                    lowColValue = -1;
+                    lowRowValue = -1;
+                    highColValue = -1;
+                    highRowValue = -1;
+                    MessageBox.Show("Please select a single horizontal row (increasing, from left to right).  You can have many columns, but just one row.");
 
-                return;
+                    return;
+                }
+            }
+            else
+            {
+                if ((highRowValue - lowRowValue) < 2)
+                {
+                    DefaultFieldsToGray();
+
+                    mWindow.dataGrid.PreviewMouseUp -= DataGrid_PreviewMouseUp_Values;
+
+                    lowColValue = -1;
+                    lowRowValue = -1;
+                    highColValue = -1;
+                    highRowValue = -1;
+
+                    MessageBox.Show("Please select multiple rows (at least 3).");
+
+                    return;
+                }
             }
 
             mWindow.dataGrid.PreviewMouseUp -= DataGrid_PreviewMouseUp_Values;
-            mWindow.dataGrid.IsReadOnly = false;
 
             ValuesBrush = Brushes.LightGreen;
             Values = DataGridTools.GetColumnName(lowColValue) + lowRowValue.ToString() + ":" + DataGridTools.GetColumnName(highColValue) + highRowValue.ToString();
         }
 
-        /// <summary>
-        /// Delegate after highlighting takes place on datagrid (call back specific to ids).
-        /// </summary>
-        private void DataGrid_PreviewMouseUp_Ids(object sender, MouseButtonEventArgs e)
-        {
-            List<DataGridCellInfo> cells = mWindow.dataGrid.SelectedCells.ToList();
-            var itemSource = mWindow.dataGrid.ItemsSource as ObservableCollection<RowViewModel>;
+        #endregion
 
-            if (cells.Count < 1 || itemSource.Count < 1) return;
-
-            lowRowId = cells.Min(i => DataGridTools.GetIndexViewModel((RowViewModel)i.Item, itemSource));
-            highRowId = cells.Max(i => DataGridTools.GetIndexViewModel((RowViewModel)i.Item, itemSource));
-
-            lowColId = cells.Min(i => i.Column.DisplayIndex);
-            highColId = cells.Max(i => i.Column.DisplayIndex);
-
-            if ((highRowValue - lowRowValue) > 0)
-            {
-                DefaultFieldsToGray();
-
-                mWindow.dataGrid.PreviewMouseUp -= DataGrid_PreviewMouseUp_Ids;
-
-                lowColId = -1;
-                lowRowId = -1;
-                highColId = -1;
-                highRowId = -1;
-                MessageBox.Show("Please select a single horizontal row (increasing, from left to right).  You can have many columns, but just one row.");
-
-                return;
-            }
-
-            mWindow.dataGrid.PreviewMouseUp -= DataGrid_PreviewMouseUp_Ids;
-            mWindow.dataGrid.IsReadOnly = false;
-
-            IdBrush = Brushes.LightGreen;
-            Ids = DataGridTools.GetColumnName(lowColValue) + lowRowValue.ToString() + ":" + DataGridTools.GetColumnName(highColValue) + highRowValue.ToString();
-        }
+        #region DataParsing
 
         /// <summary>
         /// Call window reference (shameful deviation from MVVM) for PickRange function.
@@ -797,7 +763,20 @@ namespace BayesianModeling.ViewModel
             Delays = "Select delays on spreadsheet";
 
             mWindow.dataGrid.PreviewMouseUp += DataGrid_PreviewMouseUp_Delays;
-            mWindow.dataGrid.IsReadOnly = true;
+        }
+
+        /// <summary>
+        /// Call window reference (shameful deviation from MVVM) for PickRange function.
+        /// Successful (or failing) selections result in a range string in respective text fields for later parsing.
+        /// </summary>
+        private void GetBatchValuesRange()
+        {
+            DefaultFieldsToGray();
+
+            ValuesBrush = Brushes.Yellow;
+            Values = "Select values on spreadsheet";
+
+            mWindow.dataGrid.PreviewMouseUp += DataGrid_PreviewMouseUp_Values;
         }
 
         /// <summary>
@@ -813,31 +792,6 @@ namespace BayesianModeling.ViewModel
 
             mWindow.dataGrid.PreviewMouseUp += DataGrid_PreviewMouseUp_Values;
             mWindow.dataGrid.IsReadOnly = true;
-        }
-
-        /// <summary>
-        /// Call window reference (shameful deviation from MVVM) for PickRange function.
-        /// Successful (or failing) selections result in a range string in respective text fields for later parsing.
-        /// </summary>
-        private void GetIdRange()
-        {
-            DefaultFieldsToGray();
-
-            IdBrush = Brushes.Yellow;
-            Ids = "Select values on spreadsheet";
-
-            mWindow.dataGrid.PreviewMouseUp += DataGrid_PreviewMouseUp_Ids;
-            mWindow.dataGrid.IsReadOnly = true;
-        }
-
-        /// <summary>
-        /// Take bool value, return "1" for true and "0" for false
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public string ConvertBoolToString(bool value)
-        {
-            return value == true ? "1" : "0";
         }
 
         /// <summary>
@@ -866,6 +820,11 @@ namespace BayesianModeling.ViewModel
         /// </returns>
         private List<double>[] GetRangedValues(int startColDelay, int endColDelay, int rowDelay, int startColValue, int endColValue, int rowValue)
         {
+            if (startColDelay == -1 || endColDelay == -1 || startColValue == -1 || endColValue == -1)
+            {
+                return null;
+            }
+
             List<double>[] array = new List<double>[2];
             array[0] = new List<double>();
             array[1] = new List<double>();
@@ -902,6 +861,125 @@ namespace BayesianModeling.ViewModel
         }
 
         /// <summary>
+        /// Walk through ranged values as needed, finding appropriate values
+        /// </summary>
+        /// <param name="startCol">
+        /// First column index for delay
+        /// </param>
+        /// <param name="endCol">
+        /// Row index for delays
+        /// </param>
+        /// <param name="startRow">
+        /// Row index for values
+        /// </param>
+        /// <returns>
+        /// List of all range/value pairs that correspond
+        /// </returns>
+        private List<double> GetRangedValues(int startCol, int endCol, int startRow)
+        {
+            if (startCol == -1 || endCol == -1 || startRow == -1)
+            {
+                return null;
+            }
+
+            List<double> mRange = new List<double>();
+
+            string mCell;
+            double test;
+
+            var itemSource = mWindow.dataGrid.ItemsSource as ObservableCollection<RowViewModel>;
+
+            if (itemSource == null)
+                return null;
+
+            for (int i = startCol; i <= endCol; i++)
+            {
+                mCell = itemSource[startRow].values[i];
+
+                if (!Double.TryParse(mCell, out test))
+                {
+                    return null;
+                }
+                else
+                {
+                    mRange.Add(test);
+                }
+            }
+
+            return mRange;
+        }
+
+        /// <summary>
+        /// A method for submitting a string-encoded range and returning the value of the cells selected.
+        /// </summary>
+        /// <param name="range">
+        /// List of double values returned for use as delay or value points in Computation
+        /// </param>
+        public string[,] ParseBulkRangeStrings(int lowRowValue, int highRowValue, int lowColValue, int highColValue)
+        {
+            string[,] mDouble = null;
+            string mCell;
+
+            int mRows = (highRowValue - lowRowValue) + 1;
+            int mCols = (highColValue - lowColValue) + 1;
+
+            mDouble = new string[mCols, mRows];
+
+            var itemSource = mWindow.dataGrid.ItemsSource as ObservableCollection<RowViewModel>;
+
+            if (itemSource == null)
+                return null;
+
+            try
+            {
+                for (int i = lowRowValue; i <= highRowValue; i++)
+                {
+
+                    for (int j = lowColValue; j <= highColValue; j++)
+                    {
+                        mCell = itemSource[i].values[j];
+                        mDouble[j - lowColValue, i - lowRowValue] = mCell;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return null;
+            }
+
+            return mDouble;
+        }
+
+        /// <summary>
+        /// Converts bool to string
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public string ConvertBoolToString(bool value)
+        {
+            return value == true ? "1" : "0";
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Routing command for mode-specific scoring
+        /// </summary>
+        /// <returns></returns>
+        private void PreScoring()
+        {
+            if (ModeSelection == "Batched")
+            {
+                CalculateBatchScores();
+            }
+            else if (ModeSelection == "Single")
+            {
+                CalculateScores();
+            }
+        }
+
+        /// <summary>
         /// Command-call to calculate based on supplied ranges and reference values (max value).
         /// Will reference user-selected options (figures, outputs, etc.) throughout calls to R
         /// </summary>
@@ -911,23 +989,32 @@ namespace BayesianModeling.ViewModel
 
             if (failed) return;
 
-            List<double>[] array = GetRangedValues(lowColDelay, highColDelay, lowRowDelay, lowColValue, highColValue, lowRowValue);
-            List<double> xRange = array[0];
-            List<double> yRange = array[1];
-
-            if (xRange == null || yRange == null) return;
-
-            if (xRange == yRange )
+            if (Delays == Values)
             {
                 mWindow.OutputEvents("Error while validating the ranges.  Did you select the same for each?");
                 MessageBox.Show("Please review the ranges.  These cannot be the same.");
                 return;
             }
 
+            List<double>[] array = GetRangedValues(lowColDelay, highColDelay, lowRowDelay, lowColValue, highColValue, lowRowValue);
+
+            if (array == null)
+            {
+                return;
+            }
+
+            List<double> xRange = array[0];
+            List<double> yRange = array[1];
+
+            if (xRange == null || yRange == null)
+            {
+                return;
+            }
+
             mWindow.OutputEvents("---------------------------------------------------");
             mWindow.OutputEvents("Checking user-supplied ranges and reference points.");
 
-            if (!double.TryParse(MaxValue, out maxValueA) || maxValueA == 0)
+            if (!double.TryParse(DelayedValue, out MaxValueA) || MaxValueA == 0)
             {
                 mWindow.OutputEvents("Error while validating the Delayed Amount.  Is this a non-zero number?");
                 MessageBox.Show("Please review the Delayed Amount number.  This must be a non-zero number.");
@@ -942,13 +1029,13 @@ namespace BayesianModeling.ViewModel
                 return;
             }
 
-            if ((yRange[0] / maxValueA) <= 0.1)
+            if ((yRange[0] / MaxValueA) <= 0.1)
             {
                 MessageBox.Show("There's a chance your max value is off (the initial value is <10% of the max already).  If this is expected, please disregard.");
                 mWindow.OutputEvents("Initial indifference point was <10% of A.  This is irregular, please inspect.  If this is accurate, disregard.");
             }
 
-            if (yRange[0] > maxValueA)
+            if (yRange[0] > MaxValueA)
             {
                 MessageBox.Show("There's a chance your max value is off (the initial value is greater than the max).  This shouldn't be possible.");
                 mWindow.OutputEvents("Initial value is greater than A.  This shouldn't be possible.  Halting Computation.");
@@ -957,7 +1044,7 @@ namespace BayesianModeling.ViewModel
 
             mWindow.OutputEvents("Inputs passed verification.");
             mWindow.OutputEvents("Figure output: " + outputFigures);
-            mWindow.OutputEvents("Workbook output: " + outputWorkbook);
+            mWindow.OutputEvents("Workbook output: true");
             mWindow.OutputEvents("Beginning Bayesian Computation...");
 
             try
@@ -975,7 +1062,7 @@ namespace BayesianModeling.ViewModel
 
                 for (int i = 0; i < yRangeMod.Count; i++)
                 {
-                    yRangeMod[i] = yRange[i] /= maxValueA;
+                    yRangeMod[i] = yRange[i] /= MaxValueA;
                 }
 
                 NumericVector indiffValues = engine.CreateNumericVector(yRangeMod.ToArray());
@@ -991,7 +1078,7 @@ namespace BayesianModeling.ViewModel
                 engine.SetSymbol("mSes", sesValues);
 
                 engine.Evaluate(BayesianModelSelection.GetFranckFunction());
-                
+
                 engine.Evaluate("datHack<-data.frame(X = mDelays, Y = mIndiffs, ses=mSes)");
 
                 string evalStatement = string.Format("output <-BDS(datHack, Noise={0},Mazur={1},Exponential={2},Rachlin={3},GreenMyerson={4},BD={5})",
@@ -1013,7 +1100,7 @@ namespace BayesianModeling.ViewModel
                 engine.Evaluate("rachlinK <- as.numeric(output[[5]]['Rachlin.lnk'])");
                 engine.Evaluate("rachlinS <- as.numeric(output[[5]]['Rachlin.s'])");
 
-                NumericVector aSymbol = engine.Evaluate(maxValueA.ToString()).AsNumeric();
+                NumericVector aSymbol = engine.Evaluate(MaxValueA.ToString()).AsNumeric();
                 engine.SetSymbol("A", aSymbol);
 
                 engine.SetSymbol("mDelays", delayValues);
@@ -1156,17 +1243,17 @@ namespace BayesianModeling.ViewModel
             }
 
             mVM.RowViewModels[3].values[0] = "Delayed Value";
-            mVM.RowViewModels[3].values[1] = MaxValue;
+            mVM.RowViewModels[3].values[1] = DelayedValue;
 
             mVM.RowViewModels[4].values[0] = "Delays";
             mVM.RowViewModels[5].values[0] = "Values";
-                
+
             for (int i = 0; i < xRange.Count; i++)
             {
                 mVM.RowViewModels[4].values[1 + i] = xRange[i].ToString();
                 mVM.RowViewModels[5].values[1 + i] = yRange[i].ToString();
             }
-                
+
             mWin.Show();
 
             mWindow.OutputEvents("Output Completed!");
@@ -1189,52 +1276,55 @@ namespace BayesianModeling.ViewModel
 
                     string output = engine.Evaluate("barString").AsVector().First().ToString();
 
-                        byte[] bytes = Convert.FromBase64String(output);
+                    byte[] bytes = Convert.FromBase64String(output);
 
-                        path1 = Path.GetTempFileName();
+                    path1 = Path.GetTempFileName();
 
-                        if (File.Exists(path1))
-                        {
-                            File.Delete(path1);
-                        }
+                    if (File.Exists(path1))
+                    {
+                        File.Delete(path1);
+                    }
 
-                        File.WriteAllBytes(path1, bytes);
+                    File.WriteAllBytes(path1, bytes);
 
-                        FileSvgReader converter1 = new FileSvgReader(settings);
-                        DrawingGroup drawing1 = converter1.Read(path1);
+                    FileSvgReader converter1 = new FileSvgReader(settings);
+                    DrawingGroup drawing1 = converter1.Read(path1);
 
-                        if (drawing1 != null)
-                        {
-                            var iWindow1 = new ImageWindow();
-                            iWindow1.filePath = path1;
-                            iWindow1.Owner = mWindow;
-                            iWindow1.imageHolder.Source = new DrawingImage(drawing1);
-                            iWindow1.Show();
-                        }
+                    if (drawing1 != null)
+                    {
+                        var iWindow1 = new ImageWindow();
+                        iWindow1.filePath = path1;
+                        iWindow1.Owner = mWindow;
+                        iWindow1.imageHolder.Source = new DrawingImage(drawing1);
+                        iWindow1.Show();
+                    }
 
                     string output2 = engine.Evaluate("lineString").AsVector().First().ToString();
 
-                        byte[] bytes2 = Convert.FromBase64String(output2);
-                        path2 = Path.GetTempFileName();
+                    byte[] bytes2 = Convert.FromBase64String(output2);
+                    path2 = Path.GetTempFileName();
 
-                        if (File.Exists(path2))
-                        {
-                            File.Delete(path2);
-                        }
+                    if (File.Exists(path2))
+                    {
+                        File.Delete(path2);
+                    }
 
-                        File.WriteAllBytes(path2, bytes2);
-                    
-                        FileSvgReader converter2 = new FileSvgReader(settings);
-                        DrawingGroup drawing2 = converter2.Read(path2);
+                    File.WriteAllBytes(path2, bytes2);
 
-                        if (drawing2 != null)
-                        {
-                            var iWindow2 = new ImageWindow();
-                            iWindow2.filePath = path2;
-                            iWindow2.Owner = mWindow;
-                            iWindow2.imageHolder.Source = new DrawingImage(drawing2);
-                            iWindow2.Show();
-                        }
+                    FileSvgReader converter2 = new FileSvgReader(settings);
+                    DrawingGroup drawing2 = converter2.Read(path2);
+
+                    if (drawing2 != null)
+                    {
+                        var iWindow2 = new ImageWindow();
+                        iWindow2.filePath = path2;
+                        iWindow2.Owner = mWindow;
+                        iWindow2.imageHolder.Source = new DrawingImage(drawing2);
+                        iWindow2.Show();
+                    }
+
+                    mWindow.OutputEvents("Charting Completed!");
+
                 }
                 catch (Exception e)
                 {
@@ -1242,7 +1332,6 @@ namespace BayesianModeling.ViewModel
                     mWindow.OutputEvents(e.ToString());
                 }
 
-                mWindow.OutputEvents("Charting Completed!");
                 mWindow.OutputEvents("Please remember to cite the packages used in this process!");
                 mWindow.OutputEvents("Citation:: Gilroy, S. G., Franck, C. T. & Hantula, D. A. (2016). Technical Report: The Bayesian Model Selector: Statistical discounting software.");
                 mWindow.OutputEvents("Citation:: Franck, C. T., Koffarnus, M. N., House, L. L. & Bickel, W. K. (2015). Accurate characterization of delay discounting: a multiple model approach using approximate Bayesian model selection and a unified discounting measure. Journal of the Experimental Analysis of Behavior, 103(1), 218-233.");
@@ -1253,6 +1342,281 @@ namespace BayesianModeling.ViewModel
                 mWindow.OutputEvents("Citation:: " + string.Join("", engine.Evaluate("citation('reshape2')$textVersion").AsCharacter().ToArray()));
                 mWindow.OutputEvents("Citation:: " + string.Join("", engine.Evaluate("citation('scales')$textVersion").AsCharacter().ToArray()));
             }
+        }
+
+        /// <summary>
+        /// Command-call to calculate based on supplied ranges and reference values (max value).
+        /// Will reference user-selected options (figures, outputs, etc.) throughout calls to R
+        /// </summary>
+        private void CalculateBatchScores()
+        {
+            mWindow.dataGrid.CommitEdit();
+
+            if (failed) return;
+
+            mWindow.OutputEvents("---------------------------------------------------");
+            mWindow.OutputEvents("Checking user-supplied ranges and reference points.");
+
+            if (!double.TryParse(DelayedValue, out MaxValueA) || MaxValueA == 0)
+            {
+                mWindow.OutputEvents("Error while validating the Delayed Amount.  Is this a non-zero number?");
+                MessageBox.Show("Please review the the Delayed Amount number.  This must be a non-zero number.");
+                return;
+            }
+
+            if (Delays == Values)
+            {
+                mWindow.OutputEvents("Error while validating the ranges.  Did you select the same for each?");
+                MessageBox.Show("Please review the ranges.  These cannot be the same.");
+                return;
+            }
+
+            List<double> xRange = new List<double>();
+            xRange = GetRangedValues(lowColDelay, highColDelay, lowRowDelay);
+
+            if (xRange == null)
+            {
+                mWindow.OutputEvents("Error while validating the Delays.  There cannot be any blank, null or non-numeric fields.");
+                MessageBox.Show("Please review the the Delays column.  There cannot be any blank, null or non-numeric fields.");
+                return;
+            }
+
+            List<double> yRange = new List<double>();
+
+            string[,] wholeRange = ParseBulkRangeStrings(lowRowValue, highRowValue, lowColValue, highColValue);
+
+            if (wholeRange == null)
+            {
+                mWindow.OutputEvents("There were items that failed validation in the Indifference Point values.  Are any fields blank or not numeric?");
+                MessageBox.Show("There were items that failed validation in the Indifference Point values.");
+                return;
+            }
+
+            List<double> xRangeShadow = new List<double>();
+            double holder;
+
+            yRange.Clear();
+            xRangeShadow.Clear();
+
+            for (int i = 0; i < wholeRange.GetLength(0); i++)
+            {
+                if (double.TryParse(wholeRange[i, 0], out holder))
+                {
+                    yRange.Add(holder);
+                    xRangeShadow.Add(xRange[i]);
+                }
+            }
+
+            if ((yRange[0] / MaxValueA) <= 0.1)
+            {
+                MessageBox.Show("There's a chance your max value is off (the initial value is <10% of the max already).  If this is expected, please disregard.");
+                mWindow.OutputEvents("Initial indifference point was <10% of A.  This is irregular, please inspect.  If this is accurate, disregard.");
+            }
+
+            if (yRange[0] > MaxValueA)
+            {
+                MessageBox.Show("Your Delayed Amount appears incorrect (the first Indifference Point is greater than the Delayed Amount).  This shouldn't be possible.");
+                mWindow.OutputEvents("Initial indifference point is greater than Delayed Amount.  This shouldn't be possible.  Halting Computation.");
+                return;
+            }
+
+            mWindow.OutputEvents("All inputs passed verification.");
+            mWindow.OutputEvents("---------------------------------------------------");
+            mWindow.OutputEvents("Beginning Batched Computations...");
+
+            var mWin = new ResultsWindow();
+            var mVM = new ResultsViewModel();
+            mWin.DataContext = mVM;
+            mWin.Owner = windowRef;
+            mWin.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            mWin.Height = 600;
+            mWin.Width = 800;
+
+            for (int i = 0; i < wholeRange.GetLength(1) + 5; i++)
+            {
+                mVM.RowViewModels.Add(new RowViewModel());
+            }
+
+            for (int mIndex = 0; mIndex < wholeRange.GetLength(1); mIndex++)
+            {
+                engine.Evaluate("rm(list = setdiff(ls(), lsf.str()))");
+
+                yRange.Clear();
+                xRangeShadow.Clear();
+
+                for (int i = 0; i < wholeRange.GetLength(0); i++)
+                {
+
+                    if (double.TryParse(wholeRange[i, mIndex], out holder))
+                    {
+                        yRange.Add(holder);
+                        xRangeShadow.Add(xRange[i]);
+                    }
+                }
+
+                try
+                {
+                    NumericVector delayValues = engine.CreateNumericVector(xRangeShadow.ToArray());
+                    engine.SetSymbol("mDelays", delayValues);
+
+                    List<double> yRangeMod = new List<double>(yRange);
+
+                    for (int i = 0; i < yRangeMod.Count; i++)
+                    {
+                        yRangeMod[i] = yRange[i] /= MaxValueA;
+                    }
+
+                    NumericVector indiffValues = engine.CreateNumericVector(yRangeMod.ToArray());
+                    engine.SetSymbol("mIndiffs", indiffValues);
+
+                    List<double> sValues = new List<double>();
+
+                    foreach (double y in yRange)
+                    {
+                        sValues.Add(1);
+                    }
+
+                    NumericVector sesValues = engine.CreateNumericVector(sValues.ToArray());
+                    engine.SetSymbol("mSes", sesValues);
+
+                    if (mIndex == 0)
+                    {
+                        engine.Evaluate(BayesianModelSelection.GetFranckFunction());
+                    }
+
+                    engine.Evaluate("datHack<-data.frame(X = mDelays, Y = mIndiffs, ses=mSes)");
+                    string evalStatement = string.Format("output <-BDS(datHack, Noise={0},Mazur={1},Exponential={2},Rachlin={3},GreenMyerson={4},BD={5})",
+                        1,
+                        ConvertBoolToString(HyperbolicModel),
+                        ConvertBoolToString(ExponentialModel),
+                        ConvertBoolToString(RachHyperboloidModel),
+                        ConvertBoolToString(MyerHyperboloidModel),
+                        ConvertBoolToString(QuasiHyperbolicModel));
+
+                    engine.Evaluate(evalStatement);
+
+                    double noiseProb = double.Parse(engine.Evaluate("as.numeric(output[[1]]['noise.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
+                    double hyperProb = double.Parse(engine.Evaluate("as.numeric(output[[2]]['Mazur.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
+                    double exponProb = double.Parse(engine.Evaluate("as.numeric(output[[3]]['exp.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
+                    double quasiProb = double.Parse(engine.Evaluate("as.numeric(output[[9]]['BD.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
+                    double myerProb = double.Parse(engine.Evaluate("as.numeric(output[[4]]['MG.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
+                    double rachProb = double.Parse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
+
+                    var dictionary = new Dictionary<string, double>();
+                    dictionary.Add("Noise Model", noiseProb);
+                    dictionary.Add("Exponential Model", exponProb);
+                    dictionary.Add("Hyperbolic Model", hyperProb);
+                    dictionary.Add("Quasi Hyperbolic Model", quasiProb);
+                    dictionary.Add("Hyperboloid (Myerson) Model", myerProb);
+                    dictionary.Add("Hyperboloid (Rachlin) Model", rachProb);
+
+                    var items = from pair in dictionary orderby pair.Value descending select pair;
+
+                    if (mIndex == 0)
+                    {
+                        mVM.RowViewModels[0].values[1] = "Exponential - k: ";
+                        mVM.RowViewModels[0].values[2] = "Hyperbolic - k: ";
+                        mVM.RowViewModels[0].values[3] = "Quasi-Hyperbolic - beta: ";
+                        mVM.RowViewModels[0].values[4] = "Quasi-Hyperbolic - delta: ";
+                        mVM.RowViewModels[0].values[5] = "Myerson-Hyperboloid - k: ";
+                        mVM.RowViewModels[0].values[6] = "Myerson-Hyperboloid - s: ";
+                        mVM.RowViewModels[0].values[7] = "Rachlin-Hyperboloid - k: ";
+                        mVM.RowViewModels[0].values[8] = "Rachlin-Hyperboloid - s: ";
+                        mVM.RowViewModels[0].values[9] = "Model Competition (#1)";
+                        mVM.RowViewModels[0].values[10] = "#2";
+                        mVM.RowViewModels[0].values[11] = "#3";
+                        mVM.RowViewModels[0].values[12] = "#4";
+                        mVM.RowViewModels[0].values[13] = "#5";
+                        mVM.RowViewModels[0].values[14] = "#6";
+                        mVM.RowViewModels[0].values[15] = "Most competitive model: ";
+                        mVM.RowViewModels[0].values[16] = "ED50 of Most Competitive Model - ln(x): ";
+                    }
+
+                    mVM.RowViewModels[mIndex + 1].values[0] = "Series #" + (int)(mIndex + 1);
+
+                    double ed50Best = engine.Evaluate("as.numeric(output[[8]]['lnED50.mostprob'])").AsNumeric().First();
+
+                    double modExp = double.NaN;
+                    if (double.TryParse(engine.Evaluate("as.numeric(output[[3]]['exp.lnk'])").AsVector().First().ToString(), out modExp))
+                    {
+                        mVM.RowViewModels[mIndex + 1].values[1] = Math.Exp(modExp).ToString();
+                    }
+                    else
+                    {
+                        mVM.RowViewModels[mIndex + 1].values[1] = modExp.ToString();
+                    }
+
+                    double modHyp = double.NaN;
+                    if (double.TryParse(engine.Evaluate("as.numeric(output[[2]]['Mazur.lnk'])").AsVector().First().ToString(), out modHyp))
+                    {
+                        mVM.RowViewModels[mIndex + 1].values[2] = Math.Exp(modHyp).ToString();
+                    }
+                    else
+                    {
+                        mVM.RowViewModels[mIndex + 1].values[2] = modHyp.ToString();
+                    }
+
+                    double modMG = double.NaN;
+                    if (double.TryParse(engine.Evaluate("as.numeric(output[[4]]['MG.lnk'])").AsVector().First().ToString(), out modMG))
+                    {
+                        mVM.RowViewModels[mIndex + 1].values[5] = Math.Exp(modMG).ToString();
+                    }
+                    else
+                    {
+                        mVM.RowViewModels[mIndex + 1].values[5] = modMG.ToString();
+                    }
+
+                    double modR = double.NaN;
+                    if (double.TryParse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.lnk'])").AsVector().First().ToString(), out modR))
+                    {
+                        mVM.RowViewModels[mIndex + 1].values[7] = Math.Exp(modR).ToString();
+                    }
+                    else
+                    {
+                        mVM.RowViewModels[mIndex + 1].values[7] = modR.ToString();
+                    }
+
+                    //mVM.RowViewModels[mIndex + 1].values[1] = engine.Evaluate("as.numeric(output[[3]]['exp.lnk'])").AsVector().First().ToString();
+                    //mVM.RowViewModels[mIndex + 1].values[2] = engine.Evaluate("as.numeric(output[[2]]['Mazur.lnk'])").AsVector().First().ToString();
+                    mVM.RowViewModels[mIndex + 1].values[3] = engine.Evaluate("as.numeric(output[[9]]['BD.beta'])").AsVector().First().ToString();
+                    mVM.RowViewModels[mIndex + 1].values[4] = engine.Evaluate("as.numeric(output[[9]]['BD.delta'])").AsVector().First().ToString();
+                    //mVM.RowViewModels[mIndex + 1].values[5] = engine.Evaluate("as.numeric(output[[4]]['MG.lnk'])").AsVector().First().ToString();
+                    mVM.RowViewModels[mIndex + 1].values[6] = engine.Evaluate("as.numeric(output[[4]]['MG.s'])").AsVector().First().ToString();
+                    //mVM.RowViewModels[mIndex + 1].values[7] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.lnk'])").AsVector().First().ToString();
+                    mVM.RowViewModels[mIndex + 1].values[8] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.s'])").AsVector().First().ToString();
+
+                    int row = 9;
+                    foreach (KeyValuePair<string, double> pair in items)
+                    {
+                        mVM.RowViewModels[mIndex + 1].values[row] = pair.Key + " - (" + pair.Value.ToString("0.000") + ")";
+                        row++;
+                    }
+
+                    mVM.RowViewModels[mIndex + 1].values[15] = items.First().Key.ToString();
+                    mVM.RowViewModels[mIndex + 1].values[16] = ed50Best.ToString();
+                }
+                catch (ParseException pe)
+                {
+                    Logging.SubmitError("ViewModelBatchDiscounting", pe.ToString());
+                    mWindow.OutputEvents(pe.ToString());
+                }
+
+                mWindow.OutputEvents("Computation #" + ((int)mIndex + (int)1) + " of " + wholeRange.GetLength(1) + " Completed!");
+
+            }
+
+            mWindow.OutputEvents("Final Calculations Completed!");
+            mWindow.OutputEvents("Please remember to cite the packages used in this process!");
+            mWindow.OutputEvents("Citation:: Gilroy, S. G., Franck, C. T. & Hantula, D. A. (2016). Technical Report: The Bayesian Model Selector: Statistical discounting software.");
+            mWindow.OutputEvents("Citation:: Franck, C. T., Koffarnus, M. N., House, L. L. & Bickel, W. K. (2015). Accurate characterization of delay discounting: a multiple model approach using approximate Bayesian model selection and a unified discounting measure. Journal of the Experimental Analysis of Behavior, 103(1), 218-233.");
+            mWindow.OutputEvents("Citation:: " + string.Join("", engine.Evaluate("citation()$textVersion").AsCharacter().ToArray()));
+            mWindow.OutputEvents("Citation:: " + string.Join("", engine.Evaluate("citation('ggplot2')$textVersion").AsCharacter().ToArray()));
+            mWindow.OutputEvents("Citation:: " + string.Join("", engine.Evaluate("citation('gridExtra')$textVersion").AsCharacter().ToArray()));
+            mWindow.OutputEvents("Citation:: " + string.Join("", engine.Evaluate("citation('base64enc')$textVersion").AsCharacter().ToArray()));
+            mWindow.OutputEvents("Citation:: " + string.Join("", engine.Evaluate("citation('reshape2')$textVersion").AsCharacter().ToArray()));
+            mWindow.OutputEvents("Citation:: " + string.Join("", engine.Evaluate("citation('scales')$textVersion").AsCharacter().ToArray()));
+
+            mWin.Show();
         }
     }
 }

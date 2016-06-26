@@ -32,7 +32,7 @@
     <SuiteName>Discounting Model Selector</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>66</ApplicationRevision>
+    <ApplicationRevision>67</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -178,16 +178,9 @@
     <Compile Include="ViewModel\ResultsViewModel.cs" />
     <Compile Include="ViewModel\RowViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
-    <Compile Include="ViewModel\ViewModelBatchDiscounting.cs" />
-    <Compile Include="ViewModel\ViewModelDiscounting.cs" />
     <Compile Include="ViewModel\ViewModelLicense.cs" />
     <Compile Include="ViewModel\ViewModelMainWindow.cs" />
-    <Compile Include="View\BatchDiscountingWindow.xaml.cs">
-      <DependentUpon>BatchDiscountingWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\DiscountingWindow.xaml.cs">
-      <DependentUpon>DiscountingWindow.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="ViewModel\ViewModelUnifiedDiscounting.cs" />
     <Compile Include="View\HelpWindow.xaml.cs">
       <DependentUpon>HelpWindow.xaml</DependentUpon>
     </Compile>
@@ -212,14 +205,9 @@
     <Compile Include="View\SelectionWindow.xaml.cs">
       <DependentUpon>SelectionWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="View\BatchDiscountingWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\DiscountingWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
+    <Compile Include="View\UnifiedDiscountingWindow.xaml.cs">
+      <DependentUpon>UnifiedDiscountingWindow.xaml</DependentUpon>
+    </Compile>
     <Page Include="View\HelpWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -275,6 +263,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\SelectionWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UnifiedDiscountingWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

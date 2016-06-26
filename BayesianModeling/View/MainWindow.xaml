@@ -91,12 +91,9 @@
                     </MenuItem>
                 </MenuItem>
 
-                <MenuItem Header="_Modeling">
-                    <MenuItem Header="_Discounting Model Selection" 
-                              Command="{Binding DiscountingWindowCommand}">
-                    </MenuItem>
-                    <MenuItem Header="_Batch Discounting Model Selection" 
-                              Command="{Binding BatchDiscountingWindowCommand}">
+                <MenuItem Header="_Analyses">
+                    <MenuItem Header="_Bayesian Discounting Model Selection" 
+                              Command="{Binding UnifiedDiscountingWindowCommand}">
                     </MenuItem>
                 </MenuItem>
 

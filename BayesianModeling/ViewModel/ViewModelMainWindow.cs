@@ -33,14 +33,14 @@
 //    
 //    Redistribution and use in source and binary forms, with or without modification, 
 //    are permitted provided that the following conditions are met:
-
+//
 //    Redistributions of source code must retain the above copyright notice, this list
 //    of conditions and the following disclaimer.
-
+//
 //    Redistributions in binary form must reproduce the above copyright notice, this 
 //    list of conditions and the following disclaimer in the documentation and/or other
 //    materials provided with the distribution.
-
+//
 //    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 //    ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 //    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
@@ -154,9 +154,8 @@ namespace BayesianModeling.ViewModel
         public RelayCommand ViewClosingCommand { get; set; }
 
         /* Menu Commands */
-
-        public RelayCommand DiscountingWindowCommand { get; set; }
-        public RelayCommand BatchDiscountingWindowCommand { get; set; }
+        
+        public RelayCommand UnifiedDiscountingWindowCommand { get; set; }
         public RelayCommand InformationWindowCommand { get; set; }
 
         public RelayCommand RLicenseWindowCommand { get; set; }
@@ -271,9 +270,8 @@ namespace BayesianModeling.ViewModel
             #endregion
 
             #region UICommands
-
-            DiscountingWindowCommand = new RelayCommand(param => OpenDiscountingWindow(), param => true);
-            BatchDiscountingWindowCommand = new RelayCommand(param => OpenBatchDiscountingWindow(), param => true);
+            
+            UnifiedDiscountingWindowCommand = new RelayCommand(param => OpenUnifiedDiscountingWindow(), param => true);
             InformationWindowCommand = new RelayCommand(param => OpenInformationWindow(), param => true);
 
             #endregion
@@ -871,9 +869,9 @@ namespace BayesianModeling.ViewModel
         #region OpenWindows
 
         /// <summary>
-        /// Single mode analysis window
+        /// Unified mode analysis window
         /// </summary>
-        private void OpenDiscountingWindow()
+        private void OpenUnifiedDiscountingWindow()
         {
             if (failed)
             {
@@ -886,35 +884,9 @@ namespace BayesianModeling.ViewModel
                 return;
             }
 
-            var mWin = new DiscountingWindow();
+            var mWin = new UnifiedDiscountingWindow();
             mWin.Owner = MainWindow;
-            mWin.DataContext = new ViewModelDiscounting()
-            {
-                mWindow = MainWindow,
-                windowRef = mWin
-            };
-            mWin.Show();
-        }
-
-        /// <summary>
-        /// Batch mode analysis window
-        /// </summary>
-        private void OpenBatchDiscountingWindow()
-        {
-            if (failed)
-            {
-                SendMessageToOutput("R Installation not found, please install in order to continue.");
-                if (MessageBox.Show("R was not found on your computer.  Do you want to be directed to the R web site for more information?", "R Not Found", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
-                {
-                    Process.Start("https://www.r-project.org/");
-                }
-
-                return;
-            }
-
-            var mWin = new BatchDiscountingWindow();
-            mWin.Owner = MainWindow;
-            mWin.DataContext = new ViewModelBatchDiscounting()
+            mWin.DataContext = new ViewModelUnifiedDiscounting()
             {
                 mWindow = MainWindow,
                 windowRef = mWin
@@ -1157,6 +1129,13 @@ namespace BayesianModeling.ViewModel
                     if (mExt.Equals(".xlsx"))
                     {
                         ObservableCollection<RowViewModel> temp = OpenXMLHelper.ReadFromExcelFile(openFileDialog1.FileName, out workingSheet);
+
+                        if (temp == null)
+                        {
+                            CloseFileUIProgressWindow();
+                            return;
+                        }
+
                         RowViewModels = new ObservableCollection<RowViewModel>(temp);
 
                         UpdateTitle(openFileDialog1.SafeFileName);
@@ -1217,6 +1196,7 @@ namespace BayesianModeling.ViewModel
 
                     if (temp == null)
                     {
+                        CloseFileUIProgressWindow();
                         return;
                     }
 
