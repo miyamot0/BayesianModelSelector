@@ -678,7 +678,8 @@ namespace BayesianModeling.ViewModel
 
             if (failed)
             {
-                SendMessageToOutput("R Installation not found, please install in order to continue.");
+                SendMessageToOutput("R Installation not found, please install and then re-start the program in order to continue.");
+                introWindow.loadText.Text = "R needs to be installed first";
                 if (MessageBox.Show("R was not found on your computer.  Do you want to be directed to the R web site for more information?", "R Not Found", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                 {
                     Process.Start("https://www.r-project.org/");
