@@ -1258,6 +1258,19 @@ namespace BayesianModeling.ViewModel
                 col++;
             }
 
+            mVM.RowViewModels[0].values[17] = "Noise Model Probs";
+            mVM.RowViewModels[1].values[17] = noiseProb.ToString();
+            mVM.RowViewModels[0].values[18] = "Exponential Model Probs";
+            mVM.RowViewModels[1].values[18] = exponProb.ToString();
+            mVM.RowViewModels[0].values[19] = "Hyperbolic Model Probs";
+            mVM.RowViewModels[1].values[19] = hyperProb.ToString();
+            mVM.RowViewModels[0].values[20] = "Quasi Hyperbolic Model Probs";
+            mVM.RowViewModels[1].values[20] = quasiProb.ToString();
+            mVM.RowViewModels[0].values[21] = "Hyperboloid (Myerson) Model Probs";
+            mVM.RowViewModels[1].values[21] = myerProb.ToString();
+            mVM.RowViewModels[0].values[22] = "Hyperboloid (Rachlin) Model Probs";
+            mVM.RowViewModels[1].values[22] = rachProb.ToString();
+
             mVM.RowViewModels[3].values[0] = "Delayed Value";
             mVM.RowViewModels[3].values[1] = DelayedValue;
 
@@ -1553,6 +1566,12 @@ namespace BayesianModeling.ViewModel
                         mVM.RowViewModels[0].values[14] = "#6";
                         mVM.RowViewModels[0].values[15] = "Most competitive model: ";
                         mVM.RowViewModels[0].values[16] = "ED50 of Most Competitive Model - ln(x): ";
+                        mVM.RowViewModels[0].values[17] = "Noise Model Probs";
+                        mVM.RowViewModels[0].values[18] = "Exponential Model Probs";
+                        mVM.RowViewModels[0].values[19] = "Hyperbolic Model Probs";
+                        mVM.RowViewModels[0].values[20] = "Quasi Hyperbolic Model Probs";
+                        mVM.RowViewModels[0].values[21] = "Hyperboloid (Myerson) Model Probs";
+                        mVM.RowViewModels[0].values[22] = "Hyperboloid (Rachlin) Model Probs";
                     }
 
                     mVM.RowViewModels[mIndex + 1].values[0] = "Series #" + (int)(mIndex + 1);
@@ -1617,6 +1636,14 @@ namespace BayesianModeling.ViewModel
 
                     mVM.RowViewModels[mIndex + 1].values[15] = items.First().Key.ToString();
                     mVM.RowViewModels[mIndex + 1].values[16] = ed50Best.ToString();
+
+                    mVM.RowViewModels[mIndex + 1].values[17] = noiseProb.ToString();
+                    mVM.RowViewModels[mIndex + 1].values[18] = exponProb.ToString();
+                    mVM.RowViewModels[mIndex + 1].values[19] = hyperProb.ToString();
+                    mVM.RowViewModels[mIndex + 1].values[20] = quasiProb.ToString();
+                    mVM.RowViewModels[mIndex + 1].values[21] = myerProb.ToString();
+                    mVM.RowViewModels[mIndex + 1].values[22] = rachProb.ToString();
+
                 }
                 catch (ParseException pe)
                 {
