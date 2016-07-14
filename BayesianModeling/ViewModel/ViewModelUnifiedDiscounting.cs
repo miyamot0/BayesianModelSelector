@@ -113,17 +113,57 @@ namespace BayesianModeling.ViewModel
             }
         }
 
-        private string modeSelection = "";
-        public string ModeSelection
+        #region DataModes
+
+        private bool rowModeRadio = false;
+        public bool RowModeRadio
         {
-            get { return modeSelection; }
+            get { return rowModeRadio; }
             set
             {
-                modeSelection = value;
-                OnPropertyChanged("ModeSelection");
-                UpdateStyles();
+                rowModeRadio = value;
+                OnPropertyChanged("RowModeRadio");
+                UpdateSelectionMode();
             }
         }
+
+        private bool columnModeRadio = false;
+        public bool ColumnModeRadio
+        {
+            get { return columnModeRadio; }
+            set
+            {
+                columnModeRadio = value;
+                OnPropertyChanged("ColumnModeRadio");
+                UpdateSelectionMode();
+            }
+        }
+
+        private bool singleModeRadio = false;
+        public bool SingleModeRadio
+        {
+            get { return singleModeRadio; }
+            set
+            {
+                singleModeRadio = value;
+                OnPropertyChanged("SingleModeRadio");
+                UpdateButtons();
+            }
+        }
+
+        private bool batchModeRadio = false;
+        public bool BatchModeRadio
+        {
+            get { return batchModeRadio; }
+            set
+            {
+                batchModeRadio = value;
+                OnPropertyChanged("BatchModeRadio");
+                UpdateButtons();
+            }
+        }
+
+        #endregion
 
         private bool advancedMenu = false;
         public bool AdvancedMenu
@@ -324,9 +364,9 @@ namespace BayesianModeling.ViewModel
             GetDelaysRangeCommand = new RelayCommand(param => GetDelaysRange(), param => true);            
             DelayRangeCommand = new RelayCommand(param => GetCustomDelays(), param => true);
 
-            GetValuesRangeCommand = new RelayCommand(param => GetBatchValuesRange(), param => true);
+            GetValuesRangeCommand = new RelayCommand(param => GetValuesRange(), param => true);
             CalculateScoresCommand = new RelayCommand(param => PreScoring(), param => true);
-            ValueRangeCommand = new RelayCommand(param => GetCustomBatchValues(), param => true);
+            ValueRangeCommand = new RelayCommand(param => GetCustomValues(), param => true);
         }
 
         #endregion
@@ -360,20 +400,41 @@ namespace BayesianModeling.ViewModel
 
                 if (int.TryParse(firstNums, out fNum) && int.TryParse(secondNums, out sNum) && firstChars.Length > 0 && secondChars.Length > 0)
                 {
-                    if ((sNum - fNum) == 0)
+                    if (RowModeRadio)
                     {
-                        DelaysBrush = Brushes.LightBlue;
-                        Delays = firstChars + firstNums + ":" + secondChars + secondNums;
+                        if ((sNum - fNum) == 0)
+                        {
+                            DelaysBrush = Brushes.LightBlue;
+                            Delays = firstChars + firstNums + ":" + secondChars + secondNums;
 
-                        lowColDelay = DataGridTools.GetColumnIndex(firstChars);
-                        highColDelay = DataGridTools.GetColumnIndex(secondChars);
+                            lowColDelay = DataGridTools.GetColumnIndex(firstChars);
+                            highColDelay = DataGridTools.GetColumnIndex(secondChars);
 
-                        lowRowDelay = fNum;
-                        highRowDelay = sNum;
+                            lowRowDelay = fNum;
+                            highRowDelay = sNum;
+                        }
+                        else
+                        {
+                            MessageBox.Show("Please ensure that only a single row is selected");
+                        }
                     }
-                    else
+                    else if (columnModeRadio)
                     {
-                        MessageBox.Show("Please ensure that only a single row is selected");
+                        if ((DataGridTools.GetColumnIndex(secondChars) - DataGridTools.GetColumnIndex(firstChars)) == 0)
+                        {
+                            DelaysBrush = Brushes.LightBlue;
+                            Delays = firstChars + firstNums + ":" + secondChars + secondNums;
+
+                            lowColDelay = DataGridTools.GetColumnIndex(firstChars);
+                            highColDelay = DataGridTools.GetColumnIndex(secondChars);
+
+                            lowRowDelay = fNum;
+                            highRowDelay = sNum;
+                        }
+                        else
+                        {
+                            MessageBox.Show("Please ensure that only a single column is selected");
+                        }
                     }
                 }
                 else
@@ -410,70 +471,83 @@ namespace BayesianModeling.ViewModel
 
                 if (int.TryParse(firstNums, out fNum) && int.TryParse(secondNums, out sNum) && firstChars.Length > 0 && secondChars.Length > 0)
                 {
-                    if ((sNum - fNum) == 0)
+                    if (SingleModeRadio)
                     {
-                        ValuesBrush = Brushes.LightGreen;
-                        Values = firstChars + firstNums + ":" + secondChars + secondNums;
+                        if (RowModeRadio)
+                        {
+                            if ((sNum - fNum) == 0)
+                            {
+                                ValuesBrush = Brushes.LightGreen;
+                                Values = firstChars + firstNums + ":" + secondChars + secondNums;
 
-                        lowColValue = DataGridTools.GetColumnIndex(firstChars);
-                        highColValue = DataGridTools.GetColumnIndex(secondChars);
+                                lowColValue = DataGridTools.GetColumnIndex(firstChars);
+                                highColValue = DataGridTools.GetColumnIndex(secondChars);
 
-                        lowRowValue = fNum;
-                        highRowValue = sNum;
+                                lowRowValue = fNum;
+                                highRowValue = sNum;
+                            }
+                            else
+                            {
+                                MessageBox.Show("Please ensure that only a single row is selected");
+                            }
+                        }
+                        else if (ColumnModeRadio)
+                        {
+                            if ((DataGridTools.GetColumnIndex(secondChars) - DataGridTools.GetColumnIndex(firstChars)) == 0)
+                            {
+                                ValuesBrush = Brushes.LightGreen;
+                                Values = firstChars + firstNums + ":" + secondChars + secondNums;
+
+                                lowColValue = DataGridTools.GetColumnIndex(firstChars);
+                                highColValue = DataGridTools.GetColumnIndex(secondChars);
+
+                                lowRowValue = fNum;
+                                highRowValue = sNum;
+                            }
+                            else
+                            {
+                                MessageBox.Show("Please ensure that only a single column is selected");
+                            }
+                        }
                     }
-                    else
+                    else if (BatchModeRadio)
                     {
-                        MessageBox.Show("Please ensure that only a single row is selected");
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("Parse error!");
-                }
-            }
-        }
+                        if (RowModeRadio)
+                        {
+                            if ((sNum - fNum) > 1)
+                            {
+                                ValuesBrush = Brushes.LightGreen;
+                                Values = firstChars + firstNums + ":" + secondChars + secondNums;
 
-        /// <summary>
-        /// Query user for a range
-        /// </summary>
-        private void GetCustomBatchValues()
-        {
-            var mWin = new RangePrompt();
-            mWin.Topmost = true;
-            mWin.Owner = windowRef;
-            mWin.ResponseText = Values;
-            mWin.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                                lowColValue = DataGridTools.GetColumnIndex(firstChars);
+                                highColValue = DataGridTools.GetColumnIndex(secondChars);
 
-            if (mWin.ShowDialog() == true)
-            {
-                string[] addresses = mWin.ResponseText.Split(':');
+                                lowRowValue = fNum;
+                                highRowValue = sNum;
+                            }
+                            else
+                            {
+                                MessageBox.Show("Please ensure that more than two rows are selected");
+                            }
+                        }
+                        else if (ColumnModeRadio)
+                        {
+                            if ((highRowValue - lowRowValue) < 2 || (highColValue - lowColValue) < 1)
+                            {
+                                ValuesBrush = Brushes.LightGreen;
+                                Values = firstChars + firstNums + ":" + secondChars + secondNums;
 
-                if (addresses.Length != 2) return;
+                                lowColValue = DataGridTools.GetColumnIndex(firstChars);
+                                highColValue = DataGridTools.GetColumnIndex(secondChars);
 
-                var firstChars = new String(addresses[0].ToCharArray().Where(c => !Char.IsDigit(c)).ToArray());
-                var firstNums = new String(addresses[0].ToCharArray().Where(c => Char.IsDigit(c)).ToArray());
-
-                var secondChars = new String(addresses[1].ToCharArray().Where(c => !Char.IsDigit(c)).ToArray());
-                var secondNums = new String(addresses[1].ToCharArray().Where(c => Char.IsDigit(c)).ToArray());
-
-                int fNum, sNum;
-
-                if (int.TryParse(firstNums, out fNum) && int.TryParse(secondNums, out sNum) && firstChars.Length > 0 && secondChars.Length > 0)
-                {
-                    if ((sNum - fNum) > 1)
-                    {
-                        ValuesBrush = Brushes.LightGreen;
-                        Values = firstChars + firstNums + ":" + secondChars + secondNums;
-
-                        lowColValue = DataGridTools.GetColumnIndex(firstChars);
-                        highColValue = DataGridTools.GetColumnIndex(secondChars);
-
-                        lowRowValue = fNum;
-                        highRowValue = sNum;
-                    }
-                    else
-                    {
-                        MessageBox.Show("Please ensure that more than two rows are selected");
+                                lowRowValue = fNum;
+                                highRowValue = sNum;
+                            }
+                            else
+                            {
+                                MessageBox.Show("Please ensure that more than two columns are selected");
+                            }
+                        }
                     }
                 }
                 else
@@ -499,19 +573,52 @@ namespace BayesianModeling.ViewModel
 
             mWindow.dataGrid.PreviewMouseUp -= DataGrid_PreviewMouseUp_Values;
 
-            if (ModeSelection == "Batched")
+            //if (ModeSelection == "Batched")
+            if (BatchModeRadio)
             {
                 PossibleFigures = true;
-                GetValuesRangeCommand = new RelayCommand(param => GetBatchValuesRange(), param => true);
-                ValueRangeCommand = new RelayCommand(param => GetCustomBatchValues(), param => true);
             }
-            else if (ModeSelection == "Single")
+            //else if (ModeSelection == "Single")
+            else if (SingleModeRadio)
             {
                 PossibleFigures = false;
-                GetValuesRangeCommand = new RelayCommand(param => GetValuesRange(), param => true);
-                ValueRangeCommand = new RelayCommand(param => GetCustomValues(), param => true);
             }
+        }
 
+        /// <summary>
+        /// Calls to update after mode change
+        /// </summary>
+        private void UpdateButtons()
+        {
+            OutputFigures = false;
+            lowRowValue = highRowValue = lowColValue = highColValue = -1;
+            ValuesBrush = Brushes.LightGray;
+            Values = "";
+
+            mWindow.dataGrid.PreviewMouseUp -= DataGrid_PreviewMouseUp_Values;
+
+            if (SingleModeRadio)
+            {
+                PossibleFigures = true;
+            }
+            else if (BatchModeRadio)
+            {
+                PossibleFigures = false;
+            }
+        }
+
+        /// <summary>
+        /// Calls to update after mode change
+        /// </summary>
+        private void UpdateSelectionMode()
+        {
+            lowRowDelay = highRowDelay = lowColDelay = highColDelay = -1;
+            lowRowValue = highRowValue = lowColValue = highColValue = -1;
+
+            Delays = "";
+            Values = "";
+
+            DefaultFieldsToGray();
         }
 
         /// <summary>
@@ -639,7 +746,9 @@ namespace BayesianModeling.ViewModel
 
             DefaultFieldsToGray();
 
-            ModeSelection = "Batched";
+            //ModeSelection = "Batched";
+            BatchModeRadio = true;
+            RowModeRadio = true;
         }
 
         /// <summary>
@@ -677,20 +786,40 @@ namespace BayesianModeling.ViewModel
             lowColDelay = cells.Min(i => i.Column.DisplayIndex);
             highColDelay = cells.Max(i => i.Column.DisplayIndex);
 
-            if ((highRowDelay - lowRowDelay) > 0)
+            if (RowModeRadio)
             {
-                DefaultFieldsToGray();
+                if ((highRowDelay - lowRowDelay) > 0)
+                {
+                    DefaultFieldsToGray();
 
-                mWindow.dataGrid.PreviewMouseUp -= DataGrid_PreviewMouseUp_Delays;
+                    mWindow.dataGrid.PreviewMouseUp -= DataGrid_PreviewMouseUp_Delays;
 
-                lowColDelay = -1;
-                lowRowDelay = -1;
-                highColDelay = -1;
-                highRowDelay = -1;
+                    lowColDelay = -1;
+                    lowRowDelay = -1;
+                    highColDelay = -1;
+                    highRowDelay = -1;
 
-                MessageBox.Show("Please select a single horizontal row (increasing, from left to right).  You can have many columns, but just one row.");
+                    MessageBox.Show("Please select a single horizontal row (increasing, from left to right).  You can have many columns, but just one row.");
 
-                return;
+                    return;
+                }
+            }
+            else if (ColumnModeRadio)
+            {
+                if ((highColDelay - lowColDelay) > 0)
+                {
+                    DefaultFieldsToGray();
+
+                    mWindow.dataGrid.PreviewMouseUp -= DataGrid_PreviewMouseUp_Delays;
+
+                    lowColDelay = -1;
+                    lowRowDelay = -1;
+                    highColDelay = -1;
+                    highRowDelay = -1;
+                    MessageBox.Show("Please select a single vertical column.  You can have many rows, but just one column of pricing values.");
+
+                    return;
+                }
             }
 
             mWindow.dataGrid.PreviewMouseUp -= DataGrid_PreviewMouseUp_Delays;
@@ -715,41 +844,81 @@ namespace BayesianModeling.ViewModel
             lowColValue = cells.Min(i => i.Column.DisplayIndex);
             highColValue = cells.Max(i => i.Column.DisplayIndex);
 
-            bool single = (ModeSelection == "Single") ? true : false;
+            //bool single = (ModeSelection == "Single") ? true : false;
 
-            if (single)
+            if (SingleModeRadio)
             {
-                if ((highRowValue - lowRowValue) > 0)
+                if (RowModeRadio)
                 {
-                    DefaultFieldsToGray();
+                    if ((highRowValue - lowRowValue) > 0)
+                    {
+                        DefaultFieldsToGray();
 
-                    mWindow.dataGrid.PreviewMouseUp -= DataGrid_PreviewMouseUp_Values;
+                        mWindow.dataGrid.PreviewMouseUp -= DataGrid_PreviewMouseUp_Values;
 
-                    lowColValue = -1;
-                    lowRowValue = -1;
-                    highColValue = -1;
-                    highRowValue = -1;
-                    MessageBox.Show("Please select a single horizontal row (increasing, from left to right).  You can have many columns, but just one row.");
+                        lowColValue = -1;
+                        lowRowValue = -1;
+                        highColValue = -1;
+                        highRowValue = -1;
+                        MessageBox.Show("Please select a single horizontal row (increasing, from left to right).  You can have many columns, but just one row.");
 
-                    return;
+                        return;
+                    }
+                }
+                else if (ColumnModeRadio)
+                {
+                    if ((highRowValue - lowRowValue) < 2 || (highColValue - lowColValue) > 0)
+                    {
+                        DefaultFieldsToGray();
+
+                        mWindow.dataGrid.PreviewMouseUp -= DataGrid_PreviewMouseUp_Values;
+
+                        lowColValue = -1;
+                        lowRowValue = -1;
+                        highColValue = -1;
+                        highRowValue = -1;
+                        MessageBox.Show("Please select a matrix of indifference values, with one column of values with at least three individual points of data (i.e., 3x3).");
+
+                        return;
+                    }
                 }
             }
-            else
+            else if (BatchModeRadio)
             {
-                if ((highRowValue - lowRowValue) < 2)
+                if (RowModeRadio)
                 {
-                    DefaultFieldsToGray();
+                    if ((highRowValue - lowRowValue) < 2)
+                    {
+                        DefaultFieldsToGray();
 
-                    mWindow.dataGrid.PreviewMouseUp -= DataGrid_PreviewMouseUp_Values;
+                        mWindow.dataGrid.PreviewMouseUp -= DataGrid_PreviewMouseUp_Values;
 
-                    lowColValue = -1;
-                    lowRowValue = -1;
-                    highColValue = -1;
-                    highRowValue = -1;
+                        lowColValue = -1;
+                        lowRowValue = -1;
+                        highColValue = -1;
+                        highRowValue = -1;
 
-                    MessageBox.Show("Please select multiple rows (at least 3).");
+                        MessageBox.Show("Please select multiple rows (at least 3).");
 
-                    return;
+                        return;
+                    }
+                }
+                else if (ColumnModeRadio)
+                {
+                    if ((highRowValue - lowRowValue) < 2 || (highColValue - lowColValue) < 1)
+                    {
+                        DefaultFieldsToGray();
+
+                        mWindow.dataGrid.PreviewMouseUp -= DataGrid_PreviewMouseUp_Values;
+
+                        lowColValue = -1;
+                        lowRowValue = -1;
+                        highColValue = -1;
+                        highRowValue = -1;
+                        MessageBox.Show("Please select a matrix of indifference values, with more than one column of values with at least three individual points of data (i.e., 3x3).");
+
+                        return;
+                    }
                 }
             }
 
@@ -778,23 +947,7 @@ namespace BayesianModeling.ViewModel
 
             mWindow.dataGrid.PreviewMouseUp += DataGrid_PreviewMouseUp_Delays;
         }
-
-        /// <summary>
-        /// Call window reference (shameful deviation from MVVM) for PickRange function.
-        /// Successful (or failing) selections result in a range string in respective text fields for later parsing.
-        /// </summary>
-        private void GetBatchValuesRange()
-        {
-            mWindow.dataGrid.CommitEdit();
-
-            DefaultFieldsToGray();
-
-            ValuesBrush = Brushes.Yellow;
-            Values = "Select values on spreadsheet";
-
-            mWindow.dataGrid.PreviewMouseUp += DataGrid_PreviewMouseUp_Values;
-        }
-
+        
         /// <summary>
         /// Call window reference (shameful deviation from MVVM) for PickRange function.
         /// Successful (or failing) selections result in a range string in respective text fields for later parsing.
@@ -813,163 +966,6 @@ namespace BayesianModeling.ViewModel
         }
 
         /// <summary>
-        /// Walk through ranged values as needed, finding necessary pairs
-        /// </summary>
-        /// <param name="startColDelay">
-        /// First column index for delay
-        /// </param>
-        /// <param name="endColDelay">
-        /// Final column index for delay
-        /// </param>
-        /// <param name="rowDelay">
-        /// Row index for delays
-        /// </param>
-        /// <param name="startColValue">
-        /// First column index for values
-        /// </param>
-        /// <param name="endColValue">
-        /// Final column index for values
-        /// </param>
-        /// <param name="rowValue">
-        /// Row index for values
-        /// </param>
-        /// <returns>
-        /// List of all range/value pairs that correspond
-        /// </returns>
-        private List<double>[] GetRangedValues(int startColDelay, int endColDelay, int rowDelay, int startColValue, int endColValue, int rowValue)
-        {
-            if (startColDelay == -1 || endColDelay == -1 || startColValue == -1 || endColValue == -1)
-            {
-                return null;
-            }
-
-            List<double>[] array = new List<double>[2];
-            array[0] = new List<double>();
-            array[1] = new List<double>();
-
-            string mCellDelay, mCellValue;
-
-            double testDelay = -1,
-                   testValue = -1;
-
-            int i = startColDelay,
-                j = startColValue;
-
-            var itemSource = mWindow.dataGrid.ItemsSource as ObservableCollection<RowViewModel>;
-
-            if (itemSource == null)
-                return null;
-
-            for (; i <= endColDelay && j <= endColValue;)
-            {
-                mCellDelay = itemSource[rowDelay].values[i];
-                mCellValue = itemSource[rowValue].values[j];
-
-                if (Double.TryParse(mCellDelay, out testDelay) && Double.TryParse(mCellValue, out testValue))
-                {
-                    array[0].Add(testDelay);
-                    array[1].Add(testValue);
-                }
-
-                i++;
-                j++;
-            }
-
-            return array;
-        }
-
-        /// <summary>
-        /// Walk through ranged values as needed, finding appropriate values
-        /// </summary>
-        /// <param name="startCol">
-        /// First column index for delay
-        /// </param>
-        /// <param name="endCol">
-        /// Row index for delays
-        /// </param>
-        /// <param name="startRow">
-        /// Row index for values
-        /// </param>
-        /// <returns>
-        /// List of all range/value pairs that correspond
-        /// </returns>
-        private List<double> GetRangedValues(int startCol, int endCol, int startRow)
-        {
-            if (startCol == -1 || endCol == -1 || startRow == -1)
-            {
-                return null;
-            }
-
-            List<double> mRange = new List<double>();
-
-            string mCell;
-            double test;
-
-            var itemSource = mWindow.dataGrid.ItemsSource as ObservableCollection<RowViewModel>;
-
-            if (itemSource == null)
-                return null;
-
-            for (int i = startCol; i <= endCol; i++)
-            {
-                mCell = itemSource[startRow].values[i];
-
-                if (!Double.TryParse(mCell, out test))
-                {
-                    return null;
-                }
-                else
-                {
-                    mRange.Add(test);
-                }
-            }
-
-            return mRange;
-        }
-
-        /// <summary>
-        /// A method for submitting a string-encoded range and returning the value of the cells selected.
-        /// </summary>
-        /// <param name="range">
-        /// List of double values returned for use as delay or value points in Computation
-        /// </param>
-        public string[,] ParseBulkRangeStrings(int lowRowValue, int highRowValue, int lowColValue, int highColValue)
-        {
-            string[,] mDouble = null;
-            string mCell;
-
-            int mRows = (highRowValue - lowRowValue) + 1;
-            int mCols = (highColValue - lowColValue) + 1;
-
-            mDouble = new string[mCols, mRows];
-
-            var itemSource = mWindow.dataGrid.ItemsSource as ObservableCollection<RowViewModel>;
-
-            if (itemSource == null)
-                return null;
-
-            try
-            {
-                for (int i = lowRowValue; i <= highRowValue; i++)
-                {
-
-                    for (int j = lowColValue; j <= highColValue; j++)
-                    {
-                        mCell = itemSource[i].values[j];
-                        mDouble[j - lowColValue, i - lowRowValue] = mCell;
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-                return null;
-            }
-
-            return mDouble;
-        }
-
-        /// <summary>
         /// Converts bool to string
         /// </summary>
         /// <param name="value"></param>
@@ -981,17 +977,19 @@ namespace BayesianModeling.ViewModel
 
         #endregion
 
+        #region Calculations
+
         /// <summary>
         /// Routing command for mode-specific scoring
         /// </summary>
         /// <returns></returns>
         private void PreScoring()
         {
-            if (ModeSelection == "Batched")
+            if (BatchModeRadio)
             {
                 CalculateBatchScores();
             }
-            else if (ModeSelection == "Single")
+            else if (SingleModeRadio)
             {
                 CalculateScores();
             }
@@ -1013,8 +1011,17 @@ namespace BayesianModeling.ViewModel
                 MessageBox.Show("Please review the ranges.  These cannot be the same.");
                 return;
             }
+            
+            List<double>[] array = null;
 
-            List<double>[] array = GetRangedValues(lowColDelay, highColDelay, lowRowDelay, lowColValue, highColValue, lowRowValue);
+            if (RowModeRadio)
+            {
+                array = DataGridTools.GetRangedValuesHorizontal(lowColDelay, highColDelay, lowRowDelay, lowColValue, highColValue, lowRowValue, mWindow.dataGrid.ItemsSource);
+            }
+            else if (ColumnModeRadio)
+            {
+                array = DataGridTools.GetRangedValuesVertical(lowRowDelay, highRowDelay, lowColDelay, lowRowValue, highRowValue, lowColValue, mWindow.dataGrid.ItemsSource);
+            }
 
             if (array == null)
             {
@@ -1071,7 +1078,17 @@ namespace BayesianModeling.ViewModel
             {
                 engine.Evaluate("rm(list = setdiff(ls(), lsf.str()))");
 
-                List<double>[] arrayNew = GetRangedValues(lowColDelay, highColDelay, lowRowDelay, lowColValue, highColValue, lowRowValue);
+                List<double>[] arrayNew = null;
+
+                if (RowModeRadio)
+                {
+                    arrayNew = DataGridTools.GetRangedValuesHorizontal(lowColDelay, highColDelay, lowRowDelay, lowColValue, highColValue, lowRowValue, mWindow.dataGrid.ItemsSource);
+                }
+                else if (ColumnModeRadio)
+                {
+                    arrayNew = DataGridTools.GetRangedValuesVertical(lowRowDelay, highRowDelay, lowColDelay, lowRowValue, highRowValue, lowColValue, mWindow.dataGrid.ItemsSource);
+                }
+                
                 List<double> xRangeNew = arrayNew[0];
                 List<double> yRangeNew = arrayNew[1];
 
@@ -1259,17 +1276,17 @@ namespace BayesianModeling.ViewModel
             }
 
             mVM.RowViewModels[0].values[17] = "Noise Model Probs";
-            mVM.RowViewModels[1].values[17] = noiseProb.ToString();
+            mVM.RowViewModels[1].values[17] = noiseProb.ToString("0.000");
             mVM.RowViewModels[0].values[18] = "Exponential Model Probs";
-            mVM.RowViewModels[1].values[18] = exponProb.ToString();
+            mVM.RowViewModels[1].values[18] = exponProb.ToString("0.000");
             mVM.RowViewModels[0].values[19] = "Hyperbolic Model Probs";
-            mVM.RowViewModels[1].values[19] = hyperProb.ToString();
+            mVM.RowViewModels[1].values[19] = hyperProb.ToString("0.000");
             mVM.RowViewModels[0].values[20] = "Quasi Hyperbolic Model Probs";
-            mVM.RowViewModels[1].values[20] = quasiProb.ToString();
+            mVM.RowViewModels[1].values[20] = quasiProb.ToString("0.000");
             mVM.RowViewModels[0].values[21] = "Hyperboloid (Myerson) Model Probs";
-            mVM.RowViewModels[1].values[21] = myerProb.ToString();
+            mVM.RowViewModels[1].values[21] = myerProb.ToString("0.000");
             mVM.RowViewModels[0].values[22] = "Hyperboloid (Rachlin) Model Probs";
-            mVM.RowViewModels[1].values[22] = rachProb.ToString();
+            mVM.RowViewModels[1].values[22] = rachProb.ToString("0.000");
 
             mVM.RowViewModels[3].values[0] = "Delayed Value";
             mVM.RowViewModels[3].values[1] = DelayedValue;
@@ -1405,8 +1422,19 @@ namespace BayesianModeling.ViewModel
                 return;
             }
 
-            List<double> xRange = new List<double>();
-            xRange = GetRangedValues(lowColDelay, highColDelay, lowRowDelay);
+            List<double> xRange = null;
+            string[,] wholeRange = null;
+            
+            if (RowModeRadio)
+            {
+                xRange = DataGridTools.GetRangedValuesVM(lowColDelay, highColDelay, lowRowDelay, mWindow.dataGrid.ItemsSource);
+                wholeRange = DataGridTools.ParseBulkRangeStringsVM(lowRowValue, highRowValue, lowColValue, highColValue, mWindow.dataGrid.ItemsSource);
+            }
+            else if (ColumnModeRadio)
+            {
+                xRange = DataGridTools.GetRangedValuesVerticalVM(lowRowDelay, highRowDelay, lowColDelay, mWindow.dataGrid.ItemsSource);
+                wholeRange = DataGridTools.ParseBulkRangeStringsVerticalVM(lowRowValue, highRowValue, lowColValue, highColValue, mWindow.dataGrid.ItemsSource);
+            }
 
             if (xRange == null)
             {
@@ -1415,16 +1443,14 @@ namespace BayesianModeling.ViewModel
                 return;
             }
 
-            List<double> yRange = new List<double>();
-
-            string[,] wholeRange = ParseBulkRangeStrings(lowRowValue, highRowValue, lowColValue, highColValue);
-
             if (wholeRange == null)
             {
                 mWindow.OutputEvents("There were items that failed validation in the Indifference Point values.  Are any fields blank or not numeric?");
                 MessageBox.Show("There were items that failed validation in the Indifference Point values.");
                 return;
             }
+
+            List<double> yRange = new List<double>();
 
             List<double> xRangeShadow = new List<double>();
             double holder;
@@ -1637,12 +1663,12 @@ namespace BayesianModeling.ViewModel
                     mVM.RowViewModels[mIndex + 1].values[15] = items.First().Key.ToString();
                     mVM.RowViewModels[mIndex + 1].values[16] = ed50Best.ToString();
 
-                    mVM.RowViewModels[mIndex + 1].values[17] = noiseProb.ToString();
-                    mVM.RowViewModels[mIndex + 1].values[18] = exponProb.ToString();
-                    mVM.RowViewModels[mIndex + 1].values[19] = hyperProb.ToString();
-                    mVM.RowViewModels[mIndex + 1].values[20] = quasiProb.ToString();
-                    mVM.RowViewModels[mIndex + 1].values[21] = myerProb.ToString();
-                    mVM.RowViewModels[mIndex + 1].values[22] = rachProb.ToString();
+                    mVM.RowViewModels[mIndex + 1].values[17] = noiseProb.ToString("0.000");
+                    mVM.RowViewModels[mIndex + 1].values[18] = exponProb.ToString("0.000");
+                    mVM.RowViewModels[mIndex + 1].values[19] = hyperProb.ToString("0.000");
+                    mVM.RowViewModels[mIndex + 1].values[20] = quasiProb.ToString("0.000");
+                    mVM.RowViewModels[mIndex + 1].values[21] = myerProb.ToString("0.000");
+                    mVM.RowViewModels[mIndex + 1].values[22] = rachProb.ToString("0.000");
 
                 }
                 catch (ParseException pe)
@@ -1670,5 +1696,7 @@ namespace BayesianModeling.ViewModel
 
             windowRef.calculateButton.IsEnabled = true;
         }
+
+        #endregion
     }
 }

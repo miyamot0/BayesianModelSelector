@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:BayesianModeling.View"
         mc:Ignorable="d"
         ResizeMode="NoResize"
-        Height="475" 
+        Height="500" 
         Width="425"
         Loaded="Window_Loaded"
         Closing="Window_Closing"
@@ -35,7 +35,7 @@
 
             <Style TargetType="CheckBox" x:Key="disableKey">
                 <Style.Triggers>
-                    <DataTrigger Binding="{Binding PossibleFigures}"  Value="True">
+                    <DataTrigger Binding="{Binding PossibleFigures}"  Value="False">
                         <Setter Property="IsEnabled" Value="False" />
                     </DataTrigger>
                 </Style.Triggers>
@@ -53,49 +53,50 @@
 
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="40"></RowDefinition>
+                <RowDefinition Height="50"></RowDefinition>
+                <RowDefinition Height="50"></RowDefinition>
+                <RowDefinition Height="50"></RowDefinition>
+                <RowDefinition Height="35"></RowDefinition>
+                <RowDefinition Height="35"></RowDefinition>
+                <RowDefinition Height="35"></RowDefinition>
                 <RowDefinition Height="60"></RowDefinition>
                 <RowDefinition Height="60"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="50"></RowDefinition>
             </Grid.RowDefinitions>
 
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="150"></ColumnDefinition>
+                <ColumnDefinition Width="55"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
 
             <TextBlock
-            Grid.Row="0"
-            Grid.Column="0"
-            Grid.ColumnSpan="4"
-            FontSize="18"
-            Text="Bayesian Model Selection"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center">
+                Grid.Row="0"
+                Grid.Column="0"
+                Grid.ColumnSpan="4"
+                FontSize="18"
+                Text="Bayesian Model Selection"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
             </TextBlock>
 
             <!-- Data Controls -->
 
             <Button Name="delaysButton" 
-            Grid.Row="1" 
-            Grid.Column="0"
-            Grid.ColumnSpan="2"
-            Margin="10"
-            Content="Select Delay Points"
-            Command="{Binding GetDelaysRangeCommand}">
+                Grid.Row="1" 
+                Grid.Column="0"
+                Grid.ColumnSpan="1"
+                Margin="10"
+                Content="Delay Points"
+                Command="{Binding GetDelaysRangeCommand}">
             </Button>
 
             <TextBox
                 Grid.Row="1" 
-                Grid.Column="2"
-                Grid.ColumnSpan="2"
+                Grid.Column="1"
+                Grid.ColumnSpan="3"
                 IsReadOnly="True"
                 Margin="10"
                 Focusable="False"
@@ -109,18 +110,18 @@
             </TextBox>
 
             <Button Name="valuesButton" 
-                    Grid.Row="2" 
-                    Grid.Column="0"
-                    Grid.ColumnSpan="2"
-                    Margin="10"
-                    Content="Select Indifference Points"
-                    Command="{Binding GetValuesRangeCommand}">
+                Grid.Row="2" 
+                Grid.Column="0"
+                Grid.ColumnSpan="1"
+                Margin="10"
+                Content="Indifference Points"
+                Command="{Binding GetValuesRangeCommand}">
             </Button>
 
             <TextBox
                 Grid.Row="2" 
-                Grid.Column="2"
-                Grid.ColumnSpan="2"
+                Grid.Column="1"
+                Grid.ColumnSpan="3"
                 IsReadOnly="True"
                 Margin="10"
                 Focusable="False"
@@ -134,56 +135,93 @@
             </TextBox>
 
             <Label Grid.Row="3" 
-                    Grid.Column="0"
-                    Grid.ColumnSpan="2"
-                    Margin="10"
-                    VerticalContentAlignment="Center"
-                    HorizontalContentAlignment="Left"
-                    Content="Enter the Delayed Amount:">
+                Grid.Column="0"
+                Grid.ColumnSpan="1"
+                Margin="10"
+                VerticalContentAlignment="Center"
+                HorizontalContentAlignment="Left"
+                Content="Delayed Amount:">
             </Label>
 
-            <TextBox
-                    Name="maxValue"
-                    Grid.Row="3" 
-                    Grid.Column="2"
-                    Grid.ColumnSpan="2"
-                    Margin="10"
-                    VerticalContentAlignment="Center"
-                    Text="{Binding DelayedValue}">
+            <TextBox Name="maxValue"
+                Grid.Row="3" 
+                Grid.Column="1"
+                Grid.ColumnSpan="3"
+                Margin="10"
+                VerticalContentAlignment="Center"
+                Text="{Binding DelayedValue}">
             </TextBox>
 
-            <Label  Grid.Row="4" 
+            <Grid Grid.Row="4"
+                  Grid.Column="0"
+                  Grid.ColumnSpan="4"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Center">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <RadioButton 
+                    x:Name="rowSelectionButton"
                     Grid.Column="0"
-                    Grid.ColumnSpan="2"
-                    Margin="10"
-                    VerticalContentAlignment="Center"
-                    HorizontalContentAlignment="Left"
-                    Content="Calculation Mode:">
-            </Label>
+                    GroupName="Selections"
+                    Content="Horizontal Data (Left to Right)"
+                    Width="Auto"
+                    Margin="20,5,5,5"
+                    IsChecked="{Binding Path=RowModeRadio, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                </RadioButton>
 
-            <ComboBox Name="selectedModel"
-                      SelectedValuePath="Content"
-                      SelectedValue="{Binding ModeSelection}"
-                      VerticalContentAlignment="Center"
-                      HorizontalContentAlignment="Left"
-                      Grid.Row="4" 
-                      Grid.Column="2"
-                      Grid.ColumnSpan="2"
-                      Margin="10"
-                      IsSynchronizedWithCurrentItem="True">
-                <ComboBoxItem IsSelected="True">Single</ComboBoxItem>
-                <ComboBoxItem>Batched</ComboBoxItem>
-            </ComboBox>
+                <RadioButton 
+                    Grid.Column="2"
+                    GroupName="Selections"
+                    Content="Vertical Data (Top to Bottom)"
+                    Width="Auto"
+                    Margin="20,5,5,5"
+                    IsChecked="{Binding Path=ColumnModeRadio, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                </RadioButton>
+            </Grid>
 
+            <Grid Grid.Row="5"
+                  Grid.Column="0"
+                  Grid.ColumnSpan="4"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Center">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <RadioButton 
+                    x:Name="singleCalculationButton"
+                    Grid.Column="0"
+                    GroupName="Setting"
+                    Content="Single Calculation"
+                    Width="Auto"
+                    Margin="20,5,5,5"
+                    IsChecked="{Binding Path=SingleModeRadio, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                </RadioButton>
+
+                <RadioButton 
+                    Grid.Column="2"
+                    GroupName="Setting"
+                    Content="Batched Calculations"
+                    Width="Auto"
+                    Margin="20,5,5,5"
+                    IsChecked="{Binding Path=BatchModeRadio, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                </RadioButton>
+            </Grid>            
+                        
             <StackPanel
-            Orientation="Horizontal"
-            Grid.Row="5"
-            Grid.Column="0"
-            Grid.ColumnSpan="2"
-            VerticalAlignment="Center"
-            HorizontalAlignment="Right"
-            Margin="0,0,15,0">
-                <Label Content="Output Model Figures?"/>
+                Orientation="Horizontal"
+                Grid.Row="6"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Left"
+                Margin="15,0,15,0">
                 <CheckBox
                     Grid.Row="4"
                     Grid.Column="2"
@@ -192,20 +230,19 @@
                     VerticalAlignment="Center"
                     HorizontalAlignment="Left"
                     Style="{DynamicResource disableKey}"
-                    Content=""
+                    Content="Output Model Figures?"
                     IsChecked="{Binding Path=OutputFigures, Mode=TwoWay}">
                 </CheckBox>
             </StackPanel>
 
             <StackPanel
                     Orientation="Horizontal"
-                    Grid.Row="5"
+                    Grid.Row="6"
                     Grid.Column="2"
                     Grid.ColumnSpan="2"
                     VerticalAlignment="Center"
-                    HorizontalAlignment="Right"
-                    Margin="0,0,25,0">
-                <Label Content="Advanced Settings?"/>
+                    HorizontalAlignment="Left"
+                    Margin="15,0,25,0">
                 <CheckBox
                     Grid.Row="4"
                     Grid.Column="2"
@@ -214,7 +251,7 @@
                     VerticalAlignment="Center"
                     HorizontalAlignment="Left"
                     Style="{DynamicResource unlockingKey}"
-                    Content=""
+                    Content="Advanced Settings?"
                     IsChecked="{Binding Path=AdvancedMenu, Mode=TwoWay}">
                 </CheckBox>
             </StackPanel>
@@ -222,7 +259,7 @@
             <FlowDocumentScrollViewer
                 Grid.Column="0"
                 Grid.ColumnSpan="4"
-                Grid.Row="6"
+                Grid.Row="7"
                 Grid.RowSpan="2"
                 VerticalScrollBarVisibility="Hidden">
                 <FlowDocument>
@@ -245,7 +282,7 @@
             </FlowDocumentScrollViewer>
 
             <Button x:Name="calculateButton" 
-                    Grid.Row="8" 
+                    Grid.Row="9" 
                     Grid.Column="0"
                     Grid.ColumnSpan="4"
                     Margin="10"
@@ -325,7 +362,6 @@
                 </FlowDocument>
             </FlowDocumentScrollViewer>
 
-
             <StackPanel
                 Orientation="Horizontal"
                 Grid.Row="2"
@@ -390,7 +426,6 @@
                 </CheckBox>
             </StackPanel>
 
-
             <StackPanel
                 Orientation="Horizontal"
                 Grid.Row="2"
@@ -453,7 +488,6 @@
                     IsChecked="{Binding Path=RachHyperboloidModel, Mode=TwoWay}">
                 </CheckBox>
             </StackPanel>
-
 
             <FlowDocumentScrollViewer
                 Grid.Column="0"
