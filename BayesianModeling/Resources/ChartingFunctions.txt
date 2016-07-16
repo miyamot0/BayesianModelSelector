@@ -49,16 +49,22 @@ ggBar <- ggplot(barGraph.melt, aes(x = factor(variable), y=value)) +
   theme_bw() +
   theme(panel.grid.minor = element_blank()) +
   theme(panel.grid.major = element_blank()) +
+  theme(panel.border = element_rect(colour = "white", 
+                                    fill=FALSE, 
+                                    size=0)) +
+  theme(text = element_text(size=16)) +
   theme(axis.title.x = element_blank()) +
+  theme(axis.line.x = element_line(colour = "black")) +
+  theme(axis.line.y = element_line(colour = "black")) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
   theme(axis.ticks = element_blank())
 
-delaySeries = 1:endDelay
-expSeries = rep(NA,endDelay)
-hypSeries = rep(NA,endDelay)
-quaSeries = rep(NA,endDelay)
-myerSeries = rep(NA,endDelay)
-rachSeries = rep(NA,endDelay)
+delaySeries = 1:(endDelay+1)
+expSeries = rep(NA,endDelay+1)
+hypSeries = rep(NA,endDelay+1)
+quaSeries = rep(NA,endDelay+1)
+myerSeries = rep(NA,endDelay+1)
+rachSeries = rep(NA,endDelay+1)
 
 samuelsonK <- as.numeric(output[[3]]['exp.lnk'])
 ainslieK <- as.numeric(output[[2]]['Mazur.lnk'])
@@ -69,9 +75,11 @@ myerS <- as.numeric(output[[4]]['MG.s'])
 rachK <- as.numeric(output[[5]]['Rachlin.lnk'])
 rachS <- as.numeric(output[[5]]['Rachlin.s'])
 
+ed50 <- as.numeric(output[[8]]['lnED50.mostprob'])
+
 for (delay in delaySeries)
 {
-  delaySeries[delay] = delay
+  delaySeries[delay] = delay-1
   
   if(!is.na(samuelsonK))
   {
@@ -108,23 +116,32 @@ pointFrame <- data.frame(DelaysP=mDelays, ValuesP=mIndiff)
 
 logChart <- ggplot() +
   geom_line(data=totalFrame.melt, aes(x=Delays, y=value, group=variable, colour = variable)) + 
-  geom_point(data=pointFrame, aes(x=pointFrame$DelaysP, y=pointFrame$ValuesP)) +
+  geom_point(data=pointFrame, aes(x=pointFrame$DelaysP, y=pointFrame$ValuesP), size=2, shape=21, show.legend=F) +
+  geom_segment(aes(x=0, xend=exp(ed50), y=A/2, yend=A/2), inherit.aes=FALSE, linetype="dashed", show.legend = F) +
   expand_limits(y=0) +
   theme_bw() +
   theme(panel.grid.minor = element_blank()) +
-  ggtitle("Fitted Discounting Functions\n") +
   ylab("Value") +
   scale_x_continuous(trans = 'log',
                         breaks = scales::trans_breaks('log', function(x) exp(x)),
                         labels = scales::trans_format('log', scales::math_format(.x))) +
   annotation_logticks(sides = "b") +
   xlab("ln(Delay)") +
-  theme(legend.title = element_blank()) +
-  theme(legend.position = "bottom") +
-  theme(legend.direction = "vertical") + 
-  theme(panel.grid.minor = element_blank()) +
-  theme(panel.grid.major = element_blank()) +
-  guides(col = guide_legend(ncol = 3)) 
+  theme(panel.background = element_blank(),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        panel.border = element_rect(colour = "white", 
+                                    fill=FALSE, 
+                                    size=0),
+        axis.line.x = element_line(colour = "black"),
+        axis.line.y = element_line(colour = "black"),
+        axis.text.x=element_text(colour="black"),
+        axis.text.y=element_text(colour="black"),
+        text = element_text(size=16),
+        legend.position = "bottom",
+        legend.title = element_blank(),
+        legend.key = element_rect(fill = "transparent", colour = "transparent")) +
+  guides(col = guide_legend(ncol = 3))
   
 
 svg(tempf1 <- tempfile(fileext = '.svg'), width = 9, height = 9)
