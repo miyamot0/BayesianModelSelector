@@ -786,6 +786,8 @@ namespace BayesianModeling.ViewModel
             lowColDelay = cells.Min(i => i.Column.DisplayIndex);
             highColDelay = cells.Max(i => i.Column.DisplayIndex);
 
+            mWindow.dataGrid.IsReadOnly = false;
+
             if (RowModeRadio)
             {
                 if ((highRowDelay - lowRowDelay) > 0)
@@ -844,7 +846,7 @@ namespace BayesianModeling.ViewModel
             lowColValue = cells.Min(i => i.Column.DisplayIndex);
             highColValue = cells.Max(i => i.Column.DisplayIndex);
 
-            //bool single = (ModeSelection == "Single") ? true : false;
+            mWindow.dataGrid.IsReadOnly = false;
 
             if (SingleModeRadio)
             {
@@ -946,6 +948,7 @@ namespace BayesianModeling.ViewModel
             Delays = "Select delays on spreadsheet";
 
             mWindow.dataGrid.PreviewMouseUp += DataGrid_PreviewMouseUp_Delays;
+            mWindow.dataGrid.IsReadOnly = true;
         }
         
         /// <summary>
