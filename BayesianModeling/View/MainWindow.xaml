@@ -183,6 +183,12 @@
                         <Setter Property="HorizontalAlignment" Value="Stretch" />
                         <Setter Property="HorizontalContentAlignment" Value="Center" />
                         <Setter Property="MinWidth" Value="100" />
+                        <Setter Property="ContextMenu">
+                            <Setter.Value>
+                                <ContextMenu IsEnabled="False" Visibility="Hidden">
+                                </ContextMenu>
+                            </Setter.Value>
+                        </Setter>
                     </Style>
                 </DataGrid.ColumnHeaderStyle>
 
@@ -195,8 +201,25 @@
                         <Setter Property="VerticalContentAlignment" Value="Center" />
                         <Setter Property="MinWidth" Value="25" />
                         <Setter Property="Height" Value="25" />
+                        <Setter Property="ContextMenu">
+                            <Setter.Value>
+                                <ContextMenu IsEnabled="False" Visibility="Hidden">
+                                </ContextMenu>
+                            </Setter.Value>
+                        </Setter>
                     </Style>
                 </DataGrid.RowHeaderStyle>
+
+                <DataGrid.ContextMenu>
+                    <ContextMenu >
+                        <MenuItem Header="Cut" Command="{Binding CutSelectedCommand}" />
+                        <MenuItem Header="Copy" Command="Copy" />
+                        <MenuItem Header="Paste" Command="Paste" />
+                        <MenuItem Header="Paste Transposed" Command="{Binding PasteInvertedCommand}" />
+                        <Separator />
+                        <MenuItem Header="Clear" Command="{Binding DeleteSelectedCommand}" />
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
 
             </custom:CustomDataGrid>
         </DockPanel>
