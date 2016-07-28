@@ -11,9 +11,10 @@ Features include:
   - Wide range of model outputs/metrics, saveable in common spreadsheet file formats
 
 ### Version
-1.0.0.70
+1.0.0.73
 
 ### Changelog
+ * 1.0.0.73 - Various minor bug fixes, cleanup from private beta, language changes
  * 1.0.0.70 - Expanded output- Model probabilities output directly 
  * 1.0.0.69 - Finally fixed start menu word errors from pre-1.0.0.0
  * 1.0.0.68 - Few UI tweaks related to new combined VM/view
