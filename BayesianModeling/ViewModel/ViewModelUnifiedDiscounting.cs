@@ -998,6 +998,18 @@ namespace BayesianModeling.ViewModel
             }
         }
 
+        public DataGridRow GetGridRow(CustomDataGrid grid, int index)
+        {
+            DataGridRow row = (DataGridRow) grid.ItemContainerGenerator.ContainerFromIndex(index);
+            if (row == null)
+            {
+                grid.UpdateLayout();
+                grid.ScrollIntoView(grid.Items[index]);
+                row = (DataGridRow) grid.ItemContainerGenerator.ContainerFromIndex(index);
+            }
+            return row;
+        }
+
         /// <summary>
         /// Command-call to calculate based on supplied ranges and reference values (max value).
         /// Will reference user-selected options (figures, outputs, etc.) throughout calls to R
@@ -1304,6 +1316,18 @@ namespace BayesianModeling.ViewModel
             }
 
             mWin.Show();
+
+            for (int i = 0; i < mWin.dataGrid.Items.Count; i++)
+            {
+                if (mVM.RowViewModels[i].values[9] == "Noise Model")
+                {
+                    var row = GetGridRow(mWin.dataGrid, i);
+                    if (row != null)
+                    {
+                        row.Background = Brushes.Yellow;
+                    }
+                }
+            }
 
             mWindow.OutputEvents("Output Completed!");
 
@@ -1696,6 +1720,18 @@ namespace BayesianModeling.ViewModel
             mWindow.OutputEvents("Citation:: " + string.Join("", engine.Evaluate("citation('scales')$textVersion").AsCharacter().ToArray()));
 
             mWin.Show();
+
+            for (int i = 0; i < mWin.dataGrid.Items.Count; i++)
+            {
+                if (mVM.RowViewModels[i].values[15] == "Noise Model")
+                {
+                    var row = GetGridRow(mWin.dataGrid, i);
+                    if (row != null)
+                    {
+                        row.Background = Brushes.Yellow;
+                    }
+                }
+            }
 
             windowRef.calculateButton.IsEnabled = true;
         }

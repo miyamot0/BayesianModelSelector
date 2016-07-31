@@ -168,7 +168,7 @@
                                     EnableColumnVirtualization="True"
                                     RowDetailsVisibilityMode="Visible"
                                     ClipboardCopyMode="ExcludeHeader"
-                                    ItemsSource="{Binding RowViewModels}"
+                                    ItemsSource="{Binding RowViewModels, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                     BorderThickness="0"
                                     VerticalAlignment="Stretch">
 
@@ -211,7 +211,7 @@
                 </DataGrid.RowHeaderStyle>
 
                 <DataGrid.ContextMenu>
-                    <ContextMenu >
+                    <ContextMenu>                        
                         <MenuItem Header="Cut" Command="{Binding CutSelectedCommand}" />
                         <MenuItem Header="Copy" Command="Copy" />
                         <MenuItem Header="Paste" Command="Paste" />

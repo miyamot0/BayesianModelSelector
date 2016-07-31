@@ -26,6 +26,7 @@
 //----------------------------------------------------------------------------------------------
 
 using BayesianModeling.Utilities;
+using System.ComponentModel;
 
 namespace BayesianModeling.ViewModel
 {

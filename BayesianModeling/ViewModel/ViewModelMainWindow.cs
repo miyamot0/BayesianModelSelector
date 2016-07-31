@@ -80,6 +80,7 @@ using RDotNet;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -99,8 +100,8 @@ namespace BayesianModeling.ViewModel
 
         #region Observable Bindings
 
-        private ObservableCollection<RowViewModel> rowViewModels { get; set; }
-        public ObservableCollection<RowViewModel> RowViewModels
+        private SmartCollection<RowViewModel> rowViewModels { get; set; }
+        public SmartCollection<RowViewModel> RowViewModels
         {
             get { return rowViewModels; }
             set
@@ -147,6 +148,8 @@ namespace BayesianModeling.ViewModel
         public RelayCommand FileSaveNoDialogCommand { get; set; }
         public RelayCommand RecentsClearCommand { get; set; }
         public RelayCommand HelpCommand { get; set; }
+
+        public RelayCommand EventCommand { get; set; }
 
         /* Loading Commands */
 
@@ -210,7 +213,8 @@ namespace BayesianModeling.ViewModel
 
             FileSaveNoDialogCommand = new RelayCommand(param => SaveFileWithoutDialog(), param => true);
             FileOpenNoDialogCommand = new RelayCommand(param => FileOpenNoDialog(param), param => true);
-            
+
+            EventCommand = new RelayCommand(param => RaiseChangeEvent(), param => true);
             HelpCommand = new RelayCommand(param => OpenHelpWindow(), param => true);
             RecentsClearCommand = new RelayCommand(param => ClearRecents(), param => true);
             RecentStuff = new ObservableCollection<MenuItem>();
@@ -278,7 +282,7 @@ namespace BayesianModeling.ViewModel
 
             #endregion
 
-            RowViewModels = new ObservableCollection<RowViewModel>();
+            RowViewModels = new SmartCollection<RowViewModel>();
 
             ObservableCollection<RowViewModel> temp = new ObservableCollection<RowViewModel>();
 
@@ -289,7 +293,8 @@ namespace BayesianModeling.ViewModel
 
             /* Minor speedup, avoids many UI update calls */
 
-            RowViewModels = new ObservableCollection<RowViewModel>(temp);
+            RowViewModels = new SmartCollection<RowViewModel>(temp);
+            RowViewModels.CollectionChanged += this.OnCollectionChanged;
 
             if (Properties.Settings.Default.GUID.Trim().Length < 1)
             {
@@ -311,6 +316,88 @@ namespace BayesianModeling.ViewModel
                     Application.Current.Shutdown();
                 }
             }
+        }
+
+        public class SmartCollection<T> : ObservableCollection<T>
+        {
+            public SmartCollection() : base()
+            {
+                this.OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Count"));
+                this.OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Item[]"));
+                this.OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            }
+
+            public SmartCollection(IEnumerable<T> collection) : base(collection)
+            {
+                this.OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Count"));
+                this.OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Item[]"));
+                this.OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            }
+
+            public SmartCollection(List<T> list)
+                : base(list)
+            {
+                this.OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Count"));
+                this.OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Item[]"));
+                this.OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            }
+
+            public void AddRange(IEnumerable<T> range)
+            {
+                foreach (var item in range)
+                {
+                    Items.Add(item);
+                }
+
+                this.OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Count"));
+                this.OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Item[]"));
+                this.OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            }
+
+            public void Reset(IEnumerable<T> range)
+            {
+                this.Items.Clear();
+
+                AddRange(range);
+            }
+        }
+
+        void RaiseChangeEvent()
+        {
+            Console.Out.WriteLine("fire");
+            //RowViewModels.Add(new RowViewModel());
+            //RowViewModels.Remove(new RowViewModel());
+        }
+
+        void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            //Get the sender observable collection
+            ObservableCollection<RowViewModel> obsSender = sender as ObservableCollection<RowViewModel>;
+
+            if (obsSender == null)
+            {
+                Console.Out.WriteLine("was null");
+                return;
+            }
+
+            List<RowViewModel> editedOrRemovedItems = new List<RowViewModel>();
+            foreach (RowViewModel newItem in e.NewItems)
+            {
+                //editedOrRemovedItems.Add(newItem);
+                Console.Out.WriteLine("new: " + newItem);
+            }
+
+            if (e.OldItems != null)
+            {
+                foreach (RowViewModel oldItem in e.OldItems)
+                {
+                    //editedOrRemovedItems.Add(oldItem);
+                    Console.Out.WriteLine("old: " + oldItem);
+                }
+            }
+
+            //Get the action which raised the collection changed event
+            //NotifyCollectionChangedAction action = e.Action;
         }
 
         #region UI
@@ -1236,7 +1323,7 @@ namespace BayesianModeling.ViewModel
                             return;
                         }
 
-                        RowViewModels = new ObservableCollection<RowViewModel>(temp);
+                        RowViewModels = new SmartCollection<RowViewModel>(temp);
 
                         UpdateTitle(openFileDialog1.SafeFileName);
                         haveFileLoaded = true;
@@ -1244,7 +1331,7 @@ namespace BayesianModeling.ViewModel
                     else if (mExt.Equals(".csv"))
                     {
                         ObservableCollection<RowViewModel> temp = OpenXMLHelper.ReadFromCSVFile(openFileDialog1.FileName);
-                        RowViewModels = new ObservableCollection<RowViewModel>(temp);
+                        RowViewModels = new SmartCollection<RowViewModel>(temp);
 
                         UpdateTitle(openFileDialog1.SafeFileName);
                         haveFileLoaded = true;
@@ -1300,7 +1387,7 @@ namespace BayesianModeling.ViewModel
                         return;
                     }
 
-                    RowViewModels = new ObservableCollection<RowViewModel>(temp);
+                    RowViewModels = new SmartCollection<RowViewModel>(temp);
 
                     UpdateTitle(Path.GetFileName(filePath));
                     haveFileLoaded = true;
@@ -1314,7 +1401,7 @@ namespace BayesianModeling.ViewModel
                         return;
                     }
 
-                    RowViewModels = new ObservableCollection<RowViewModel>(temp);
+                    RowViewModels = new SmartCollection<RowViewModel>(temp);
 
                     UpdateTitle(Path.GetFileName(filePath));
                     haveFileLoaded = true;
