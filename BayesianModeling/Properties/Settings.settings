@@ -12,10 +12,10 @@
       <Value Profile="(Default)">600</Value>
     </Setting>
     <Setting Name="ResultWidth" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">400</Value>
+      <Value Profile="(Default)">600</Value>
     </Setting>
     <Setting Name="ResultHeight" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">400</Value>
+      <Value Profile="(Default)">600</Value>
     </Setting>
     <Setting Name="Updated" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
