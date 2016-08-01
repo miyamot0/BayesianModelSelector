@@ -1691,8 +1691,10 @@ namespace BayesianModeling.ViewModel
                         mVM.RowViewModels[0].values[6] = "Myerson-Hyperboloid - s: ";
                         mVM.RowViewModels[0].values[7] = "Rachlin-Hyperboloid - k: ";
                         mVM.RowViewModels[0].values[8] = "Rachlin-Hyperboloid - s: ";
+                        mVM.RowViewModels[0].values[9] = "Most competitive model: ";
+                        mVM.RowViewModels[0].values[10] = "ED50 of Most Competitive Model - ln(x): ";
 
-                        int colTitle = 9;
+                        int colTitle = 11;
 
                         if (OutputProb)
                         {
@@ -1796,8 +1798,11 @@ namespace BayesianModeling.ViewModel
                     //mVM.RowViewModels[mIndex + 1].values[7] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.lnk'])").AsVector().First().ToString();
                     mVM.RowViewModels[mIndex + 1].values[8] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.s'])").AsVector().First().ToString();
 
+                    mVM.RowViewModels[mIndex + 1].values[9] = items.First().Key.ToString();
+                    mVM.RowViewModels[mIndex + 1].values[10] = ed50Best.ToString();
+
                     int row = 9;
-                    int col = 9;
+                    int col = 11;
 
                     if (OutputProb)
                     {
