@@ -332,6 +332,39 @@ namespace BayesianModeling.ViewModel
             }
         }
 
+        private bool outputBIC = false;
+        public bool OutputBIC
+        {
+            get { return outputBIC; }
+            set
+            {
+                outputBIC = value;
+                OnPropertyChanged("OutputBIC");
+            }
+        }
+
+        private bool outputProb = false;
+        public bool OutputProb
+        {
+            get { return outputProb; }
+            set
+            {
+                outputProb = value;
+                OnPropertyChanged("OutputProb");
+            }
+        }
+
+        private bool outputRanks = false;
+        public bool OutputRanks
+        {
+            get { return outputRanks; }
+            set
+            {
+                outputRanks = value;
+                OnPropertyChanged("OutputRanks");
+            }
+        }
+
         private bool possibleFigures = false;
         public bool PossibleFigures
         {
@@ -1280,28 +1313,75 @@ namespace BayesianModeling.ViewModel
             mVM.RowViewModels[0].values[10] = "ED50 of Most Competitive Model - ln(x): ";
             mVM.RowViewModels[1].values[10] = ed50Best.ToString();
 
-            int col = 11, rank = 1;
+            int col = 11;
 
-            foreach (KeyValuePair<string, double> pair in items)
+            if (OutputProb)
             {
-                mVM.RowViewModels[0].values[col] = pair.Key + "(Ranked #" + rank + ")";
-                mVM.RowViewModels[1].values[col] = pair.Value.ToString();
-                rank++;
+
+                mVM.RowViewModels[0].values[col] = "Noise Model Probs";
+                mVM.RowViewModels[1].values[col] = noiseProb.ToString("0.000");
+                col++;
+
+                mVM.RowViewModels[0].values[col] = "Exponential Model Probs";
+                mVM.RowViewModels[1].values[col] = exponProb.ToString("0.000");
+                col++;
+
+                mVM.RowViewModels[0].values[col] = "Hyperbolic Model Probs";
+                mVM.RowViewModels[1].values[col] = hyperProb.ToString("0.000");
+                col++;
+
+                mVM.RowViewModels[0].values[col] = "Quasi Hyperbolic Model Probs";
+                mVM.RowViewModels[1].values[col] = quasiProb.ToString("0.000");
+                col++;
+
+                mVM.RowViewModels[0].values[col] = "Hyperboloid (Myerson) Model Probs";
+                mVM.RowViewModels[1].values[col] = myerProb.ToString("0.000");
+                col++;
+
+                mVM.RowViewModels[0].values[col] = "Hyperboloid (Rachlin) Model Probs";
+                mVM.RowViewModels[1].values[col] = rachProb.ToString("0.000");
                 col++;
             }
 
-            mVM.RowViewModels[0].values[17] = "Noise Model Probs";
-            mVM.RowViewModels[1].values[17] = noiseProb.ToString("0.000");
-            mVM.RowViewModels[0].values[18] = "Exponential Model Probs";
-            mVM.RowViewModels[1].values[18] = exponProb.ToString("0.000");
-            mVM.RowViewModels[0].values[19] = "Hyperbolic Model Probs";
-            mVM.RowViewModels[1].values[19] = hyperProb.ToString("0.000");
-            mVM.RowViewModels[0].values[20] = "Quasi Hyperbolic Model Probs";
-            mVM.RowViewModels[1].values[20] = quasiProb.ToString("0.000");
-            mVM.RowViewModels[0].values[21] = "Hyperboloid (Myerson) Model Probs";
-            mVM.RowViewModels[1].values[21] = myerProb.ToString("0.000");
-            mVM.RowViewModels[0].values[22] = "Hyperboloid (Rachlin) Model Probs";
-            mVM.RowViewModels[1].values[22] = rachProb.ToString("0.000");
+            if (OutputBIC)
+            {
+                mVM.RowViewModels[0].values[col] = "Noise Model BIC";
+                mVM.RowViewModels[1].values[col] = engine.Evaluate("as.numeric(output[[1]]['noise.BIC'])").AsVector().First().ToString();
+                col++;
+
+                mVM.RowViewModels[0].values[col] = "Exponential Model BIC";
+                mVM.RowViewModels[1].values[col] = engine.Evaluate("as.numeric(output[[3]]['exp.BIC'])").AsVector().First().ToString();
+                col++;
+
+                mVM.RowViewModels[0].values[col] = "Hyperbolic Model BIC";
+                mVM.RowViewModels[1].values[col] = engine.Evaluate("as.numeric(output[[2]]['Mazur.BIC'])").AsVector().First().ToString();
+                col++;
+
+                mVM.RowViewModels[0].values[col] = "Quasi Hyperbolic Model BIC";
+                mVM.RowViewModels[1].values[col] = engine.Evaluate("as.numeric(output[[9]]['BD.BIC'])").AsVector().First().ToString();
+                col++;
+
+                mVM.RowViewModels[0].values[col] = "Hyperboloid (Myerson) Model BIC";
+                mVM.RowViewModels[1].values[col] = engine.Evaluate("as.numeric(output[[4]]['MG.BIC'])").AsVector().First().ToString();
+                col++;
+
+                mVM.RowViewModels[0].values[col] = "Hyperboloid (Rachlin) Model BIC";
+                mVM.RowViewModels[1].values[col] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.BIC'])").AsVector().First().ToString();
+                col++;
+            }
+
+            if (OutputRanks)
+            {
+                int rank = 1;
+
+                foreach (KeyValuePair<string, double> pair in items)
+                {
+                    mVM.RowViewModels[0].values[col] = pair.Key + " Probability (Ranked #" + rank + ")";
+                    mVM.RowViewModels[1].values[col] = pair.Value.ToString();
+                    rank++;
+                    col++;
+                }
+            }
 
             mVM.RowViewModels[3].values[0] = "Delayed Value";
             mVM.RowViewModels[3].values[1] = DelayedValue;
@@ -1611,20 +1691,56 @@ namespace BayesianModeling.ViewModel
                         mVM.RowViewModels[0].values[6] = "Myerson-Hyperboloid - s: ";
                         mVM.RowViewModels[0].values[7] = "Rachlin-Hyperboloid - k: ";
                         mVM.RowViewModels[0].values[8] = "Rachlin-Hyperboloid - s: ";
-                        mVM.RowViewModels[0].values[9] = "Model Competition (#1)";
-                        mVM.RowViewModels[0].values[10] = "#2";
-                        mVM.RowViewModels[0].values[11] = "#3";
-                        mVM.RowViewModels[0].values[12] = "#4";
-                        mVM.RowViewModels[0].values[13] = "#5";
-                        mVM.RowViewModels[0].values[14] = "#6";
-                        mVM.RowViewModels[0].values[15] = "Most competitive model: ";
-                        mVM.RowViewModels[0].values[16] = "ED50 of Most Competitive Model - ln(x): ";
-                        mVM.RowViewModels[0].values[17] = "Noise Model Probs";
-                        mVM.RowViewModels[0].values[18] = "Exponential Model Probs";
-                        mVM.RowViewModels[0].values[19] = "Hyperbolic Model Probs";
-                        mVM.RowViewModels[0].values[20] = "Quasi Hyperbolic Model Probs";
-                        mVM.RowViewModels[0].values[21] = "Hyperboloid (Myerson) Model Probs";
-                        mVM.RowViewModels[0].values[22] = "Hyperboloid (Rachlin) Model Probs";
+
+                        int colTitle = 9;
+
+                        if (OutputProb)
+                        {
+                            mVM.RowViewModels[0].values[colTitle] = "Noise Model Probs";
+                            colTitle++;
+                            mVM.RowViewModels[0].values[colTitle] = "Exponential Model Probs";
+                            colTitle++;
+                            mVM.RowViewModels[0].values[colTitle] = "Hyperbolic Model Probs";
+                            colTitle++;
+                            mVM.RowViewModels[0].values[colTitle] = "Quasi Hyperbolic Model Probs";
+                            colTitle++;
+                            mVM.RowViewModels[0].values[colTitle] = "Hyperboloid (Myerson) Model Probs";
+                            colTitle++;
+                            mVM.RowViewModels[0].values[colTitle] = "Hyperboloid (Rachlin) Model Probs";
+                            colTitle++;
+                        }
+
+                        if (OutputBIC)
+                        {
+                            mVM.RowViewModels[0].values[colTitle] = "Noise Model BIC";
+                            colTitle++;
+                            mVM.RowViewModels[0].values[colTitle] = "Exponential Model BIC";
+                            colTitle++;
+                            mVM.RowViewModels[0].values[colTitle] = "Hyperbolic Model BIC";
+                            colTitle++;
+                            mVM.RowViewModels[0].values[colTitle] = "Quasi Hyperbolic Model BIC";
+                            colTitle++;
+                            mVM.RowViewModels[0].values[colTitle] = "Hyperboloid (Myerson) Model BIC";
+                            colTitle++;
+                            mVM.RowViewModels[0].values[colTitle] = "Hyperboloid (Rachlin) Model BIC";
+                            colTitle++;
+                        }
+
+                        if (OutputRanks)
+                        {
+                            mVM.RowViewModels[0].values[colTitle] = "Ranked #1";
+                            colTitle++;
+                            mVM.RowViewModels[0].values[colTitle] = "Ranked #2";
+                            colTitle++;
+                            mVM.RowViewModels[0].values[colTitle] = "Ranked #3";
+                            colTitle++;
+                            mVM.RowViewModels[0].values[colTitle] = "Ranked #4";
+                            colTitle++;
+                            mVM.RowViewModels[0].values[colTitle] = "Ranked #5";
+                            colTitle++;
+                            mVM.RowViewModels[0].values[colTitle] = "Ranked #6";
+                            colTitle++;
+                        }
                     }
 
                     mVM.RowViewModels[mIndex + 1].values[0] = "Series #" + (int)(mIndex + 1);
@@ -1681,6 +1797,65 @@ namespace BayesianModeling.ViewModel
                     mVM.RowViewModels[mIndex + 1].values[8] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.s'])").AsVector().First().ToString();
 
                     int row = 9;
+                    int col = 9;
+
+                    if (OutputProb)
+                    {
+                        mVM.RowViewModels[mIndex + 1].values[col] = noiseProb.ToString("0.000");
+                        col++;
+
+                        mVM.RowViewModels[mIndex + 1].values[col] = exponProb.ToString("0.000");
+                        col++;
+
+                        mVM.RowViewModels[mIndex + 1].values[col] = hyperProb.ToString("0.000");
+                        col++;
+
+                        mVM.RowViewModels[mIndex + 1].values[col] = quasiProb.ToString("0.000");
+                        col++;
+
+                        mVM.RowViewModels[mIndex + 1].values[col] = myerProb.ToString("0.000");
+                        col++;
+
+                        mVM.RowViewModels[mIndex + 1].values[col] = rachProb.ToString("0.000");
+                        col++;
+                    }
+
+                    if (OutputBIC)
+                    {
+                        mVM.RowViewModels[mIndex + 1].values[col] = engine.Evaluate("as.numeric(output[[1]]['noise.BIC'])").AsVector().First().ToString();
+                        col++;
+
+                        mVM.RowViewModels[mIndex + 1].values[col] = engine.Evaluate("as.numeric(output[[3]]['exp.BIC'])").AsVector().First().ToString();
+                        col++;
+
+                        mVM.RowViewModels[mIndex + 1].values[col] = engine.Evaluate("as.numeric(output[[2]]['Mazur.BIC'])").AsVector().First().ToString();
+                        col++;
+
+                        mVM.RowViewModels[mIndex + 1].values[col] = engine.Evaluate("as.numeric(output[[9]]['BD.BIC'])").AsVector().First().ToString();
+                        col++;
+
+                        mVM.RowViewModels[mIndex + 1].values[col] = engine.Evaluate("as.numeric(output[[4]]['MG.BIC'])").AsVector().First().ToString();
+                        col++;
+
+                        mVM.RowViewModels[mIndex + 1].values[col] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.BIC'])").AsVector().First().ToString();
+                        col++;
+                    }
+
+                    if (OutputRanks)
+                    {
+                        int rank = 1;
+
+                        foreach (KeyValuePair<string, double> pair in items)
+                        {
+                            mVM.RowViewModels[mIndex + 1].values[col] = pair.Key + " Probability (" + pair.Value.ToString() + ")";
+                            //mVM.RowViewModels[mIndex + 1].values[col] = pair.Value.ToString();
+                            rank++;
+                            col++;
+                        }
+                    }
+
+
+                    /*
                     foreach (KeyValuePair<string, double> pair in items)
                     {
                         mVM.RowViewModels[mIndex + 1].values[row] = pair.Key + " - (" + pair.Value.ToString("0.000") + ")";
@@ -1696,6 +1871,36 @@ namespace BayesianModeling.ViewModel
                     mVM.RowViewModels[mIndex + 1].values[20] = quasiProb.ToString("0.000");
                     mVM.RowViewModels[mIndex + 1].values[21] = myerProb.ToString("0.000");
                     mVM.RowViewModels[mIndex + 1].values[22] = rachProb.ToString("0.000");
+
+                    string mBIC = string.Empty;
+
+                    if (items.First().Key.ToString() == "Noise Model")
+                    {
+                        mBIC = engine.Evaluate("as.numeric(output[[1]]['noise.BIC'])").AsVector().First().ToString();
+                    }
+                    else if (items.First().Key.ToString() == "Exponential Model")
+                    {
+                        mBIC = engine.Evaluate("as.numeric(output[[3]]['exp.BIC'])").AsVector().First().ToString();
+                    }
+                    else if (items.First().Key.ToString() == "Hyperbolic Model")
+                    {
+                        mBIC = engine.Evaluate("as.numeric(output[[2]]['Mazur.BIC'])").AsVector().First().ToString();
+                    }
+                    else if (items.First().Key.ToString() == "Quasi Hyperbolic Model")
+                    {
+                        mBIC = engine.Evaluate("as.numeric(output[[9]]['BD.BIC'])").AsVector().First().ToString();
+                    }
+                    else if (items.First().Key.ToString() == "Hyperboloid (Myerson) Model")
+                    {
+                        mBIC = engine.Evaluate("as.numeric(output[[4]]['MG.BIC'])").AsVector().First().ToString();
+                    }
+                    else if (items.First().Key.ToString() == "Hyperboloid (Rachlin) Model")
+                    {
+                        mBIC = engine.Evaluate("as.numeric(output[[5]]['Rachlin.BIC'])").AsVector().First().ToString();
+                    }
+
+                    mVM.RowViewModels[mIndex + 1].values[23] = mBIC;
+                    */
 
                 }
                 catch (ParseException pe)
