@@ -78,7 +78,7 @@
                                     Grid.ColumnSpan="1"
                                     IsReadOnly="True"
                                     EnableRowVirtualization="True"
-                                    EnableColumnVirtualization="True"
+                                    EnableColumnVirtualization="False"
                                     CanUserReorderColumns="False"
                                     CanUserSortColumns="False"
                                     RowDetailsVisibilityMode="Visible"

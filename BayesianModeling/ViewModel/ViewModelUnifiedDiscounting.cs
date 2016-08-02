@@ -1399,6 +1399,7 @@ namespace BayesianModeling.ViewModel
 
             for (int i = 0; i < mWin.dataGrid.Items.Count; i++)
             {
+
                 if (mVM.RowViewModels[i].values[9] == "Noise Model")
                 {
                     var row = GetGridRow(mWin.dataGrid, i);
@@ -1531,7 +1532,7 @@ namespace BayesianModeling.ViewModel
 
             List<double> xRange = null;
             string[,] wholeRange = null;
-            
+
             if (RowModeRadio)
             {
                 xRange = DataGridTools.GetRangedValuesVM(lowColDelay, highColDelay, lowRowDelay, mWindow.dataGrid.ItemsSource);
@@ -1801,7 +1802,7 @@ namespace BayesianModeling.ViewModel
                     mVM.RowViewModels[mIndex + 1].values[9] = items.First().Key.ToString();
                     mVM.RowViewModels[mIndex + 1].values[10] = ed50Best.ToString();
 
-                    int row = 9;
+                    //int row = 9;
                     int col = 11;
 
                     if (OutputProb)
@@ -1853,60 +1854,10 @@ namespace BayesianModeling.ViewModel
                         foreach (KeyValuePair<string, double> pair in items)
                         {
                             mVM.RowViewModels[mIndex + 1].values[col] = pair.Key + " Probability (" + pair.Value.ToString() + ")";
-                            //mVM.RowViewModels[mIndex + 1].values[col] = pair.Value.ToString();
                             rank++;
                             col++;
                         }
                     }
-
-
-                    /*
-                    foreach (KeyValuePair<string, double> pair in items)
-                    {
-                        mVM.RowViewModels[mIndex + 1].values[row] = pair.Key + " - (" + pair.Value.ToString("0.000") + ")";
-                        row++;
-                    }
-
-                    mVM.RowViewModels[mIndex + 1].values[15] = items.First().Key.ToString();
-                    mVM.RowViewModels[mIndex + 1].values[16] = ed50Best.ToString();
-
-                    mVM.RowViewModels[mIndex + 1].values[17] = noiseProb.ToString("0.000");
-                    mVM.RowViewModels[mIndex + 1].values[18] = exponProb.ToString("0.000");
-                    mVM.RowViewModels[mIndex + 1].values[19] = hyperProb.ToString("0.000");
-                    mVM.RowViewModels[mIndex + 1].values[20] = quasiProb.ToString("0.000");
-                    mVM.RowViewModels[mIndex + 1].values[21] = myerProb.ToString("0.000");
-                    mVM.RowViewModels[mIndex + 1].values[22] = rachProb.ToString("0.000");
-
-                    string mBIC = string.Empty;
-
-                    if (items.First().Key.ToString() == "Noise Model")
-                    {
-                        mBIC = engine.Evaluate("as.numeric(output[[1]]['noise.BIC'])").AsVector().First().ToString();
-                    }
-                    else if (items.First().Key.ToString() == "Exponential Model")
-                    {
-                        mBIC = engine.Evaluate("as.numeric(output[[3]]['exp.BIC'])").AsVector().First().ToString();
-                    }
-                    else if (items.First().Key.ToString() == "Hyperbolic Model")
-                    {
-                        mBIC = engine.Evaluate("as.numeric(output[[2]]['Mazur.BIC'])").AsVector().First().ToString();
-                    }
-                    else if (items.First().Key.ToString() == "Quasi Hyperbolic Model")
-                    {
-                        mBIC = engine.Evaluate("as.numeric(output[[9]]['BD.BIC'])").AsVector().First().ToString();
-                    }
-                    else if (items.First().Key.ToString() == "Hyperboloid (Myerson) Model")
-                    {
-                        mBIC = engine.Evaluate("as.numeric(output[[4]]['MG.BIC'])").AsVector().First().ToString();
-                    }
-                    else if (items.First().Key.ToString() == "Hyperboloid (Rachlin) Model")
-                    {
-                        mBIC = engine.Evaluate("as.numeric(output[[5]]['Rachlin.BIC'])").AsVector().First().ToString();
-                    }
-
-                    mVM.RowViewModels[mIndex + 1].values[23] = mBIC;
-                    */
-
                 }
                 catch (ParseException pe)
                 {
@@ -1933,17 +1884,78 @@ namespace BayesianModeling.ViewModel
 
             for (int i = 0; i < mWin.dataGrid.Items.Count; i++)
             {
-                if (mVM.RowViewModels[i].values[15] == "Noise Model")
-                {
-                    var row = GetGridRow(mWin.dataGrid, i);
-                    if (row != null)
-                    {
-                        row.Background = Brushes.Yellow;
-                    }
-                }
-            }
+                int col = 11;
 
-            windowRef.calculateButton.IsEnabled = true;
+                var row = GetGridRow(mWin.dataGrid, i);
+
+                if (row == null) continue;
+
+                bool grayOut = true;
+
+                if (OutputProb)
+                {
+                    if (grayOut)
+                    {
+                        for (int j = 0; j < 6; j++)
+                        {
+                            var mCell = mWin.dataGrid.Columns[col].GetCellContent(row).Parent as DataGridCell;
+                            mCell.Background = Brushes.LightGray;
+                            col++;
+                        }
+                    }
+                    else
+                    {
+                        col += 6;
+                    }
+
+                    grayOut = !grayOut;
+                }
+
+                if (OutputBIC)
+                {
+                    if (grayOut)
+                    {
+                        for (int j = 0; j < 6; j++)
+                        {
+                            var mCell = mWin.dataGrid.Columns[col].GetCellContent(row).Parent as DataGridCell;
+                            mCell.Background = Brushes.LightGray;
+                            col++;
+                        }
+                    }
+                    else
+                    {
+                        col += 6;
+                    }
+
+                    grayOut = !grayOut;
+                }
+
+                if (OutputRanks)
+                {
+                    if (grayOut)
+                    {
+                        for (int j = 0; j < 6; j++)
+                        {
+                            var mCell = mWin.dataGrid.Columns[col].GetCellContent(row).Parent as DataGridCell;
+                            mCell.Background = Brushes.LightGray;
+                            col++;
+                        }
+                    }
+                    else
+                    {
+                        col += 6;
+                    }
+
+                    grayOut = !grayOut;
+                }
+
+                if (mVM.RowViewModels[i].values[9] == "Noise Model")
+                {
+                    row.Background = Brushes.Yellow;
+                }
+
+                windowRef.calculateButton.IsEnabled = true;
+            }
         }
 
         #endregion
