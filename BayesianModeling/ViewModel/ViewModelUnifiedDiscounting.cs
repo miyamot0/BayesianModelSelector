@@ -1031,6 +1031,12 @@ namespace BayesianModeling.ViewModel
             }
         }
 
+        /// <summary>
+        /// Grabs row from the current grid (results only)
+        /// </summary>
+        /// <param name="grid">Datagrid from results</param>
+        /// <param name="index">Index from results</param>
+        /// <returns></returns>
         public DataGridRow GetGridRow(CustomDataGrid grid, int index)
         {
             DataGridRow row = (DataGridRow) grid.ItemContainerGenerator.ContainerFromIndex(index);
@@ -1399,14 +1405,74 @@ namespace BayesianModeling.ViewModel
 
             for (int i = 0; i < mWin.dataGrid.Items.Count; i++)
             {
+                col = 11;
+
+                var row = GetGridRow(mWin.dataGrid, i);
+
+                if (row == null) continue;
 
                 if (mVM.RowViewModels[i].values[9] == "Noise Model")
                 {
-                    var row = GetGridRow(mWin.dataGrid, i);
-                    if (row != null)
+                    row.Background = Brushes.Yellow;
+                }
+
+                bool grayOut = true;
+
+                if (OutputProb)
+                {
+                    if (grayOut)
                     {
-                        row.Background = Brushes.Yellow;
+                        for (int j = 0; j < 6; j++)
+                        {
+                            var mCell = mWin.dataGrid.Columns[col].GetCellContent(row).Parent as DataGridCell;
+                            mCell.Background = Brushes.LightGray;
+                            col++;
+                        }
                     }
+                    else
+                    {
+                        col += 6;
+                    }
+
+                    grayOut = !grayOut;
+                }
+
+                if (OutputBIC)
+                {
+                    if (grayOut)
+                    {
+                        for (int j = 0; j < 6; j++)
+                        {
+                            var mCell = mWin.dataGrid.Columns[col].GetCellContent(row).Parent as DataGridCell;
+                            mCell.Background = Brushes.LightGray;
+                            col++;
+                        }
+                    }
+                    else
+                    {
+                        col += 6;
+                    }
+
+                    grayOut = !grayOut;
+                }
+
+                if (OutputRanks)
+                {
+                    if (grayOut)
+                    {
+                        for (int j = 0; j < 6; j++)
+                        {
+                            var mCell = mWin.dataGrid.Columns[col].GetCellContent(row).Parent as DataGridCell;
+                            mCell.Background = Brushes.LightGray;
+                            col++;
+                        }
+                    }
+                    else
+                    {
+                        col += 6;
+                    }
+
+                    grayOut = !grayOut;
                 }
             }
 
@@ -1490,7 +1556,7 @@ namespace BayesianModeling.ViewModel
                 }
 
                 mWindow.OutputEvents("Please remember to cite the packages used in this process!");
-                mWindow.OutputEvents("Citation:: Gilroy, S. G., Franck, C. T. & Hantula, D. A. (2016). Technical Report: The Bayesian Model Selector: Statistical discounting software.");
+                mWindow.OutputEvents("Citation:: Gilroy, S. P., Franck, C. T. & Hantula, D. A. (2016). The Bayesian Model Selector: Statistical discounting software.");
                 mWindow.OutputEvents("Citation:: Franck, C. T., Koffarnus, M. N., House, L. L. & Bickel, W. K. (2015). Accurate characterization of delay discounting: a multiple model approach using approximate Bayesian model selection and a unified discounting measure. Journal of the Experimental Analysis of Behavior, 103(1), 218-233.");
                 mWindow.OutputEvents("Citation:: " + string.Join("", engine.Evaluate("citation()$textVersion").AsCharacter().ToArray()));
                 mWindow.OutputEvents("Citation:: " + string.Join("", engine.Evaluate("citation('ggplot2')$textVersion").AsCharacter().ToArray()));
@@ -1871,7 +1937,7 @@ namespace BayesianModeling.ViewModel
 
             mWindow.OutputEvents("Final Calculations Completed!");
             mWindow.OutputEvents("Please remember to cite the packages used in this process!");
-            mWindow.OutputEvents("Citation:: Gilroy, S. G., Franck, C. T. & Hantula, D. A. (2016). Technical Report: The Bayesian Model Selector: Statistical discounting software.");
+            mWindow.OutputEvents("Citation:: Gilroy, S. P., Franck, C. T. & Hantula, D. A. (2016). The Bayesian Model Selector: Statistical discounting software.");
             mWindow.OutputEvents("Citation:: Franck, C. T., Koffarnus, M. N., House, L. L. & Bickel, W. K. (2015). Accurate characterization of delay discounting: a multiple model approach using approximate Bayesian model selection and a unified discounting measure. Journal of the Experimental Analysis of Behavior, 103(1), 218-233.");
             mWindow.OutputEvents("Citation:: " + string.Join("", engine.Evaluate("citation()$textVersion").AsCharacter().ToArray()));
             mWindow.OutputEvents("Citation:: " + string.Join("", engine.Evaluate("citation('ggplot2')$textVersion").AsCharacter().ToArray()));
