@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         ResizeMode="NoResize"
         Height="500" 
-        Width="425"
+        Width="850"
         Loaded="Window_Loaded"
         Closing="Window_Closing"
         WindowStartupLocation="CenterOwner"
@@ -275,7 +275,7 @@
                     <Paragraph FontSize="12" FontFamily="Segoe UI" Padding="0,5,0,0">
                         Batched computation permits mass calculation and output and single mode 
                         provides singular output with accompanying graphics. This operation requires that ranges of Indifference Points
-                        (with descending values) all align with a single range of Delay Points and that all series are based 
+                        (with descending values) all align with a single range of Delay Points (with increasing values) and that all series are based 
                         on the same delayed amount.
                     </Paragraph>
                 </FlowDocument>
@@ -318,16 +318,17 @@
             </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
+                <RowDefinition Height="40"></RowDefinition>
+                <RowDefinition Height="45"></RowDefinition>
+                <RowDefinition Height="35"></RowDefinition>
+                <RowDefinition Height="35"></RowDefinition>
+                <RowDefinition Height="35"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="35"></RowDefinition>
+                <RowDefinition Height="35"></RowDefinition>
+                <RowDefinition Height="35"></RowDefinition>
             </Grid.RowDefinitions>
 
             <TextBlock
@@ -512,19 +513,19 @@
                         FontSize="12" 
                         FontFamily="Segoe UI" 
                         Padding="0,5,0,0">
-                        Bayesian Model Selector can determine the best performing model of 
-                        discounting from a selection of common discounting models. You may 
-                        select models for comparison below.  It is worth noting that by default,
-                        it is recommended that all models be considered.
+                        The Bayesian Model Selector determines the best performing model 
+                        from common models of discounting. You may optionally exclude specific 
+                        models from the comparison above.  It is worth noting that by default,
+                        it is recommended that all models be considered. 
+                        For a more in-depth review of these methods, please review the work from Franck et al., 2015.                        
                     </Paragraph>
-
-                    <Paragraph 
+                    <Paragraph
                         FontSize="12" 
                         FontFamily="Segoe UI" 
                         Padding="0,5,0,0">
-                        For a more in-depth review of these methods, please review the work
-                        from Franck et al., 2015.
+                        Optional outputs are available below as well:
                     </Paragraph>
+
                 </FlowDocument>
             </FlowDocumentScrollViewer>
 
