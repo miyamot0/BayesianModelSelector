@@ -33,30 +33,37 @@
             <FlowDocument>
                 <Paragraph>
                     <InlineUIContainer>
-                        <Image Source="/Resources/SNS.png" Width="90" Height="90" Margin="0,0,30,0" />
+                        <Image
+        Width="90" Source="/Resources/SNS.png" Margin="0,0,30,0" Height="90"/>
                     </InlineUIContainer>
+                    <Run Text=" "/>
+                    <Run Text=" "/>
                     <Run Text=" "/>
                     <Run BaselineAlignment="Center" FontSize="22" Text="Bayesian Model Selector"/>
                 </Paragraph>
                 <Paragraph>
                     <Run Text="The "/>
+                    <Run Text=" "/>
                     <Bold>
                         <Run Text="Bayesian Model Selection"/>
                     </Bold>
-                    <Run Text=" procedure is an implementation of earlier work by Chris Franck et al., 2015 designed to aid in the selection of a temporal discounting model. This work was designed using the Bayesian Information Criterion as a means for comparison between between discounting models"/>
-                    <LineBreak/>
-                    <LineBreak/>
-                    <Run Text="A link to the original work is included in the credits below:" />
+                    <Run Text=" "/>
+                    <Run Text=" procedure is an implementation of earlier work by Chris Franck et al., 2015 and was designed to aid in the selection of temporal discounting models. This work utilized the Bayesian Information Criterion as a metric for comparing between fitted discounting models."/>
                 </Paragraph>
                 <Paragraph>
-                    The 
+                    <Run Text="The "/>
                     <Bold>
                         <Hyperlink NavigateUri="http://www.smallnstats.com/">
                             <Run Text="Small n Stats"/>
                         </Hyperlink>
                     </Bold>
+                    <Run Text=" "/>
                     <Run Text=" project references an on-going endeavor to expand upon the tools available to researchers and practitioners in the behavioral sciences."/>
-                    <Run Text="Small n Stats is developed and maintained by Shawn P. Gilroy." />
+                    <Run Text=" "/>
+                    <Run Text="Small n Stats is developed and maintained by Shawn P. Gilroy."/>
+                </Paragraph>
+                <Paragraph>
+                    <Run Text="A link to the original Franck et al., 2015 work is included in the credits and acknowledgment section below:"/>
                 </Paragraph>
                 <Paragraph>
                     <Bold>
