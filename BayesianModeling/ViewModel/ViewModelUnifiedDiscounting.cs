@@ -316,6 +316,8 @@ namespace BayesianModeling.ViewModel
 
         private List<string> filesList = new List<string>();
 
+        private string mPrecision = "0.00000000";
+
         /* UI Logic */
 
         bool failed;
@@ -1260,7 +1262,7 @@ namespace BayesianModeling.ViewModel
             double modExp = double.NaN;
             if (double.TryParse(engine.Evaluate("as.numeric(output[[3]]['exp.lnk'])").AsVector().First().ToString(), out modExp))
             {
-                mVM.RowViewModels[1].values[1] = Math.Exp(modExp).ToString();
+                mVM.RowViewModels[1].values[1] = Math.Exp(modExp).ToString(mPrecision);
             }
             else
             {
@@ -1272,7 +1274,7 @@ namespace BayesianModeling.ViewModel
             double modHyp = double.NaN;
             if (double.TryParse(engine.Evaluate("as.numeric(output[[2]]['Mazur.lnk'])").AsVector().First().ToString(), out modHyp))
             {
-                mVM.RowViewModels[1].values[2] = Math.Exp(modHyp).ToString();
+                mVM.RowViewModels[1].values[2] = Math.Exp(modHyp).ToString(mPrecision);
             }
             else
             {
@@ -1280,15 +1282,39 @@ namespace BayesianModeling.ViewModel
             }
 
             mVM.RowViewModels[0].values[3] = "Quasi-Hyperbolic - beta: ";
-            mVM.RowViewModels[1].values[3] = engine.Evaluate("as.numeric(output[[9]]['BD.beta'])").AsVector().First().ToString();
+
+            double qhB = double.NaN;
+            if (double.TryParse(engine.Evaluate("as.numeric(output[[9]]['BD.beta'])").AsVector().First().ToString(), out qhB))
+            {
+                mVM.RowViewModels[1].values[3] = qhB.ToString(mPrecision);
+            }
+            else
+            {
+                mVM.RowViewModels[1].values[3] = qhB.ToString();
+            }
+
+            //mVM.RowViewModels[1].values[3] = engine.Evaluate("as.numeric(output[[9]]['BD.beta'])").AsVector().First().ToString();
+
             mVM.RowViewModels[0].values[4] = "Quasi-Hyperbolic - delta: ";
-            mVM.RowViewModels[1].values[4] = engine.Evaluate("as.numeric(output[[9]]['BD.delta'])").AsVector().First().ToString();
+            
+            double qhD = double.NaN;
+            if (double.TryParse(engine.Evaluate("as.numeric(output[[9]]['BD.delta'])").AsVector().First().ToString(), out qhD))
+            {
+                mVM.RowViewModels[1].values[4] = qhD.ToString(mPrecision);
+            }
+            else
+            {
+                mVM.RowViewModels[1].values[4] = qhD.ToString();
+            }
+
+            //mVM.RowViewModels[1].values[4] = engine.Evaluate("as.numeric(output[[9]]['BD.delta'])").AsVector().First().ToString();
+
             mVM.RowViewModels[0].values[5] = "Myerson-Hyperboloid - k: ";
 
             double modMG = double.NaN;
             if (double.TryParse(engine.Evaluate("as.numeric(output[[4]]['MG.lnk'])").AsVector().First().ToString(), out modMG))
             {
-                mVM.RowViewModels[1].values[5] = Math.Exp(modMG).ToString();
+                mVM.RowViewModels[1].values[5] = Math.Exp(modMG).ToString(mPrecision);
             }
             else
             {
@@ -1296,13 +1322,25 @@ namespace BayesianModeling.ViewModel
             }
 
             mVM.RowViewModels[0].values[6] = "Myerson-Hyperboloid - s: ";
-            mVM.RowViewModels[1].values[6] = engine.Evaluate("as.numeric(output[[4]]['MG.s'])").AsVector().First().ToString();
+
+            double mS = double.NaN;
+            if (double.TryParse(engine.Evaluate("as.numeric(output[[4]]['MG.s'])").AsVector().First().ToString(), out mS))
+            {
+                mVM.RowViewModels[1].values[6] = mS.ToString(mPrecision);
+            }
+            else
+            {
+                mVM.RowViewModels[1].values[6] = mS.ToString();
+            }
+
+            //mVM.RowViewModels[1].values[6] = engine.Evaluate("as.numeric(output[[4]]['MG.s'])").AsVector().First().ToString();
+            
             mVM.RowViewModels[0].values[7] = "Rachlin-Hyperboloid - k: ";
 
             double modR = double.NaN;
             if (double.TryParse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.lnk'])").AsVector().First().ToString(), out modR))
             {
-                mVM.RowViewModels[1].values[7] = Math.Exp(modR).ToString();
+                mVM.RowViewModels[1].values[7] = Math.Exp(modR).ToString(mPrecision);
             }
             else
             {
@@ -1310,14 +1348,26 @@ namespace BayesianModeling.ViewModel
             }
 
             mVM.RowViewModels[0].values[8] = "Rachlin-Hyperboloid - s: ";
-            mVM.RowViewModels[1].values[8] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.s'])").AsVector().First().ToString();
+
+            double rS = double.NaN;
+            if (double.TryParse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.s'])").AsVector().First().ToString(), out rS))
+            {
+                mVM.RowViewModels[1].values[8] = rS.ToString(mPrecision);
+            }
+            else
+            {
+                mVM.RowViewModels[1].values[8] = rS.ToString();
+            }
+
+            //mVM.RowViewModels[1].values[8] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.s'])").AsVector().First().ToString();
+
             mVM.RowViewModels[0].values[9] = "Most competitive model: ";
             mVM.RowViewModels[1].values[9] = items.First().Key.ToString();
 
             double ed50Best = engine.Evaluate("as.numeric(output[[8]]['lnED50.mostprob'])").AsNumeric().First();
 
             mVM.RowViewModels[0].values[10] = "ED50 of Most Competitive Model - ln(x): ";
-            mVM.RowViewModels[1].values[10] = ed50Best.ToString();
+            mVM.RowViewModels[1].values[10] = ed50Best.ToString(mPrecision);
 
             int col = 11;
 
@@ -1325,54 +1375,54 @@ namespace BayesianModeling.ViewModel
             {
 
                 mVM.RowViewModels[0].values[col] = "Noise Model Probs";
-                mVM.RowViewModels[1].values[col] = noiseProb.ToString("0.000");
+                mVM.RowViewModels[1].values[col] = noiseProb.ToString(mPrecision);
                 col++;
 
                 mVM.RowViewModels[0].values[col] = "Exponential Model Probs";
-                mVM.RowViewModels[1].values[col] = exponProb.ToString("0.000");
+                mVM.RowViewModels[1].values[col] = exponProb.ToString(mPrecision);
                 col++;
 
                 mVM.RowViewModels[0].values[col] = "Hyperbolic Model Probs";
-                mVM.RowViewModels[1].values[col] = hyperProb.ToString("0.000");
+                mVM.RowViewModels[1].values[col] = hyperProb.ToString(mPrecision);
                 col++;
 
                 mVM.RowViewModels[0].values[col] = "Quasi Hyperbolic Model Probs";
-                mVM.RowViewModels[1].values[col] = quasiProb.ToString("0.000");
+                mVM.RowViewModels[1].values[col] = quasiProb.ToString(mPrecision);
                 col++;
 
                 mVM.RowViewModels[0].values[col] = "Hyperboloid (Myerson) Model Probs";
-                mVM.RowViewModels[1].values[col] = myerProb.ToString("0.000");
+                mVM.RowViewModels[1].values[col] = myerProb.ToString(mPrecision);
                 col++;
 
                 mVM.RowViewModels[0].values[col] = "Hyperboloid (Rachlin) Model Probs";
-                mVM.RowViewModels[1].values[col] = rachProb.ToString("0.000");
+                mVM.RowViewModels[1].values[col] = rachProb.ToString(mPrecision);
                 col++;
             }
 
             if (OutputBIC)
             {
                 mVM.RowViewModels[0].values[col] = "Noise Model BIC";
-                mVM.RowViewModels[1].values[col] = engine.Evaluate("as.numeric(output[[1]]['noise.BIC'])").AsVector().First().ToString();
+                mVM.RowViewModels[1].values[col] = engine.Evaluate("as.numeric(output[[1]]['noise.BIC'])").AsVector().AsNumeric().First().ToString(mPrecision);
                 col++;
 
                 mVM.RowViewModels[0].values[col] = "Exponential Model BIC";
-                mVM.RowViewModels[1].values[col] = engine.Evaluate("as.numeric(output[[3]]['exp.BIC'])").AsVector().First().ToString();
+                mVM.RowViewModels[1].values[col] = engine.Evaluate("as.numeric(output[[3]]['exp.BIC'])").AsVector().AsNumeric().First().ToString(mPrecision);
                 col++;
 
                 mVM.RowViewModels[0].values[col] = "Hyperbolic Model BIC";
-                mVM.RowViewModels[1].values[col] = engine.Evaluate("as.numeric(output[[2]]['Mazur.BIC'])").AsVector().First().ToString();
+                mVM.RowViewModels[1].values[col] = engine.Evaluate("as.numeric(output[[2]]['Mazur.BIC'])").AsVector().AsNumeric().First().ToString(mPrecision);
                 col++;
 
                 mVM.RowViewModels[0].values[col] = "Quasi Hyperbolic Model BIC";
-                mVM.RowViewModels[1].values[col] = engine.Evaluate("as.numeric(output[[9]]['BD.BIC'])").AsVector().First().ToString();
+                mVM.RowViewModels[1].values[col] = engine.Evaluate("as.numeric(output[[9]]['BD.BIC'])").AsVector().AsNumeric().First().ToString(mPrecision);
                 col++;
 
                 mVM.RowViewModels[0].values[col] = "Hyperboloid (Myerson) Model BIC";
-                mVM.RowViewModels[1].values[col] = engine.Evaluate("as.numeric(output[[4]]['MG.BIC'])").AsVector().First().ToString();
+                mVM.RowViewModels[1].values[col] = engine.Evaluate("as.numeric(output[[4]]['MG.BIC'])").AsVector().AsNumeric().First().ToString(mPrecision);
                 col++;
 
                 mVM.RowViewModels[0].values[col] = "Hyperboloid (Rachlin) Model BIC";
-                mVM.RowViewModels[1].values[col] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.BIC'])").AsVector().First().ToString();
+                mVM.RowViewModels[1].values[col] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.BIC'])").AsVector().AsNumeric().First().ToString(mPrecision);
                 col++;
             }
 
@@ -1383,7 +1433,7 @@ namespace BayesianModeling.ViewModel
                 foreach (KeyValuePair<string, double> pair in items)
                 {
                     mVM.RowViewModels[0].values[col] = pair.Key + " Probability (Ranked #" + rank + ")";
-                    mVM.RowViewModels[1].values[col] = pair.Value.ToString();
+                    mVM.RowViewModels[1].values[col] = pair.Value.ToString(mPrecision);
                     rank++;
                     col++;
                 }
@@ -1668,7 +1718,7 @@ namespace BayesianModeling.ViewModel
             mWin.Height = 600;
             mWin.Width = 800;
 
-            for (int i = 0; i < wholeRange.GetLength(1) + 5; i++)
+            for (int i = 0; i < wholeRange.GetLength(1) + 22; i++)
             {
                 mVM.RowViewModels.Add(new RowViewModel());
             }
@@ -1819,7 +1869,7 @@ namespace BayesianModeling.ViewModel
                     double modExp = double.NaN;
                     if (double.TryParse(engine.Evaluate("as.numeric(output[[3]]['exp.lnk'])").AsVector().First().ToString(), out modExp))
                     {
-                        mVM.RowViewModels[mIndex + 1].values[1] = Math.Exp(modExp).ToString();
+                        mVM.RowViewModels[mIndex + 1].values[1] = Math.Exp(modExp).ToString(mPrecision);
                     }
                     else
                     {
@@ -1829,7 +1879,7 @@ namespace BayesianModeling.ViewModel
                     double modHyp = double.NaN;
                     if (double.TryParse(engine.Evaluate("as.numeric(output[[2]]['Mazur.lnk'])").AsVector().First().ToString(), out modHyp))
                     {
-                        mVM.RowViewModels[mIndex + 1].values[2] = Math.Exp(modHyp).ToString();
+                        mVM.RowViewModels[mIndex + 1].values[2] = Math.Exp(modHyp).ToString(mPrecision);
                     }
                     else
                     {
@@ -1839,7 +1889,7 @@ namespace BayesianModeling.ViewModel
                     double modMG = double.NaN;
                     if (double.TryParse(engine.Evaluate("as.numeric(output[[4]]['MG.lnk'])").AsVector().First().ToString(), out modMG))
                     {
-                        mVM.RowViewModels[mIndex + 1].values[5] = Math.Exp(modMG).ToString();
+                        mVM.RowViewModels[mIndex + 1].values[5] = Math.Exp(modMG).ToString(mPrecision);
                     }
                     else
                     {
@@ -1849,7 +1899,7 @@ namespace BayesianModeling.ViewModel
                     double modR = double.NaN;
                     if (double.TryParse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.lnk'])").AsVector().First().ToString(), out modR))
                     {
-                        mVM.RowViewModels[mIndex + 1].values[7] = Math.Exp(modR).ToString();
+                        mVM.RowViewModels[mIndex + 1].values[7] = Math.Exp(modR).ToString(mPrecision);
                     }
                     else
                     {
@@ -1858,58 +1908,58 @@ namespace BayesianModeling.ViewModel
 
                     //mVM.RowViewModels[mIndex + 1].values[1] = engine.Evaluate("as.numeric(output[[3]]['exp.lnk'])").AsVector().First().ToString();
                     //mVM.RowViewModels[mIndex + 1].values[2] = engine.Evaluate("as.numeric(output[[2]]['Mazur.lnk'])").AsVector().First().ToString();
-                    mVM.RowViewModels[mIndex + 1].values[3] = engine.Evaluate("as.numeric(output[[9]]['BD.beta'])").AsVector().First().ToString();
-                    mVM.RowViewModels[mIndex + 1].values[4] = engine.Evaluate("as.numeric(output[[9]]['BD.delta'])").AsVector().First().ToString();
+                    mVM.RowViewModels[mIndex + 1].values[3] = engine.Evaluate("as.numeric(output[[9]]['BD.beta'])").AsVector().AsNumeric().First().ToString(mPrecision);
+                    mVM.RowViewModels[mIndex + 1].values[4] = engine.Evaluate("as.numeric(output[[9]]['BD.delta'])").AsVector().AsNumeric().First().ToString(mPrecision);
                     //mVM.RowViewModels[mIndex + 1].values[5] = engine.Evaluate("as.numeric(output[[4]]['MG.lnk'])").AsVector().First().ToString();
-                    mVM.RowViewModels[mIndex + 1].values[6] = engine.Evaluate("as.numeric(output[[4]]['MG.s'])").AsVector().First().ToString();
+                    mVM.RowViewModels[mIndex + 1].values[6] = engine.Evaluate("as.numeric(output[[4]]['MG.s'])").AsVector().AsNumeric().First().ToString(mPrecision);
                     //mVM.RowViewModels[mIndex + 1].values[7] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.lnk'])").AsVector().First().ToString();
-                    mVM.RowViewModels[mIndex + 1].values[8] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.s'])").AsVector().First().ToString();
+                    mVM.RowViewModels[mIndex + 1].values[8] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.s'])").AsVector().AsNumeric().First().ToString(mPrecision);
 
                     mVM.RowViewModels[mIndex + 1].values[9] = items.First().Key.ToString();
-                    mVM.RowViewModels[mIndex + 1].values[10] = ed50Best.ToString();
+                    mVM.RowViewModels[mIndex + 1].values[10] = ed50Best.ToString(mPrecision);
 
                     //int row = 9;
                     int col = 11;
 
                     if (OutputProb)
                     {
-                        mVM.RowViewModels[mIndex + 1].values[col] = noiseProb.ToString("0.000");
+                        mVM.RowViewModels[mIndex + 1].values[col] = noiseProb.ToString(mPrecision);
                         col++;
 
-                        mVM.RowViewModels[mIndex + 1].values[col] = exponProb.ToString("0.000");
+                        mVM.RowViewModels[mIndex + 1].values[col] = exponProb.ToString(mPrecision);
                         col++;
 
-                        mVM.RowViewModels[mIndex + 1].values[col] = hyperProb.ToString("0.000");
+                        mVM.RowViewModels[mIndex + 1].values[col] = hyperProb.ToString(mPrecision);
                         col++;
 
-                        mVM.RowViewModels[mIndex + 1].values[col] = quasiProb.ToString("0.000");
+                        mVM.RowViewModels[mIndex + 1].values[col] = quasiProb.ToString(mPrecision);
                         col++;
 
-                        mVM.RowViewModels[mIndex + 1].values[col] = myerProb.ToString("0.000");
+                        mVM.RowViewModels[mIndex + 1].values[col] = myerProb.ToString(mPrecision);
                         col++;
 
-                        mVM.RowViewModels[mIndex + 1].values[col] = rachProb.ToString("0.000");
+                        mVM.RowViewModels[mIndex + 1].values[col] = rachProb.ToString(mPrecision);
                         col++;
                     }
 
                     if (OutputBIC)
                     {
-                        mVM.RowViewModels[mIndex + 1].values[col] = engine.Evaluate("as.numeric(output[[1]]['noise.BIC'])").AsVector().First().ToString();
+                        mVM.RowViewModels[mIndex + 1].values[col] = engine.Evaluate("as.numeric(output[[1]]['noise.BIC'])").AsVector().AsNumeric().First().ToString(mPrecision);
                         col++;
 
-                        mVM.RowViewModels[mIndex + 1].values[col] = engine.Evaluate("as.numeric(output[[3]]['exp.BIC'])").AsVector().First().ToString();
+                        mVM.RowViewModels[mIndex + 1].values[col] = engine.Evaluate("as.numeric(output[[3]]['exp.BIC'])").AsVector().AsNumeric().First().ToString(mPrecision);
                         col++;
 
-                        mVM.RowViewModels[mIndex + 1].values[col] = engine.Evaluate("as.numeric(output[[2]]['Mazur.BIC'])").AsVector().First().ToString();
+                        mVM.RowViewModels[mIndex + 1].values[col] = engine.Evaluate("as.numeric(output[[2]]['Mazur.BIC'])").AsVector().AsNumeric().First().ToString(mPrecision);
                         col++;
 
-                        mVM.RowViewModels[mIndex + 1].values[col] = engine.Evaluate("as.numeric(output[[9]]['BD.BIC'])").AsVector().First().ToString();
+                        mVM.RowViewModels[mIndex + 1].values[col] = engine.Evaluate("as.numeric(output[[9]]['BD.BIC'])").AsVector().AsNumeric().First().ToString(mPrecision);
                         col++;
 
-                        mVM.RowViewModels[mIndex + 1].values[col] = engine.Evaluate("as.numeric(output[[4]]['MG.BIC'])").AsVector().First().ToString();
+                        mVM.RowViewModels[mIndex + 1].values[col] = engine.Evaluate("as.numeric(output[[4]]['MG.BIC'])").AsVector().AsNumeric().First().ToString(mPrecision);
                         col++;
 
-                        mVM.RowViewModels[mIndex + 1].values[col] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.BIC'])").AsVector().First().ToString();
+                        mVM.RowViewModels[mIndex + 1].values[col] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.BIC'])").AsVector().AsNumeric().First().ToString(mPrecision);
                         col++;
                     }
 
@@ -1919,7 +1969,7 @@ namespace BayesianModeling.ViewModel
 
                         foreach (KeyValuePair<string, double> pair in items)
                         {
-                            mVM.RowViewModels[mIndex + 1].values[col] = pair.Key + " Probability (" + pair.Value.ToString() + ")";
+                            mVM.RowViewModels[mIndex + 1].values[col] = pair.Key + " Probability (" + pair.Value.ToString(mPrecision) + ")";
                             rank++;
                             col++;
                         }
