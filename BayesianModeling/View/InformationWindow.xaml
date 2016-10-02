@@ -1,19 +1,19 @@
 ﻿<!--
     Copyright 2016 Shawn Gilroy 
 
-    This file is part of Discounting Model Selector.
+    This file is part of Bayesian Model Selector.
 
-    Discounting Model Selector is free software: you can redistribute it and/or modify
+    Bayesian Model Selector is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, version 2.
 
-    Discounting Model Selector is distributed in the hope that it will be useful,
+    Bayesian Model Selector is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Discounting Model Selector.  If not, see <http://www.gnu.org/licenses/gpl-2.0.html>.
+    along with Bayesian Model Selector.  If not, see <http://www.gnu.org/licenses/gpl-2.0.html>.
 -->
     
 <Window x:Class="BayesianModeling.View.InformationWindow"
@@ -33,30 +33,37 @@
             <FlowDocument>
                 <Paragraph>
                     <InlineUIContainer>
-                        <Image Source="/Resources/SNS.png" Width="90" Height="90" Margin="0,0,30,0" />
+                        <Image
+        Width="90" Source="/Resources/SNS.png" Margin="0,0,30,0" Height="90"/>
                     </InlineUIContainer>
                     <Run Text=" "/>
-                    <Run BaselineAlignment="Center" FontSize="22" Text="Discounting Model Selector"/>
+                    <Run Text=" "/>
+                    <Run Text=" "/>
+                    <Run BaselineAlignment="Center" FontSize="22" Text="Bayesian Model Selector"/>
                 </Paragraph>
                 <Paragraph>
                     <Run Text="The "/>
+                    <Run Text=" "/>
                     <Bold>
-                        <Run Text="Discounting Model Selection"/>
+                        <Run Text="Bayesian Model Selection"/>
                     </Bold>
-                    <Run Text=" procedure is an implementation of earlier work by Chris Franck et al., 2015 designed to aid in the selection of a temporal discounting model. This work was designed using the Bayesian Information Criterion as a means for comparison between between discounting models"/>
-                    <LineBreak/>
-                    <LineBreak/>
-                    <Run Text="A link to the original work is included in the credits below:" />
+                    <Run Text=" "/>
+                    <Run Text=" procedure is an implementation of earlier work by Chris Franck et al., 2015 and was designed to aid in the selection of temporal discounting models. This work utilized the Bayesian Information Criterion as a metric for comparing between fitted discounting models."/>
                 </Paragraph>
                 <Paragraph>
-                    The 
+                    <Run Text="The "/>
                     <Bold>
                         <Hyperlink NavigateUri="http://www.smallnstats.com/">
                             <Run Text="Small n Stats"/>
                         </Hyperlink>
                     </Bold>
+                    <Run Text=" "/>
                     <Run Text=" project references an on-going endeavor to expand upon the tools available to researchers and practitioners in the behavioral sciences."/>
-                    <Run Text="Small n Stats is developed and maintained by Shawn P. Gilroy." />
+                    <Run Text=" "/>
+                    <Run Text="Small n Stats is developed and maintained by Shawn P. Gilroy."/>
+                </Paragraph>
+                <Paragraph>
+                    <Run Text="A link to the original Franck et al., 2015 work is included in the credits and acknowledgment section below:"/>
                 </Paragraph>
                 <Paragraph>
                     <Bold>

@@ -2,27 +2,27 @@
 // <copyright file="ViewModelUnifiedDiscounting.cs" 
 // Copyright 2016 Shawn Gilroy
 //
-// This file is part of Discounting Model Selector.
+// This file is part of Bayesian Model Selector.
 //
-// Discounting Model Selector is free software: you can redistribute it and/or modify
+// Bayesian Model Selector is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, version 2.
 //
-// Discounting Model Selector is distributed in the hope that it will be useful,
+// Bayesian Model Selector is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Discounting Model Selector.  If not, see http://www.gnu.org/licenses/. 
+// along with Bayesian Model Selector.  If not, see http://www.gnu.org/licenses/. 
 // </copyright>
 //
 // <summary>
-// The Discounting Model Selector is a tool to assist researchers in behavior economics.
+// The Bayesian Model Selector is a tool to assist researchers in behavior economics.
 // 
 // Email: shawn(dot)gilroy(at)temple.edu
 //
-// Discounting Model Selector utilizes R.Net Community to communicate with the R program
+// Bayesian Model Selector utilizes R.Net Community to communicate with the R program
 //
 //    R.NET Community is distributed under this license:
 //    
@@ -316,6 +316,8 @@ namespace BayesianModeling.ViewModel
 
         private List<string> filesList = new List<string>();
 
+        private string mPrecision = "0.00000000";
+
         /* UI Logic */
 
         bool failed;
@@ -329,6 +331,39 @@ namespace BayesianModeling.ViewModel
             {
                 outputFigures = value;
                 OnPropertyChanged("OutputFigures");
+            }
+        }
+
+        private bool outputBIC = false;
+        public bool OutputBIC
+        {
+            get { return outputBIC; }
+            set
+            {
+                outputBIC = value;
+                OnPropertyChanged("OutputBIC");
+            }
+        }
+
+        private bool outputProb = false;
+        public bool OutputProb
+        {
+            get { return outputProb; }
+            set
+            {
+                outputProb = value;
+                OnPropertyChanged("OutputProb");
+            }
+        }
+
+        private bool outputRanks = false;
+        public bool OutputRanks
+        {
+            get { return outputRanks; }
+            set
+            {
+                outputRanks = value;
+                OnPropertyChanged("OutputRanks");
             }
         }
 
@@ -998,6 +1033,12 @@ namespace BayesianModeling.ViewModel
             }
         }
 
+        /// <summary>
+        /// Grabs row from the current grid (results only)
+        /// </summary>
+        /// <param name="grid">Datagrid from results</param>
+        /// <param name="index">Index from results</param>
+        /// <returns></returns>
         public DataGridRow GetGridRow(CustomDataGrid grid, int index)
         {
             DataGridRow row = (DataGridRow) grid.ItemContainerGenerator.ContainerFromIndex(index);
@@ -1214,14 +1255,14 @@ namespace BayesianModeling.ViewModel
                 mVM.RowViewModels.Add(new RowViewModel());
             }
 
-            mVM.RowViewModels[0].values[0] = "Results of Discounting Model Selector";
+            mVM.RowViewModels[0].values[0] = "Results of Bayesian Model Selector";
             mVM.RowViewModels[1].values[0] = "Single Series Analysis";
             mVM.RowViewModels[0].values[1] = "Exponential - k: ";
 
             double modExp = double.NaN;
             if (double.TryParse(engine.Evaluate("as.numeric(output[[3]]['exp.lnk'])").AsVector().First().ToString(), out modExp))
             {
-                mVM.RowViewModels[1].values[1] = Math.Exp(modExp).ToString();
+                mVM.RowViewModels[1].values[1] = Math.Exp(modExp).ToString(mPrecision);
             }
             else
             {
@@ -1233,7 +1274,7 @@ namespace BayesianModeling.ViewModel
             double modHyp = double.NaN;
             if (double.TryParse(engine.Evaluate("as.numeric(output[[2]]['Mazur.lnk'])").AsVector().First().ToString(), out modHyp))
             {
-                mVM.RowViewModels[1].values[2] = Math.Exp(modHyp).ToString();
+                mVM.RowViewModels[1].values[2] = Math.Exp(modHyp).ToString(mPrecision);
             }
             else
             {
@@ -1241,15 +1282,39 @@ namespace BayesianModeling.ViewModel
             }
 
             mVM.RowViewModels[0].values[3] = "Quasi-Hyperbolic - beta: ";
-            mVM.RowViewModels[1].values[3] = engine.Evaluate("as.numeric(output[[9]]['BD.beta'])").AsVector().First().ToString();
+
+            double qhB = double.NaN;
+            if (double.TryParse(engine.Evaluate("as.numeric(output[[9]]['BD.beta'])").AsVector().First().ToString(), out qhB))
+            {
+                mVM.RowViewModels[1].values[3] = qhB.ToString(mPrecision);
+            }
+            else
+            {
+                mVM.RowViewModels[1].values[3] = qhB.ToString();
+            }
+
+            //mVM.RowViewModels[1].values[3] = engine.Evaluate("as.numeric(output[[9]]['BD.beta'])").AsVector().First().ToString();
+
             mVM.RowViewModels[0].values[4] = "Quasi-Hyperbolic - delta: ";
-            mVM.RowViewModels[1].values[4] = engine.Evaluate("as.numeric(output[[9]]['BD.delta'])").AsVector().First().ToString();
+            
+            double qhD = double.NaN;
+            if (double.TryParse(engine.Evaluate("as.numeric(output[[9]]['BD.delta'])").AsVector().First().ToString(), out qhD))
+            {
+                mVM.RowViewModels[1].values[4] = qhD.ToString(mPrecision);
+            }
+            else
+            {
+                mVM.RowViewModels[1].values[4] = qhD.ToString();
+            }
+
+            //mVM.RowViewModels[1].values[4] = engine.Evaluate("as.numeric(output[[9]]['BD.delta'])").AsVector().First().ToString();
+
             mVM.RowViewModels[0].values[5] = "Myerson-Hyperboloid - k: ";
 
             double modMG = double.NaN;
             if (double.TryParse(engine.Evaluate("as.numeric(output[[4]]['MG.lnk'])").AsVector().First().ToString(), out modMG))
             {
-                mVM.RowViewModels[1].values[5] = Math.Exp(modMG).ToString();
+                mVM.RowViewModels[1].values[5] = Math.Exp(modMG).ToString(mPrecision);
             }
             else
             {
@@ -1257,13 +1322,25 @@ namespace BayesianModeling.ViewModel
             }
 
             mVM.RowViewModels[0].values[6] = "Myerson-Hyperboloid - s: ";
-            mVM.RowViewModels[1].values[6] = engine.Evaluate("as.numeric(output[[4]]['MG.s'])").AsVector().First().ToString();
+
+            double mS = double.NaN;
+            if (double.TryParse(engine.Evaluate("as.numeric(output[[4]]['MG.s'])").AsVector().First().ToString(), out mS))
+            {
+                mVM.RowViewModels[1].values[6] = mS.ToString(mPrecision);
+            }
+            else
+            {
+                mVM.RowViewModels[1].values[6] = mS.ToString();
+            }
+
+            //mVM.RowViewModels[1].values[6] = engine.Evaluate("as.numeric(output[[4]]['MG.s'])").AsVector().First().ToString();
+            
             mVM.RowViewModels[0].values[7] = "Rachlin-Hyperboloid - k: ";
 
             double modR = double.NaN;
             if (double.TryParse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.lnk'])").AsVector().First().ToString(), out modR))
             {
-                mVM.RowViewModels[1].values[7] = Math.Exp(modR).ToString();
+                mVM.RowViewModels[1].values[7] = Math.Exp(modR).ToString(mPrecision);
             }
             else
             {
@@ -1271,37 +1348,96 @@ namespace BayesianModeling.ViewModel
             }
 
             mVM.RowViewModels[0].values[8] = "Rachlin-Hyperboloid - s: ";
-            mVM.RowViewModels[1].values[8] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.s'])").AsVector().First().ToString();
+
+            double rS = double.NaN;
+            if (double.TryParse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.s'])").AsVector().First().ToString(), out rS))
+            {
+                mVM.RowViewModels[1].values[8] = rS.ToString(mPrecision);
+            }
+            else
+            {
+                mVM.RowViewModels[1].values[8] = rS.ToString();
+            }
+
+            //mVM.RowViewModels[1].values[8] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.s'])").AsVector().First().ToString();
+
             mVM.RowViewModels[0].values[9] = "Most competitive model: ";
             mVM.RowViewModels[1].values[9] = items.First().Key.ToString();
 
             double ed50Best = engine.Evaluate("as.numeric(output[[8]]['lnED50.mostprob'])").AsNumeric().First();
 
             mVM.RowViewModels[0].values[10] = "ED50 of Most Competitive Model - ln(x): ";
-            mVM.RowViewModels[1].values[10] = ed50Best.ToString();
+            mVM.RowViewModels[1].values[10] = ed50Best.ToString(mPrecision);
 
-            int col = 11, rank = 1;
+            int col = 11;
 
-            foreach (KeyValuePair<string, double> pair in items)
+            if (OutputProb)
             {
-                mVM.RowViewModels[0].values[col] = pair.Key + "(Ranked #" + rank + ")";
-                mVM.RowViewModels[1].values[col] = pair.Value.ToString();
-                rank++;
+
+                mVM.RowViewModels[0].values[col] = "Noise Model Probs";
+                mVM.RowViewModels[1].values[col] = noiseProb.ToString(mPrecision);
+                col++;
+
+                mVM.RowViewModels[0].values[col] = "Exponential Model Probs";
+                mVM.RowViewModels[1].values[col] = exponProb.ToString(mPrecision);
+                col++;
+
+                mVM.RowViewModels[0].values[col] = "Hyperbolic Model Probs";
+                mVM.RowViewModels[1].values[col] = hyperProb.ToString(mPrecision);
+                col++;
+
+                mVM.RowViewModels[0].values[col] = "Quasi Hyperbolic Model Probs";
+                mVM.RowViewModels[1].values[col] = quasiProb.ToString(mPrecision);
+                col++;
+
+                mVM.RowViewModels[0].values[col] = "Hyperboloid (Myerson) Model Probs";
+                mVM.RowViewModels[1].values[col] = myerProb.ToString(mPrecision);
+                col++;
+
+                mVM.RowViewModels[0].values[col] = "Hyperboloid (Rachlin) Model Probs";
+                mVM.RowViewModels[1].values[col] = rachProb.ToString(mPrecision);
                 col++;
             }
 
-            mVM.RowViewModels[0].values[17] = "Noise Model Probs";
-            mVM.RowViewModels[1].values[17] = noiseProb.ToString("0.000");
-            mVM.RowViewModels[0].values[18] = "Exponential Model Probs";
-            mVM.RowViewModels[1].values[18] = exponProb.ToString("0.000");
-            mVM.RowViewModels[0].values[19] = "Hyperbolic Model Probs";
-            mVM.RowViewModels[1].values[19] = hyperProb.ToString("0.000");
-            mVM.RowViewModels[0].values[20] = "Quasi Hyperbolic Model Probs";
-            mVM.RowViewModels[1].values[20] = quasiProb.ToString("0.000");
-            mVM.RowViewModels[0].values[21] = "Hyperboloid (Myerson) Model Probs";
-            mVM.RowViewModels[1].values[21] = myerProb.ToString("0.000");
-            mVM.RowViewModels[0].values[22] = "Hyperboloid (Rachlin) Model Probs";
-            mVM.RowViewModels[1].values[22] = rachProb.ToString("0.000");
+            if (OutputBIC)
+            {
+                mVM.RowViewModels[0].values[col] = "Noise Model BIC";
+                mVM.RowViewModels[1].values[col] = engine.Evaluate("as.numeric(output[[1]]['noise.BIC'])").AsVector().AsNumeric().First().ToString(mPrecision);
+                col++;
+
+                mVM.RowViewModels[0].values[col] = "Exponential Model BIC";
+                mVM.RowViewModels[1].values[col] = engine.Evaluate("as.numeric(output[[3]]['exp.BIC'])").AsVector().AsNumeric().First().ToString(mPrecision);
+                col++;
+
+                mVM.RowViewModels[0].values[col] = "Hyperbolic Model BIC";
+                mVM.RowViewModels[1].values[col] = engine.Evaluate("as.numeric(output[[2]]['Mazur.BIC'])").AsVector().AsNumeric().First().ToString(mPrecision);
+                col++;
+
+                mVM.RowViewModels[0].values[col] = "Quasi Hyperbolic Model BIC";
+                mVM.RowViewModels[1].values[col] = engine.Evaluate("as.numeric(output[[9]]['BD.BIC'])").AsVector().AsNumeric().First().ToString(mPrecision);
+                col++;
+
+                mVM.RowViewModels[0].values[col] = "Hyperboloid (Myerson) Model BIC";
+                mVM.RowViewModels[1].values[col] = engine.Evaluate("as.numeric(output[[4]]['MG.BIC'])").AsVector().AsNumeric().First().ToString(mPrecision);
+                col++;
+
+                mVM.RowViewModels[0].values[col] = "Hyperboloid (Rachlin) Model BIC";
+                mVM.RowViewModels[1].values[col] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.BIC'])").AsVector().AsNumeric().First().ToString(mPrecision);
+                col++;
+            }
+
+            if (OutputRanks)
+            {
+                int rank = 1;
+
+                foreach (KeyValuePair<string, double> pair in items)
+                {
+                    mVM.RowViewModels[0].values[col] = pair.Key + " Probability (Ranked #" + rank + ")";
+                    mVM.RowViewModels[1].values[col] = pair.Value.ToString(mPrecision);
+                    rank++;
+                    col++;
+                }
+            }
 
             mVM.RowViewModels[3].values[0] = "Delayed Value";
             mVM.RowViewModels[3].values[1] = DelayedValue;
@@ -1319,13 +1455,74 @@ namespace BayesianModeling.ViewModel
 
             for (int i = 0; i < mWin.dataGrid.Items.Count; i++)
             {
+                col = 11;
+
+                var row = GetGridRow(mWin.dataGrid, i);
+
+                if (row == null) continue;
+
                 if (mVM.RowViewModels[i].values[9] == "Noise Model")
                 {
-                    var row = GetGridRow(mWin.dataGrid, i);
-                    if (row != null)
+                    row.Background = Brushes.Yellow;
+                }
+
+                bool grayOut = true;
+
+                if (OutputProb)
+                {
+                    if (grayOut)
                     {
-                        row.Background = Brushes.Yellow;
+                        for (int j = 0; j < 6; j++)
+                        {
+                            var mCell = mWin.dataGrid.Columns[col].GetCellContent(row).Parent as DataGridCell;
+                            mCell.Background = Brushes.LightGray;
+                            col++;
+                        }
                     }
+                    else
+                    {
+                        col += 6;
+                    }
+
+                    grayOut = !grayOut;
+                }
+
+                if (OutputBIC)
+                {
+                    if (grayOut)
+                    {
+                        for (int j = 0; j < 6; j++)
+                        {
+                            var mCell = mWin.dataGrid.Columns[col].GetCellContent(row).Parent as DataGridCell;
+                            mCell.Background = Brushes.LightGray;
+                            col++;
+                        }
+                    }
+                    else
+                    {
+                        col += 6;
+                    }
+
+                    grayOut = !grayOut;
+                }
+
+                if (OutputRanks)
+                {
+                    if (grayOut)
+                    {
+                        for (int j = 0; j < 6; j++)
+                        {
+                            var mCell = mWin.dataGrid.Columns[col].GetCellContent(row).Parent as DataGridCell;
+                            mCell.Background = Brushes.LightGray;
+                            col++;
+                        }
+                    }
+                    else
+                    {
+                        col += 6;
+                    }
+
+                    grayOut = !grayOut;
                 }
             }
 
@@ -1409,7 +1606,7 @@ namespace BayesianModeling.ViewModel
                 }
 
                 mWindow.OutputEvents("Please remember to cite the packages used in this process!");
-                mWindow.OutputEvents("Citation:: Gilroy, S. G., Franck, C. T. & Hantula, D. A. (2016). Technical Report: The Discounting Model Selector: Statistical discounting software.");
+                mWindow.OutputEvents("Citation:: Gilroy, S. P., Franck, C. T. & Hantula, D. A. (2016). The Bayesian Model Selector: Statistical discounting software.");
                 mWindow.OutputEvents("Citation:: Franck, C. T., Koffarnus, M. N., House, L. L. & Bickel, W. K. (2015). Accurate characterization of delay discounting: a multiple model approach using approximate Bayesian model selection and a unified discounting measure. Journal of the Experimental Analysis of Behavior, 103(1), 218-233.");
                 mWindow.OutputEvents("Citation:: " + string.Join("", engine.Evaluate("citation()$textVersion").AsCharacter().ToArray()));
                 mWindow.OutputEvents("Citation:: " + string.Join("", engine.Evaluate("citation('ggplot2')$textVersion").AsCharacter().ToArray()));
@@ -1451,7 +1648,7 @@ namespace BayesianModeling.ViewModel
 
             List<double> xRange = null;
             string[,] wholeRange = null;
-            
+
             if (RowModeRadio)
             {
                 xRange = DataGridTools.GetRangedValuesVM(lowColDelay, highColDelay, lowRowDelay, mWindow.dataGrid.ItemsSource);
@@ -1521,7 +1718,7 @@ namespace BayesianModeling.ViewModel
             mWin.Height = 600;
             mWin.Width = 800;
 
-            for (int i = 0; i < wholeRange.GetLength(1) + 5; i++)
+            for (int i = 0; i < wholeRange.GetLength(1) + 22; i++)
             {
                 mVM.RowViewModels.Add(new RowViewModel());
             }
@@ -1611,20 +1808,58 @@ namespace BayesianModeling.ViewModel
                         mVM.RowViewModels[0].values[6] = "Myerson-Hyperboloid - s: ";
                         mVM.RowViewModels[0].values[7] = "Rachlin-Hyperboloid - k: ";
                         mVM.RowViewModels[0].values[8] = "Rachlin-Hyperboloid - s: ";
-                        mVM.RowViewModels[0].values[9] = "Model Competition (#1)";
-                        mVM.RowViewModels[0].values[10] = "#2";
-                        mVM.RowViewModels[0].values[11] = "#3";
-                        mVM.RowViewModels[0].values[12] = "#4";
-                        mVM.RowViewModels[0].values[13] = "#5";
-                        mVM.RowViewModels[0].values[14] = "#6";
-                        mVM.RowViewModels[0].values[15] = "Most competitive model: ";
-                        mVM.RowViewModels[0].values[16] = "ED50 of Most Competitive Model - ln(x): ";
-                        mVM.RowViewModels[0].values[17] = "Noise Model Probs";
-                        mVM.RowViewModels[0].values[18] = "Exponential Model Probs";
-                        mVM.RowViewModels[0].values[19] = "Hyperbolic Model Probs";
-                        mVM.RowViewModels[0].values[20] = "Quasi Hyperbolic Model Probs";
-                        mVM.RowViewModels[0].values[21] = "Hyperboloid (Myerson) Model Probs";
-                        mVM.RowViewModels[0].values[22] = "Hyperboloid (Rachlin) Model Probs";
+                        mVM.RowViewModels[0].values[9] = "Most competitive model: ";
+                        mVM.RowViewModels[0].values[10] = "ED50 of Most Competitive Model - ln(x): ";
+
+                        int colTitle = 11;
+
+                        if (OutputProb)
+                        {
+                            mVM.RowViewModels[0].values[colTitle] = "Noise Model Probs";
+                            colTitle++;
+                            mVM.RowViewModels[0].values[colTitle] = "Exponential Model Probs";
+                            colTitle++;
+                            mVM.RowViewModels[0].values[colTitle] = "Hyperbolic Model Probs";
+                            colTitle++;
+                            mVM.RowViewModels[0].values[colTitle] = "Quasi Hyperbolic Model Probs";
+                            colTitle++;
+                            mVM.RowViewModels[0].values[colTitle] = "Hyperboloid (Myerson) Model Probs";
+                            colTitle++;
+                            mVM.RowViewModels[0].values[colTitle] = "Hyperboloid (Rachlin) Model Probs";
+                            colTitle++;
+                        }
+
+                        if (OutputBIC)
+                        {
+                            mVM.RowViewModels[0].values[colTitle] = "Noise Model BIC";
+                            colTitle++;
+                            mVM.RowViewModels[0].values[colTitle] = "Exponential Model BIC";
+                            colTitle++;
+                            mVM.RowViewModels[0].values[colTitle] = "Hyperbolic Model BIC";
+                            colTitle++;
+                            mVM.RowViewModels[0].values[colTitle] = "Quasi Hyperbolic Model BIC";
+                            colTitle++;
+                            mVM.RowViewModels[0].values[colTitle] = "Hyperboloid (Myerson) Model BIC";
+                            colTitle++;
+                            mVM.RowViewModels[0].values[colTitle] = "Hyperboloid (Rachlin) Model BIC";
+                            colTitle++;
+                        }
+
+                        if (OutputRanks)
+                        {
+                            mVM.RowViewModels[0].values[colTitle] = "Ranked #1";
+                            colTitle++;
+                            mVM.RowViewModels[0].values[colTitle] = "Ranked #2";
+                            colTitle++;
+                            mVM.RowViewModels[0].values[colTitle] = "Ranked #3";
+                            colTitle++;
+                            mVM.RowViewModels[0].values[colTitle] = "Ranked #4";
+                            colTitle++;
+                            mVM.RowViewModels[0].values[colTitle] = "Ranked #5";
+                            colTitle++;
+                            mVM.RowViewModels[0].values[colTitle] = "Ranked #6";
+                            colTitle++;
+                        }
                     }
 
                     mVM.RowViewModels[mIndex + 1].values[0] = "Series #" + (int)(mIndex + 1);
@@ -1634,7 +1869,7 @@ namespace BayesianModeling.ViewModel
                     double modExp = double.NaN;
                     if (double.TryParse(engine.Evaluate("as.numeric(output[[3]]['exp.lnk'])").AsVector().First().ToString(), out modExp))
                     {
-                        mVM.RowViewModels[mIndex + 1].values[1] = Math.Exp(modExp).ToString();
+                        mVM.RowViewModels[mIndex + 1].values[1] = Math.Exp(modExp).ToString(mPrecision);
                     }
                     else
                     {
@@ -1644,7 +1879,7 @@ namespace BayesianModeling.ViewModel
                     double modHyp = double.NaN;
                     if (double.TryParse(engine.Evaluate("as.numeric(output[[2]]['Mazur.lnk'])").AsVector().First().ToString(), out modHyp))
                     {
-                        mVM.RowViewModels[mIndex + 1].values[2] = Math.Exp(modHyp).ToString();
+                        mVM.RowViewModels[mIndex + 1].values[2] = Math.Exp(modHyp).ToString(mPrecision);
                     }
                     else
                     {
@@ -1654,7 +1889,7 @@ namespace BayesianModeling.ViewModel
                     double modMG = double.NaN;
                     if (double.TryParse(engine.Evaluate("as.numeric(output[[4]]['MG.lnk'])").AsVector().First().ToString(), out modMG))
                     {
-                        mVM.RowViewModels[mIndex + 1].values[5] = Math.Exp(modMG).ToString();
+                        mVM.RowViewModels[mIndex + 1].values[5] = Math.Exp(modMG).ToString(mPrecision);
                     }
                     else
                     {
@@ -1664,7 +1899,7 @@ namespace BayesianModeling.ViewModel
                     double modR = double.NaN;
                     if (double.TryParse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.lnk'])").AsVector().First().ToString(), out modR))
                     {
-                        mVM.RowViewModels[mIndex + 1].values[7] = Math.Exp(modR).ToString();
+                        mVM.RowViewModels[mIndex + 1].values[7] = Math.Exp(modR).ToString(mPrecision);
                     }
                     else
                     {
@@ -1673,30 +1908,72 @@ namespace BayesianModeling.ViewModel
 
                     //mVM.RowViewModels[mIndex + 1].values[1] = engine.Evaluate("as.numeric(output[[3]]['exp.lnk'])").AsVector().First().ToString();
                     //mVM.RowViewModels[mIndex + 1].values[2] = engine.Evaluate("as.numeric(output[[2]]['Mazur.lnk'])").AsVector().First().ToString();
-                    mVM.RowViewModels[mIndex + 1].values[3] = engine.Evaluate("as.numeric(output[[9]]['BD.beta'])").AsVector().First().ToString();
-                    mVM.RowViewModels[mIndex + 1].values[4] = engine.Evaluate("as.numeric(output[[9]]['BD.delta'])").AsVector().First().ToString();
+                    mVM.RowViewModels[mIndex + 1].values[3] = engine.Evaluate("as.numeric(output[[9]]['BD.beta'])").AsVector().AsNumeric().First().ToString(mPrecision);
+                    mVM.RowViewModels[mIndex + 1].values[4] = engine.Evaluate("as.numeric(output[[9]]['BD.delta'])").AsVector().AsNumeric().First().ToString(mPrecision);
                     //mVM.RowViewModels[mIndex + 1].values[5] = engine.Evaluate("as.numeric(output[[4]]['MG.lnk'])").AsVector().First().ToString();
-                    mVM.RowViewModels[mIndex + 1].values[6] = engine.Evaluate("as.numeric(output[[4]]['MG.s'])").AsVector().First().ToString();
+                    mVM.RowViewModels[mIndex + 1].values[6] = engine.Evaluate("as.numeric(output[[4]]['MG.s'])").AsVector().AsNumeric().First().ToString(mPrecision);
                     //mVM.RowViewModels[mIndex + 1].values[7] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.lnk'])").AsVector().First().ToString();
-                    mVM.RowViewModels[mIndex + 1].values[8] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.s'])").AsVector().First().ToString();
+                    mVM.RowViewModels[mIndex + 1].values[8] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.s'])").AsVector().AsNumeric().First().ToString(mPrecision);
 
-                    int row = 9;
-                    foreach (KeyValuePair<string, double> pair in items)
+                    mVM.RowViewModels[mIndex + 1].values[9] = items.First().Key.ToString();
+                    mVM.RowViewModels[mIndex + 1].values[10] = ed50Best.ToString(mPrecision);
+
+                    //int row = 9;
+                    int col = 11;
+
+                    if (OutputProb)
                     {
-                        mVM.RowViewModels[mIndex + 1].values[row] = pair.Key + " - (" + pair.Value.ToString("0.000") + ")";
-                        row++;
+                        mVM.RowViewModels[mIndex + 1].values[col] = noiseProb.ToString(mPrecision);
+                        col++;
+
+                        mVM.RowViewModels[mIndex + 1].values[col] = exponProb.ToString(mPrecision);
+                        col++;
+
+                        mVM.RowViewModels[mIndex + 1].values[col] = hyperProb.ToString(mPrecision);
+                        col++;
+
+                        mVM.RowViewModels[mIndex + 1].values[col] = quasiProb.ToString(mPrecision);
+                        col++;
+
+                        mVM.RowViewModels[mIndex + 1].values[col] = myerProb.ToString(mPrecision);
+                        col++;
+
+                        mVM.RowViewModels[mIndex + 1].values[col] = rachProb.ToString(mPrecision);
+                        col++;
                     }
 
-                    mVM.RowViewModels[mIndex + 1].values[15] = items.First().Key.ToString();
-                    mVM.RowViewModels[mIndex + 1].values[16] = ed50Best.ToString();
+                    if (OutputBIC)
+                    {
+                        mVM.RowViewModels[mIndex + 1].values[col] = engine.Evaluate("as.numeric(output[[1]]['noise.BIC'])").AsVector().AsNumeric().First().ToString(mPrecision);
+                        col++;
 
-                    mVM.RowViewModels[mIndex + 1].values[17] = noiseProb.ToString("0.000");
-                    mVM.RowViewModels[mIndex + 1].values[18] = exponProb.ToString("0.000");
-                    mVM.RowViewModels[mIndex + 1].values[19] = hyperProb.ToString("0.000");
-                    mVM.RowViewModels[mIndex + 1].values[20] = quasiProb.ToString("0.000");
-                    mVM.RowViewModels[mIndex + 1].values[21] = myerProb.ToString("0.000");
-                    mVM.RowViewModels[mIndex + 1].values[22] = rachProb.ToString("0.000");
+                        mVM.RowViewModels[mIndex + 1].values[col] = engine.Evaluate("as.numeric(output[[3]]['exp.BIC'])").AsVector().AsNumeric().First().ToString(mPrecision);
+                        col++;
 
+                        mVM.RowViewModels[mIndex + 1].values[col] = engine.Evaluate("as.numeric(output[[2]]['Mazur.BIC'])").AsVector().AsNumeric().First().ToString(mPrecision);
+                        col++;
+
+                        mVM.RowViewModels[mIndex + 1].values[col] = engine.Evaluate("as.numeric(output[[9]]['BD.BIC'])").AsVector().AsNumeric().First().ToString(mPrecision);
+                        col++;
+
+                        mVM.RowViewModels[mIndex + 1].values[col] = engine.Evaluate("as.numeric(output[[4]]['MG.BIC'])").AsVector().AsNumeric().First().ToString(mPrecision);
+                        col++;
+
+                        mVM.RowViewModels[mIndex + 1].values[col] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.BIC'])").AsVector().AsNumeric().First().ToString(mPrecision);
+                        col++;
+                    }
+
+                    if (OutputRanks)
+                    {
+                        int rank = 1;
+
+                        foreach (KeyValuePair<string, double> pair in items)
+                        {
+                            mVM.RowViewModels[mIndex + 1].values[col] = pair.Key + " Probability (" + pair.Value.ToString(mPrecision) + ")";
+                            rank++;
+                            col++;
+                        }
+                    }
                 }
                 catch (ParseException pe)
                 {
@@ -1710,7 +1987,7 @@ namespace BayesianModeling.ViewModel
 
             mWindow.OutputEvents("Final Calculations Completed!");
             mWindow.OutputEvents("Please remember to cite the packages used in this process!");
-            mWindow.OutputEvents("Citation:: Gilroy, S. G., Franck, C. T. & Hantula, D. A. (2016). Technical Report: The Discounting Model Selector: Statistical discounting software.");
+            mWindow.OutputEvents("Citation:: Gilroy, S. P., Franck, C. T. & Hantula, D. A. (2016). The Bayesian Model Selector: Statistical discounting software.");
             mWindow.OutputEvents("Citation:: Franck, C. T., Koffarnus, M. N., House, L. L. & Bickel, W. K. (2015). Accurate characterization of delay discounting: a multiple model approach using approximate Bayesian model selection and a unified discounting measure. Journal of the Experimental Analysis of Behavior, 103(1), 218-233.");
             mWindow.OutputEvents("Citation:: " + string.Join("", engine.Evaluate("citation()$textVersion").AsCharacter().ToArray()));
             mWindow.OutputEvents("Citation:: " + string.Join("", engine.Evaluate("citation('ggplot2')$textVersion").AsCharacter().ToArray()));
@@ -1723,17 +2000,78 @@ namespace BayesianModeling.ViewModel
 
             for (int i = 0; i < mWin.dataGrid.Items.Count; i++)
             {
-                if (mVM.RowViewModels[i].values[15] == "Noise Model")
-                {
-                    var row = GetGridRow(mWin.dataGrid, i);
-                    if (row != null)
-                    {
-                        row.Background = Brushes.Yellow;
-                    }
-                }
-            }
+                int col = 11;
 
-            windowRef.calculateButton.IsEnabled = true;
+                var row = GetGridRow(mWin.dataGrid, i);
+
+                if (row == null) continue;
+
+                bool grayOut = true;
+
+                if (OutputProb)
+                {
+                    if (grayOut)
+                    {
+                        for (int j = 0; j < 6; j++)
+                        {
+                            var mCell = mWin.dataGrid.Columns[col].GetCellContent(row).Parent as DataGridCell;
+                            mCell.Background = Brushes.LightGray;
+                            col++;
+                        }
+                    }
+                    else
+                    {
+                        col += 6;
+                    }
+
+                    grayOut = !grayOut;
+                }
+
+                if (OutputBIC)
+                {
+                    if (grayOut)
+                    {
+                        for (int j = 0; j < 6; j++)
+                        {
+                            var mCell = mWin.dataGrid.Columns[col].GetCellContent(row).Parent as DataGridCell;
+                            mCell.Background = Brushes.LightGray;
+                            col++;
+                        }
+                    }
+                    else
+                    {
+                        col += 6;
+                    }
+
+                    grayOut = !grayOut;
+                }
+
+                if (OutputRanks)
+                {
+                    if (grayOut)
+                    {
+                        for (int j = 0; j < 6; j++)
+                        {
+                            var mCell = mWin.dataGrid.Columns[col].GetCellContent(row).Parent as DataGridCell;
+                            mCell.Background = Brushes.LightGray;
+                            col++;
+                        }
+                    }
+                    else
+                    {
+                        col += 6;
+                    }
+
+                    grayOut = !grayOut;
+                }
+
+                if (mVM.RowViewModels[i].values[9] == "Noise Model")
+                {
+                    row.Background = Brushes.Yellow;
+                }
+
+                windowRef.calculateButton.IsEnabled = true;
+            }
         }
 
         #endregion

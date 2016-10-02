@@ -575,7 +575,7 @@ namespace BayesianModeling.ViewModel
             };
             window.Owner = MainWindow;
             window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            window.Show();
+            window.ShowDialog();
         }
 
         /// <summary>
@@ -591,7 +591,7 @@ namespace BayesianModeling.ViewModel
             };
             window.Owner = MainWindow;
             window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            window.Show();
+            window.ShowDialog();
         }
 
         /// <summary>
@@ -607,7 +607,7 @@ namespace BayesianModeling.ViewModel
             };
             window.Owner = MainWindow;
             window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            window.Show();
+            window.ShowDialog();
         }
 
         /// <summary>
@@ -623,7 +623,7 @@ namespace BayesianModeling.ViewModel
             };
             window.Owner = MainWindow;
             window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            window.Show();
+            window.ShowDialog();
         }
 
         /// <summary>
@@ -639,7 +639,7 @@ namespace BayesianModeling.ViewModel
             };
             window.Owner = MainWindow;
             window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            window.Show();
+            window.ShowDialog();
         }
 
         /// <summary>
@@ -655,7 +655,7 @@ namespace BayesianModeling.ViewModel
             };
             window.Owner = MainWindow;
             window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            window.Show();
+            window.ShowDialog();
         }
 
         /// <summary>
@@ -671,7 +671,7 @@ namespace BayesianModeling.ViewModel
             };
             window.Owner = MainWindow;
             window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            window.Show();
+            window.ShowDialog();
         }
 
         /// <summary>
@@ -687,7 +687,7 @@ namespace BayesianModeling.ViewModel
             };
             window.Owner = MainWindow;
             window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            window.Show();
+            window.ShowDialog();
         }
 
         /// <summary>
@@ -703,7 +703,7 @@ namespace BayesianModeling.ViewModel
             };
             window.Owner = MainWindow;
             window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            window.Show();
+            window.ShowDialog();
         }
 
         /// <summary>
@@ -719,7 +719,7 @@ namespace BayesianModeling.ViewModel
             };
             window.Owner = MainWindow;
             window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            window.Show();
+            window.ShowDialog();
         }
         
         /// <summary>
@@ -735,7 +735,7 @@ namespace BayesianModeling.ViewModel
             };
             window.Owner = MainWindow;
             window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            window.Show();
+            window.ShowDialog();
         }
 
         #endregion Licences
@@ -985,6 +985,11 @@ namespace BayesianModeling.ViewModel
                 return;
             }
 
+            if (Application.Current.Windows.OfType<UnifiedDiscountingWindow>().Count() > 0)
+            {
+                return;
+            }
+
             var mWin = new UnifiedDiscountingWindow();
             mWin.Owner = MainWindow;
             mWin.DataContext = new ViewModelUnifiedDiscounting()
@@ -1002,7 +1007,7 @@ namespace BayesianModeling.ViewModel
         {
             var mWin = new InformationWindow();
             mWin.Owner = MainWindow;
-            mWin.Show();
+            mWin.ShowDialog();
         }
 
         /// <summary>
@@ -1012,7 +1017,7 @@ namespace BayesianModeling.ViewModel
         {
             var mWin = new HelpWindow();
             mWin.Owner = MainWindow;
-            mWin.Show();
+            mWin.ShowDialog();
         }
 
         #endregion OpenWindows

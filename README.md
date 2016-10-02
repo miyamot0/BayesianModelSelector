@@ -11,9 +11,10 @@ Features include:
   - Wide range of model outputs/metrics, saveable in common spreadsheet file formats
 
 ### Version
-1.0.0.74
+1.0.0.82
 
 ### Changelog
+ * 1.0.0.82 - Upstream changes..., licensing updates, formatting updates, standardized precision, spelling fixes, etc. 
  * 1.0.0.74 - Ugly Cut/Paste bug fixed. Added context menu with transposition options!
  * 1.0.0.73 - Various minor bug fixes, cleanup from private beta, language changes
  * 1.0.0.70 - Expanded output- Model probabilities output directly 

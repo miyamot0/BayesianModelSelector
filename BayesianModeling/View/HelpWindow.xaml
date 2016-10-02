@@ -1,4 +1,21 @@
-﻿<Window x:Class="BayesianModeling.View.HelpWindow"
+﻿<!--
+    Copyright 2016 Shawn Gilroy 
+
+    This file is part of Bayesian Model Selector.
+
+    Bayesian Model Selector is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2.
+
+    Bayesian Model Selector is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Bayesian Model Selector.  If not, see <http://www.gnu.org/licenses/gpl-2.0.html>.
+-->
+<Window x:Class="BayesianModeling.View.HelpWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -62,6 +79,16 @@
                     <Run Text="The BMS operates in a general fashion with R.  There are literally hundreds of R versions out there and depending your particular version, there may be variability in how it behaves." />
                     <Run Text="Generally, you should attempt to re-start the program so that it has a chance to fetch the needed packages.  If this doesn't help, email shawn(dot)gilroy(at)temple(dot)edu your specific log."/>
                 </Paragraph>
+
+                <Paragraph>
+                    <Bold>
+                        <Run Text="My data is highlighted in yellow?"/>
+                    </Bold>
+                    <LineBreak/>
+                    <LineBreak/>
+                    <Run Text="The model selection procedures work in a relative fashion-- All models are compared against one another.  In this way, there isn't a 'wrong' model but simply models that are more favorable than others. Data characterized according to the 'Noise Model' are series that don't appear to fit typical models and does not appear systematic. These series are highlighted so that users may orient to the data and inspect before drawing conclusions from other model parameters." />
+                </Paragraph>
+
             </FlowDocument>
         </FlowDocumentScrollViewer>
     </Grid>

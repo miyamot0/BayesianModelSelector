@@ -77,8 +77,8 @@
                                     Grid.Column="0"
                                     Grid.ColumnSpan="1"
                                     IsReadOnly="True"
-                                    EnableRowVirtualization="True"
-                                    EnableColumnVirtualization="True"
+                                    EnableRowVirtualization="False"
+                                    EnableColumnVirtualization="False"
                                     CanUserReorderColumns="False"
                                     CanUserSortColumns="False"
                                     RowDetailsVisibilityMode="Visible"
@@ -86,6 +86,7 @@
                                     ItemsSource="{Binding RowViewModels}"
                                     BorderThickness="0"
                                     VerticalAlignment="Stretch">
+                
                 <DataGrid.ColumnHeaderStyle>
                     <Style TargetType="{x:Type DataGridColumnHeader}">
                         <Setter Property="FontWeight"  Value="Bold" />
@@ -94,6 +95,7 @@
                         <Setter Property="MinWidth" Value="100" />
                     </Style>
                 </DataGrid.ColumnHeaderStyle>
+                
             </custom:CustomDataGrid>
 
         </DockPanel>

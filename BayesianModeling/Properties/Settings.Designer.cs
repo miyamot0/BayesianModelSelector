@@ -37,7 +37,7 @@ namespace BayesianModeling.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("400")]
+        [global::System.Configuration.DefaultSettingValueAttribute("600")]
         public double MainWidth {
             get {
                 return ((double)(this["MainWidth"]));
@@ -49,7 +49,7 @@ namespace BayesianModeling.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("400")]
+        [global::System.Configuration.DefaultSettingValueAttribute("600")]
         public double MainHeight {
             get {
                 return ((double)(this["MainHeight"]));
@@ -61,7 +61,7 @@ namespace BayesianModeling.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("400")]
+        [global::System.Configuration.DefaultSettingValueAttribute("600")]
         public double ResultWidth {
             get {
                 return ((double)(this["ResultWidth"]));
@@ -73,7 +73,7 @@ namespace BayesianModeling.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("400")]
+        [global::System.Configuration.DefaultSettingValueAttribute("600")]
         public double ResultHeight {
             get {
                 return ((double)(this["ResultHeight"]));

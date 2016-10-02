@@ -32,7 +32,7 @@
     <SuiteName>Bayesian Model Selector</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>78</ApplicationRevision>
+    <ApplicationRevision>82</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -65,10 +65,10 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>F9166C445E036D4B9E401E4C8145EBB845649CCE</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>A4BFF18D0AA581D30F6EC7253531C1411F4AFA3B</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>BayesianModeling_1_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>BayesianModeling_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <TargetZone>LocalIntranet</TargetZone>
@@ -291,7 +291,6 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="app.config" />
-    <None Include="BayesianModeling_1_TemporaryKey.pfx" />
     <None Include="BayesianModeling_TemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
