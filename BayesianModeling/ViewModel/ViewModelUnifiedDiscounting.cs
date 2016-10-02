@@ -242,6 +242,17 @@ namespace BayesianModeling.ViewModel
             }
         }
 
+        private bool boundRachHyperboloidModel = true;
+        public bool BoundRachHyperboloidModel
+        {
+            get { return boundRachHyperboloidModel; }
+            set
+            {
+                boundRachHyperboloidModel = value;
+                OnPropertyChanged("BoundRachHyperboloidModel");
+            }
+        }
+
         private Brush delaysBrush = Brushes.White;
         public Brush DelaysBrush
         {
@@ -1174,11 +1185,14 @@ namespace BayesianModeling.ViewModel
 
                 engine.Evaluate("datHack<-data.frame(X = mDelays, Y = mIndiffs, ses=mSes)");
 
+                string rachlinBoundCheck = (ConvertBoolToString(RachHyperboloidModel) == "1" && BoundRachHyperboloidModel) ? "2" : ConvertBoolToString(RachHyperboloidModel);
+
+                engine.Evaluate("datHack<-data.frame(X = mDelays, Y = mIndiffs, ses=mSes)");
                 string evalStatement = string.Format("output <-BDS(datHack, Noise={0},Mazur={1},Exponential={2},Rachlin={3},GreenMyerson={4},BD={5})",
                     1,
                     ConvertBoolToString(HyperbolicModel),
                     ConvertBoolToString(ExponentialModel),
-                    ConvertBoolToString(RachHyperboloidModel),
+                    rachlinBoundCheck,
                     ConvertBoolToString(MyerHyperboloidModel),
                     ConvertBoolToString(QuasiHyperbolicModel));
 
@@ -1770,12 +1784,14 @@ namespace BayesianModeling.ViewModel
                         engine.Evaluate(DiscountingModelSelection.GetFranckFunction());
                     }
 
+                    string rachlinBoundCheck = (ConvertBoolToString(RachHyperboloidModel) == "1" && BoundRachHyperboloidModel) ? "2" : ConvertBoolToString(RachHyperboloidModel);
+
                     engine.Evaluate("datHack<-data.frame(X = mDelays, Y = mIndiffs, ses=mSes)");
                     string evalStatement = string.Format("output <-BDS(datHack, Noise={0},Mazur={1},Exponential={2},Rachlin={3},GreenMyerson={4},BD={5})",
                         1,
                         ConvertBoolToString(HyperbolicModel),
                         ConvertBoolToString(ExponentialModel),
-                        ConvertBoolToString(RachHyperboloidModel),
+                        rachlinBoundCheck,
                         ConvertBoolToString(MyerHyperboloidModel),
                         ConvertBoolToString(QuasiHyperbolicModel));
 

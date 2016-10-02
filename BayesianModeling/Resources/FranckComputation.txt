@@ -210,13 +210,29 @@ BDS<-function(dat,Noise=1,Mazur=1,Exponential=1,Rachlin=1,GreenMyerson=1,BD=1){
     
     #Fit the Rachlin model
     ini.par <- ini.par.Rach #Starting points
-    if((Rachlin==1)&(!is.character(try(nls(y~(1+exp(lnK)*(x^s))^(-1), start = ini.par),silent=TRUE)))){
-      modfit.Rachlin<-nls(y~(1+exp(lnK)*(x^s))^(-1), start = ini.par)
-      Rachlin.frame$Rachlin.lnk<-summary(modfit.Rachlin)$coeff[1,1]
-      Rachlin.frame$Rachlin.s<-summary(modfit.Rachlin)$coeff[2,1]
-      Rachlin.frame$Rachlin.RMSE<-summary(modfit.Rachlin)$sigma
-      Rachlin.frame$Rachlin.BIC<-BIC(modfit.Rachlin)
-    }else(AF[5]<-0)
+
+	#Clamp starting points for s, since bounded
+	if (Rachlin==2) {
+		if (ini.par[2] > 1) {
+			ini.par[2] = 0.9999
+		} else if (ini.par[2] < 0) {
+			ini.par[2] = 0.0001		
+		}
+	}	
+
+	if((Rachlin==1)&(!is.character(try(nls(y~(1+exp(lnK)*(x^s))^(-1), start = ini.par), silent=FALSE)))){
+		modfit.Rachlin<-nls(y~(1+exp(lnK)*(x^s))^(-1), alg="port", start = ini.par)
+		Rachlin.frame$Rachlin.lnk<-summary(modfit.Rachlin)$coeff[1,1]
+		Rachlin.frame$Rachlin.s<-summary(modfit.Rachlin)$coeff[2,1]
+		Rachlin.frame$Rachlin.RMSE<-summary(modfit.Rachlin)$sigma
+		Rachlin.frame$Rachlin.BIC<-BIC(modfit.Rachlin)
+	} else if((Rachlin==2)&(!is.character(try(nls(y~(1+exp(lnK)*(x^s))^(-1), alg="port", start = ini.par, upper = list(lnK=1000, s = 1), lower = list(lnK=-1000, s = 0.0001)), silent=FALSE)))){
+		modfit.Rachlin<-nls(y~(1+exp(lnK)*(x^s))^(-1), alg="port", start = ini.par, upper = list(lnK = 1000, s = 1), lower = list(lnK = -1000, s = 0))
+		Rachlin.frame$Rachlin.lnk<-summary(modfit.Rachlin)$coeff[1,1]
+		Rachlin.frame$Rachlin.s<-summary(modfit.Rachlin)$coeff[2,1]
+		Rachlin.frame$Rachlin.RMSE<-summary(modfit.Rachlin)$sigma
+		Rachlin.frame$Rachlin.BIC<-BIC(modfit.Rachlin)
+	} else(AF[5]<-0)
     
     ini.par<-ini.par.BD
     if((BD==1)&(!is.character(try( nls(y~beta*delta^x,start=ini.par,algorithm='port',lower=0,upper=1),silent=TRUE)))){
@@ -225,10 +241,8 @@ BDS<-function(dat,Noise=1,Mazur=1,Exponential=1,Rachlin=1,GreenMyerson=1,BD=1){
       BD.frame$BD.delta<-summary(modfit.BD)$coeff[2,1]
       BD.frame$BD.RMSE<-summary(modfit.BD)$sigma
       BD.frame$BD.BIC<-BIC(modfit.BD)
-    }else(AF[6]<-0)
-    
-    
-    
+    }else(AF[6]<-0)   
+   
     ###Compute model probabilities
     BICvec<-c(noise.frame$noise.BIC,Mazur.frame$Mazur.BIC,exp.frame$exp.BIC,MG.frame$MG.BIC,Rachlin.frame$Rachlin.BIC,BD.frame$BD.BIC)
     BICstore<-BICvec[!is.na(BICvec)]
@@ -241,7 +255,7 @@ BDS<-function(dat,Noise=1,Mazur=1,Exponential=1,Rachlin=1,GreenMyerson=1,BD=1){
     mBFvec<-rep(NA,6)
     mi<-1
     for(j in 1:6){
-      if(AF[j]==1){mprobvec[j]<-probvec[mi];mBFvec[j]<-BFvec[mi];mi<-mi+1}
+      if(AF[j]==1 || AF[j]==2){mprobvec[j]<-probvec[mi];mBFvec[j]<-BFvec[mi];mi<-mi+1}
       if(AF[j]==0){mprobvec[j]<-NA;mBFvec[j]<-NA}
     }
     
@@ -259,8 +273,7 @@ BDS<-function(dat,Noise=1,Mazur=1,Exponential=1,Rachlin=1,GreenMyerson=1,BD=1){
     BD.frame$BD.BF<-mBFvec[6]
     BD.frame$BD.prob<-mprobvec[6]
 
-  
-  
+	 
   prob.frame<-data.frame(
     Noise=noise.frame$noise.prob, 
     Mazur=Mazur.frame$Mazur.prob,
