@@ -18,12 +18,12 @@
 # Input is a data frame with $X for delay, $Y for indiff point, and $ses for session
 # 
 # Arguments      value     purpose
-# Noise          binary    include noise model?
-# Mazur          binary    include Mazur model?
-# Exponential    binary    include Exponential model? 
-# Rachlin        binary    include Rachlin model?
-# GreenMyerson   binary    include Green-Myerson model?
-# BD             binary    include quasi-hyperboloid (aka betaq-delta) model?  
+# Noise          binary    include noise model? (0 = pass, 1 = run)
+# Mazur          binary    include Mazur model? (0 = pass, 1 = run)
+# Exponential    binary    include Exponential model? (0 = pass, 1 = run)
+# Rachlin        binary    include Rachlin model? (0 = pass, 1 = run, 2 = bound s parameter)
+# GreenMyerson   binary    include Green-Myerson model? (0 = pass, 1 = run)
+# BD             binary    include quasi-hyperboloid (aka beta-delta) model? (0 = pass, 1 = run)  
 #
 # Version history
 # v001 adapted from latest carilion day poster session
@@ -34,6 +34,7 @@
 # v006 replaces generic starting values with optimal grid values
 # v007 adds the beta-delta model option to the algorithm
 # v008 corrects a critical error in the computation of ED50 for the beta delta model
+# v009 introduce optional bounding for Rachlin's hyperboloid model
 
 BDS<-function(dat,Noise=1,Mazur=1,Exponential=1,Rachlin=1,GreenMyerson=1,BD=1){
   #Debug option
@@ -211,7 +212,7 @@ BDS<-function(dat,Noise=1,Mazur=1,Exponential=1,Rachlin=1,GreenMyerson=1,BD=1){
     #Fit the Rachlin model
     ini.par <- ini.par.Rach #Starting points
 
-	#Clamp starting points for s, since bounded
+	# Clamp starting points for s, since bounded
 	if (Rachlin==2) {
 		if (ini.par[2] > 1) {
 			ini.par[2] = 0.9999
