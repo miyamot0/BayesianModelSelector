@@ -77,7 +77,7 @@
                 Grid.Column="0"
                 Grid.ColumnSpan="4"
                 FontSize="18"
-                Text="Bayesian Model Selection"
+                Text="Discounting Model Selection"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center">
             </TextBlock>
@@ -512,7 +512,7 @@
                         FontSize="12" 
                         FontFamily="Segoe UI" 
                         Padding="0,5,0,0">
-                        Bayesian Model Selector can determine the best performing model of 
+                        Discounting Model Selector can determine the best performing model of 
                         discounting from a selection of common discounting models. You may 
                         select models for comparison below.  It is worth noting that by default,
                         it is recommended that all models be considered.

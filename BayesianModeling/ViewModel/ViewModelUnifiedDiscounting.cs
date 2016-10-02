@@ -2,27 +2,27 @@
 // <copyright file="ViewModelUnifiedDiscounting.cs" 
 // Copyright 2016 Shawn Gilroy
 //
-// This file is part of Bayesian Model Selector.
+// This file is part of Discounting Model Selector.
 //
-// Bayesian Model Selector is free software: you can redistribute it and/or modify
+// Discounting Model Selector is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, version 2.
 //
-// Bayesian Model Selector is distributed in the hope that it will be useful,
+// Discounting Model Selector is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Bayesian Model Selector.  If not, see http://www.gnu.org/licenses/. 
+// along with Discounting Model Selector.  If not, see http://www.gnu.org/licenses/. 
 // </copyright>
 //
 // <summary>
-// The Bayesian Model Selector is a tool to assist researchers in behavior economics.
+// The Discounting Model Selector is a tool to assist researchers in behavior economics.
 // 
 // Email: shawn(dot)gilroy(at)temple.edu
 //
-// Bayesian Model Selector utilizes R.Net Community to communicate with the R program
+// Discounting Model Selector utilizes R.Net Community to communicate with the R program
 //
 //    R.NET Community is distributed under this license:
 //    
@@ -1214,7 +1214,7 @@ namespace BayesianModeling.ViewModel
                 mVM.RowViewModels.Add(new RowViewModel());
             }
 
-            mVM.RowViewModels[0].values[0] = "Results of Bayesian Model Selector";
+            mVM.RowViewModels[0].values[0] = "Results of Discounting Model Selector";
             mVM.RowViewModels[1].values[0] = "Single Series Analysis";
             mVM.RowViewModels[0].values[1] = "Exponential - k: ";
 
@@ -1409,7 +1409,7 @@ namespace BayesianModeling.ViewModel
                 }
 
                 mWindow.OutputEvents("Please remember to cite the packages used in this process!");
-                mWindow.OutputEvents("Citation:: Gilroy, S. G., Franck, C. T. & Hantula, D. A. (2016). Technical Report: The Bayesian Model Selector: Statistical discounting software.");
+                mWindow.OutputEvents("Citation:: Gilroy, S. G., Franck, C. T. & Hantula, D. A. (2016). Technical Report: The Discounting Model Selector: Statistical discounting software.");
                 mWindow.OutputEvents("Citation:: Franck, C. T., Koffarnus, M. N., House, L. L. & Bickel, W. K. (2015). Accurate characterization of delay discounting: a multiple model approach using approximate Bayesian model selection and a unified discounting measure. Journal of the Experimental Analysis of Behavior, 103(1), 218-233.");
                 mWindow.OutputEvents("Citation:: " + string.Join("", engine.Evaluate("citation()$textVersion").AsCharacter().ToArray()));
                 mWindow.OutputEvents("Citation:: " + string.Join("", engine.Evaluate("citation('ggplot2')$textVersion").AsCharacter().ToArray()));
@@ -1710,7 +1710,7 @@ namespace BayesianModeling.ViewModel
 
             mWindow.OutputEvents("Final Calculations Completed!");
             mWindow.OutputEvents("Please remember to cite the packages used in this process!");
-            mWindow.OutputEvents("Citation:: Gilroy, S. G., Franck, C. T. & Hantula, D. A. (2016). Technical Report: The Bayesian Model Selector: Statistical discounting software.");
+            mWindow.OutputEvents("Citation:: Gilroy, S. G., Franck, C. T. & Hantula, D. A. (2016). Technical Report: The Discounting Model Selector: Statistical discounting software.");
             mWindow.OutputEvents("Citation:: Franck, C. T., Koffarnus, M. N., House, L. L. & Bickel, W. K. (2015). Accurate characterization of delay discounting: a multiple model approach using approximate Bayesian model selection and a unified discounting measure. Journal of the Experimental Analysis of Behavior, 103(1), 218-233.");
             mWindow.OutputEvents("Citation:: " + string.Join("", engine.Evaluate("citation()$textVersion").AsCharacter().ToArray()));
             mWindow.OutputEvents("Citation:: " + string.Join("", engine.Evaluate("citation('ggplot2')$textVersion").AsCharacter().ToArray()));

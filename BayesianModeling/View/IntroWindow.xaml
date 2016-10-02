@@ -1,19 +1,19 @@
 ﻿<!--
     Copyright 2016 Shawn Gilroy 
 
-    This file is part of Bayesian Model Selector.
+    This file is part of Discounting Model Selector.
 
-    Bayesian Model Selector is free software: you can redistribute it and/or modify
+    Discounting Model Selector is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, version 2.
 
-    Bayesian Model Selector is distributed in the hope that it will be useful,
+    Discounting Model Selector is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Bayesian Model Selector.  If not, see <http://www.gnu.org/licenses/gpl-2.0.html>.
+    along with Discounting Model Selector.  If not, see <http://www.gnu.org/licenses/gpl-2.0.html>.
 -->
     
 <Window x:Class="BayesianModeling.View.IntroWindow"
@@ -41,11 +41,11 @@
                 </Paragraph>
                 <Paragraph>
                     The
-                    <Bold>Bayesian Model Selector</Bold>
+                    <Bold>Discounting Model Selector</Bold>
                     is a tool designed to aid in the selection of models in
-                    temporal discounting.  Bayesian Model Selection itself is 
+                    temporal discounting.  Discounting Model Selection itself is 
                     available as a script runnable in R alone and the 
-                    <Bold>Bayesian Model Selector</Bold>
+                    <Bold>Discounting Model Selector</Bold>
                     serves as an easy bridge for accessing these methods in 
                     familiar, spreadsheet-based interface.
                 </Paragraph>

@@ -1,23 +1,23 @@
-Bayesian Model Selector is Copyright (C) 2016 Shawn Gilroy
+Discounting Model Selector is Copyright (C) 2016 Shawn Gilroy
 Contact: Shawn Gilroy (shawn.gilroy@temple.edu)
 
 ====================
-Bayesian Model Selector LICENSE
+Discounting Model Selector LICENSE
 ====================
 
-Bayesian Model Selector is free software: you can redistribute it and/or modify it 
+Discounting Model Selector is free software: you can redistribute it and/or modify it 
 under the terms of the GNU General Public License as published by the 
 Free Software Foundation, version 2.
 
-Bayesian Model Selector is distributed in the hope that it will be useful, but
+Discounting Model Selector is distributed in the hope that it will be useful, but
 WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
 Public License for more details.
 
 You should have received a copy of the GNU General Public License along
-with Bayesian Model Selector. If not, see <http://www.gnu.org/licenses/>.
+with Discounting Model Selector. If not, see <http://www.gnu.org/licenses/>.
 
-Bayesian Model Selector references several works in order to function
+Discounting Model Selector references several works in order to function
 properly.  These include:
 
 R.Net Community - Binary redistribution - .Net to R interface

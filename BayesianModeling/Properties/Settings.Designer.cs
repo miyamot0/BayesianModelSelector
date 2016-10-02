@@ -25,7 +25,7 @@ namespace BayesianModeling.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Bayesian Model Selector")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Discounting Model Selector")]
         public string ApplicationTitle {
             get {
                 return ((string)(this["ApplicationTitle"]));

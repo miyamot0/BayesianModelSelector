@@ -64,13 +64,13 @@ namespace BayesianModeling.Properties {
         ///   Looks up a localized string similar to # 
         ///#    Copyright 2016 Shawn Gilroy
         ///#
-        ///#    This file is part of Bayesian Model Selector.
+        ///#    This file is part of Discounting Model Selector.
         ///#
-        ///#    Bayesian Model Selector is free software: you can redistribute it and/or modify
+        ///#    Discounting Model Selector is free software: you can redistribute it and/or modify
         ///#    it under the terms of the GNU General Public License as published by
         ///#    the Free Software Foundation, version 2.
         ///#
-        ///#    Bayesian Model Selector is distributed in the hope that it will be useful,
+        ///#    Discounting Model Selector is distributed in the hope that it will be useful,
         ///#    but WITHOUT ANY WARRANTY; without even the implied warranty of
         ///#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOS [rest of string was truncated]&quot;;.
         /// </summary>
@@ -83,13 +83,13 @@ namespace BayesianModeling.Properties {
         /// <summary>
         ///   Looks up a localized string similar to #    Copyright 2016 Chris Franck
         ///#
-        ///#    This file is part of Bayesian Model Selector.
+        ///#    This file is part of Discounting Model Selector.
         ///#
-        ///#    Bayesian Model Selector is free software: you can redistribute it and/or modify
+        ///#    Discounting Model Selector is free software: you can redistribute it and/or modify
         ///#    it under the terms of the GNU General Public License as published by
         ///#    the Free Software Foundation, version 2.
         ///#
-        ///#    Bayesian Model Selector is distributed in the hope that it will be useful,
+        ///#    Discounting Model Selector is distributed in the hope that it will be useful,
         ///#    but WITHOUT ANY WARRANTY; without even the implied warranty of
         ///#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.   [rest of string was truncated]&quot;;.
         /// </summary>
@@ -100,18 +100,18 @@ namespace BayesianModeling.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Bayesian Model Selector is Copyright (C) 2016 Shawn Gilroy
+        ///   Looks up a localized string similar to Discounting Model Selector is Copyright (C) 2016 Shawn Gilroy
         ///Contact: Shawn Gilroy (shawn.gilroy@temple.edu)
         ///
         ///====================
-        ///Bayesian Model Selector LICENSE
+        ///Discounting Model Selector LICENSE
         ///====================
         ///
-        ///Bayesian Model Selector is free software: you can redistribute it and/or modify it 
+        ///Discounting Model Selector is free software: you can redistribute it and/or modify it 
         ///under the terms of the GNU General Public License as published by the 
         ///Free Software Foundation, version 2.
         ///
-        ///Bayesian Model Selector is distributed in the hope that it will be useful, but
+        ///Discounting Model Selector is distributed in the hope that it will be useful, but
         ///WITHOUT ANY WARRANTY; without even the implie [rest of string was truncated]&quot;;.
         /// </summary>
         public static string License {

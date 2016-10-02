@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BayesianModeling.View"
         mc:Ignorable="d"
-        Title="Bayesian Model Selector - Accept License"
+        Title="Discounting Model Selector - Accept License"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         Height="500" 
@@ -34,7 +34,7 @@
             Margin="5">
             License Agreement
             <LineBreak></LineBreak>
-            Please review the terms before using Bayesian Model Selector.
+            Please review the terms before using Discounting Model Selector.
         </TextBlock>
 
         <FlowDocumentScrollViewer Grid.Row="1"

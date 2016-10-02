@@ -2,27 +2,27 @@
 // <copyright file="ViewModelMainWindow.cs" 
 // Copyright 2016 Shawn Gilroy
 //
-// This file is part of Bayesian Model Selector.
+// This file is part of Discounting Model Selector.
 //
-// Bayesian Model Selector is free software: you can redistribute it and/or modify
+// Discounting Model Selector is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, version 2.
 //
-// Bayesian Model Selector is distributed in the hope that it will be useful,
+// Discounting Model Selector is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Bayesian Model Selector.  If not, see http://www.gnu.org/licenses/. 
+// along with Discounting Model Selector.  If not, see http://www.gnu.org/licenses/. 
 // </copyright>
 //
 // <summary>
-// The Bayesian Model Selector is a tool to assist researchers in behavior economics.
+// The Discounting Model Selector is a tool to assist researchers in behavior economics.
 // 
 // Email: shawn(dot)gilroy(at)temple.edu
 //
-// Bayesian Model Selector utilizes R.Net Community to communicate with the R program
+// Discounting Model Selector utilizes R.Net Community to communicate with the R program
 //
 //    R.NET Community is distributed under this license:
 //    
@@ -52,7 +52,7 @@
 //    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 //    OF SUCH DAMAGE.
 //
-// Bayesian Model Selector utilizes EPPlus to leverage interactions with XML file formats
+// Discounting Model Selector utilizes EPPlus to leverage interactions with XML file formats
 //
 //    EPPlus is distributed under this license:
 //
@@ -100,8 +100,8 @@ namespace BayesianModeling.ViewModel
 
         #region Observable Bindings
 
-        private SmartCollection<RowViewModel> rowViewModels { get; set; }
-        public SmartCollection<RowViewModel> RowViewModels
+        private ObservableCollection<RowViewModel> rowViewModels { get; set; }
+        public ObservableCollection<RowViewModel> RowViewModels
         {
             get { return rowViewModels; }
             set
@@ -122,7 +122,7 @@ namespace BayesianModeling.ViewModel
             }
         }
 
-        public string title = "Bayesian Model Selection - New File";
+        public string title = "Discounting Model Selection - New File";
         public string Title
         {
             get { return title; }
@@ -148,8 +148,6 @@ namespace BayesianModeling.ViewModel
         public RelayCommand FileSaveNoDialogCommand { get; set; }
         public RelayCommand RecentsClearCommand { get; set; }
         public RelayCommand HelpCommand { get; set; }
-
-        public RelayCommand EventCommand { get; set; }
 
         /* Loading Commands */
 
@@ -213,8 +211,7 @@ namespace BayesianModeling.ViewModel
 
             FileSaveNoDialogCommand = new RelayCommand(param => SaveFileWithoutDialog(), param => true);
             FileOpenNoDialogCommand = new RelayCommand(param => FileOpenNoDialog(param), param => true);
-
-            EventCommand = new RelayCommand(param => RaiseChangeEvent(), param => true);
+            
             HelpCommand = new RelayCommand(param => OpenHelpWindow(), param => true);
             RecentsClearCommand = new RelayCommand(param => ClearRecents(), param => true);
             RecentStuff = new ObservableCollection<MenuItem>();
@@ -282,7 +279,7 @@ namespace BayesianModeling.ViewModel
 
             #endregion
 
-            RowViewModels = new SmartCollection<RowViewModel>();
+            RowViewModels = new ObservableCollection<RowViewModel>();
 
             ObservableCollection<RowViewModel> temp = new ObservableCollection<RowViewModel>();
 
@@ -293,8 +290,7 @@ namespace BayesianModeling.ViewModel
 
             /* Minor speedup, avoids many UI update calls */
 
-            RowViewModels = new SmartCollection<RowViewModel>(temp);
-            RowViewModels.CollectionChanged += this.OnCollectionChanged;
+            RowViewModels = new ObservableCollection<RowViewModel>(temp);
 
             if (Properties.Settings.Default.GUID.Trim().Length < 1)
             {
@@ -316,88 +312,6 @@ namespace BayesianModeling.ViewModel
                     Application.Current.Shutdown();
                 }
             }
-        }
-
-        public class SmartCollection<T> : ObservableCollection<T>
-        {
-            public SmartCollection() : base()
-            {
-                this.OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Count"));
-                this.OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Item[]"));
-                this.OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-            }
-
-            public SmartCollection(IEnumerable<T> collection) : base(collection)
-            {
-                this.OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Count"));
-                this.OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Item[]"));
-                this.OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-            }
-
-            public SmartCollection(List<T> list)
-                : base(list)
-            {
-                this.OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Count"));
-                this.OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Item[]"));
-                this.OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-            }
-
-            public void AddRange(IEnumerable<T> range)
-            {
-                foreach (var item in range)
-                {
-                    Items.Add(item);
-                }
-
-                this.OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Count"));
-                this.OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Item[]"));
-                this.OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-            }
-
-            public void Reset(IEnumerable<T> range)
-            {
-                this.Items.Clear();
-
-                AddRange(range);
-            }
-        }
-
-        void RaiseChangeEvent()
-        {
-            Console.Out.WriteLine("fire");
-            //RowViewModels.Add(new RowViewModel());
-            //RowViewModels.Remove(new RowViewModel());
-        }
-
-        void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            //Get the sender observable collection
-            ObservableCollection<RowViewModel> obsSender = sender as ObservableCollection<RowViewModel>;
-
-            if (obsSender == null)
-            {
-                Console.Out.WriteLine("was null");
-                return;
-            }
-
-            List<RowViewModel> editedOrRemovedItems = new List<RowViewModel>();
-            foreach (RowViewModel newItem in e.NewItems)
-            {
-                //editedOrRemovedItems.Add(newItem);
-                Console.Out.WriteLine("new: " + newItem);
-            }
-
-            if (e.OldItems != null)
-            {
-                foreach (RowViewModel oldItem in e.OldItems)
-                {
-                    //editedOrRemovedItems.Add(oldItem);
-                    Console.Out.WriteLine("old: " + oldItem);
-                }
-            }
-
-            //Get the action which raised the collection changed event
-            //NotifyCollectionChangedAction action = e.Action;
         }
 
         #region UI
@@ -1000,7 +914,7 @@ namespace BayesianModeling.ViewModel
 
                 SendMessageToOutput("");
                 SendMessageToOutput("A listing of all referenced software, with licensing, has been displayed above.");
-                SendMessageToOutput("TLDR: Bayesian Model Selector is made possible by the following software.");
+                SendMessageToOutput("TLDR: Discounting Model Selector is made possible by the following software.");
                 SendMessageToOutput("");
                 SendMessageToOutput("R Statistical Package - GPL v2+ Licensed. Copyright (C) 2000-16. The R Core Team");
                 SendMessageToOutput("nls R Package - GPLv2+ Licensed. Copyright (C) 1999-1999 Saikat DebRoy, Douglas M. Bates, Jose C. Pinheiro.");
@@ -1295,67 +1209,77 @@ namespace BayesianModeling.ViewModel
         /// </summary>
         private void OpenFile()
         {
-            OpenFileDialog openFileDialog1 = new OpenFileDialog();
-
-            openFileDialog1.Filter = "Spreadsheet Files (XLSX, CSV)|*.xlsx;*.csv";
-            openFileDialog1.Title = "Select an Excel File";
-
-            if (openFileDialog1.ShowDialog() == true)
+            try
             {
-                loadThread = new Thread(new ThreadStart(ShowFileUIProgressWindow));
-                loadThread.SetApartmentState(ApartmentState.STA);
-                loadThread.IsBackground = true;
-                loadThread.Start();
+                OpenFileDialog openFileDialog1 = new OpenFileDialog();
 
-                string mExt = Path.GetExtension(openFileDialog1.FileName);
+                openFileDialog1.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                openFileDialog1.Filter = "Spreadsheet Files (XLSX, CSV)|*.xlsx;*.csv";
+                openFileDialog1.Title = "Select an Excel File";
 
-                path = Path.GetDirectoryName(openFileDialog1.FileName);
-
-                try
+                if (openFileDialog1.ShowDialog() == true)
                 {
-                    if (mExt.Equals(".xlsx"))
-                    {
-                        ObservableCollection<RowViewModel> temp = OpenXMLHelper.ReadFromExcelFile(openFileDialog1.FileName, out workingSheet);
+                    loadThread = new Thread(new ThreadStart(ShowFileUIProgressWindow));
+                    loadThread.SetApartmentState(ApartmentState.STA);
+                    loadThread.IsBackground = true;
+                    loadThread.Start();
 
-                        if (temp == null)
+                    string mExt = Path.GetExtension(openFileDialog1.FileName);
+
+                    path = Path.GetDirectoryName(openFileDialog1.FileName);
+
+                    try
+                    {
+                        if (mExt.Equals(".xlsx"))
                         {
-                            CloseFileUIProgressWindow();
-                            return;
+                            ObservableCollection<RowViewModel> temp = OpenXMLHelper.ReadFromExcelFile(openFileDialog1.FileName, out workingSheet);
+
+                            if (temp == null)
+                            {
+                                CloseFileUIProgressWindow();
+                                return;
+                            }
+
+                            RowViewModels = new ObservableCollection<RowViewModel>(temp);
+
+                            UpdateTitle(openFileDialog1.SafeFileName);
+                            haveFileLoaded = true;
+                        }
+                        else if (mExt.Equals(".csv"))
+                        {
+                            ObservableCollection<RowViewModel> temp = OpenXMLHelper.ReadFromCSVFile(openFileDialog1.FileName);
+                            RowViewModels = new ObservableCollection<RowViewModel>(temp);
+
+                            UpdateTitle(openFileDialog1.SafeFileName);
+                            haveFileLoaded = true;
                         }
 
-                        RowViewModels = new SmartCollection<RowViewModel>(temp);
-
-                        UpdateTitle(openFileDialog1.SafeFileName);
-                        haveFileLoaded = true;
+                        AddToRecents(@openFileDialog1.FileName);
                     }
-                    else if (mExt.Equals(".csv"))
+                    catch (IOException e)
                     {
-                        ObservableCollection<RowViewModel> temp = OpenXMLHelper.ReadFromCSVFile(openFileDialog1.FileName);
-                        RowViewModels = new SmartCollection<RowViewModel>(temp);
-
-                        UpdateTitle(openFileDialog1.SafeFileName);
-                        haveFileLoaded = true;
+                        CloseFileUIProgressWindow();
+                        Logging.SubmitError("OpenFile", e.ToString());
+                        Console.WriteLine(e.ToString());
+                        MessageBox.Show("We weren't able to save.  Is the target file either open, missing or in use?");
+                    }
+                    catch (Exception e)
+                    {
+                        CloseFileUIProgressWindow();
+                        Logging.SubmitError("OpenFile", e.ToString());
+                        Console.WriteLine(e.ToString());
+                        MessageBox.Show("We weren't able to save.  Is the target file either open, missing or in use?");
                     }
 
-                    AddToRecents(@openFileDialog1.FileName);
-                }
-                catch (IOException e)
-                {
                     CloseFileUIProgressWindow();
-                    Logging.SubmitError("OpenFile", e.ToString());
-                    Console.WriteLine(e.ToString());
-                    MessageBox.Show("We weren't able to save.  Is the target file either open, missing or in use?");
                 }
-                catch (Exception e)
-                {
-                    CloseFileUIProgressWindow();
-                    Logging.SubmitError("OpenFile", e.ToString());
-                    Console.WriteLine(e.ToString());
-                    MessageBox.Show("We weren't able to save.  Is the target file either open, missing or in use?");
-                }
-
-                CloseFileUIProgressWindow();
             }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+
+
         }
 
         /// <summary>
@@ -1387,7 +1311,7 @@ namespace BayesianModeling.ViewModel
                         return;
                     }
 
-                    RowViewModels = new SmartCollection<RowViewModel>(temp);
+                    RowViewModels = new ObservableCollection<RowViewModel>(temp);
 
                     UpdateTitle(Path.GetFileName(filePath));
                     haveFileLoaded = true;
@@ -1401,7 +1325,7 @@ namespace BayesianModeling.ViewModel
                         return;
                     }
 
-                    RowViewModels = new SmartCollection<RowViewModel>(temp);
+                    RowViewModels = new ObservableCollection<RowViewModel>(temp);
 
                     UpdateTitle(Path.GetFileName(filePath));
                     haveFileLoaded = true;
