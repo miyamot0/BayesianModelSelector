@@ -25,7 +25,6 @@
 // </summary>
 //----------------------------------------------------------------------------------------------
 
-using BayesianModeling.View;
 using BayesianModeling.ViewModel;
 using System.Windows;
 

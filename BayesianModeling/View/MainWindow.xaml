@@ -92,7 +92,7 @@
                 </MenuItem>
 
                 <MenuItem Header="_Analyses">
-                    <MenuItem Header="_Bayesian Discounting Model Selection" 
+                    <MenuItem Header="_Discounting Model Selection" 
                               Command="{Binding UnifiedDiscountingWindowCommand}">
                     </MenuItem>
                 </MenuItem>
