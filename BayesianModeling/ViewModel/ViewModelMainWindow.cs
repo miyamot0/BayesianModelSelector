@@ -752,7 +752,7 @@ namespace BayesianModeling.ViewModel
             introWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             introWindow.Show();
 
-            SendMessageToOutput("Welcome to Bayesian discounting model selector!");
+            SendMessageToOutput("Welcome to Discounting Model Selector!");
             SendMessageToOutput("");
             SendMessageToOutput("All view elements loaded");
             SendMessageToOutput("");

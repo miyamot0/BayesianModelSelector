@@ -167,7 +167,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Mathematics\BayesianModelSelection.cs" />
+    <Compile Include="Mathematics\DiscountingModelSelection.cs" />
     <Compile Include="Utilities\ClipboardTools.cs" />
     <Compile Include="Utilities\CustomDataGrid.cs" />
     <Compile Include="Utilities\DataGridTools.cs" />

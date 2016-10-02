@@ -1,5 +1,5 @@
 ﻿//----------------------------------------------------------------------------------------------
-// <copyright file="BayesianModelSelection.cs" 
+// <copyright file="DiscountingModelSelection.cs" 
 // Copyright 2016 Shawn Gilroy
 //
 // This file is part of Discounting Model Selector.
@@ -27,7 +27,7 @@
 
 namespace BayesianModeling.Mathematics
 {
-    class BayesianModelSelection
+    class DiscountingModelSelection
     {
         /// <summary>
         /// Chris Franck's Discounting Model Selection script is called from resources here (as string), for use in R function calls

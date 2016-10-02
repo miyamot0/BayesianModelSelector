@@ -29,7 +29,7 @@ gridExtra - R package - visualization of plots in R
 base64enc - R package - base64 encoding for transmitting plots
 reshape2 - R package - organization and shaping of data in R
 scales - R package - visualization of plots in R
-BDS - R script - procedure for Discounting Model comparisons using bayesian information criterion
+BDS - R script - procedure for Discounting Model comparisons using  information criterion
 
 Individual licenses for these software are displayed below, as well as in the /Resources 
 folder of this application. 

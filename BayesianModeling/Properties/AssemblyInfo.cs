@@ -6,7 +6,7 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly. 
 [assembly: AssemblyTitle("Discounting Modeling")]
-[assembly: AssemblyDescription("Bayesian Discounting Modeling Selection")]
+[assembly: AssemblyDescription("Discounting Modeling Selection")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Small n Stats")]
 [assembly: AssemblyProduct("Discounting Modeling")]

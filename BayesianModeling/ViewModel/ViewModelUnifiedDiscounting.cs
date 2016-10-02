@@ -1126,7 +1126,7 @@ namespace BayesianModeling.ViewModel
             mWindow.OutputEvents("Inputs passed verification.");
             mWindow.OutputEvents("Figure output: " + outputFigures);
             mWindow.OutputEvents("Workbook output: true");
-            mWindow.OutputEvents("Beginning Bayesian Computation...");
+            mWindow.OutputEvents("Beginning Computation...");
 
             windowRef.calculateButton.IsEnabled = false;
 
@@ -1170,7 +1170,7 @@ namespace BayesianModeling.ViewModel
                 NumericVector sesValues = engine.CreateNumericVector(sValues.ToArray());
                 engine.SetSymbol("mSes", sesValues);
 
-                engine.Evaluate(BayesianModelSelection.GetFranckFunction());
+                engine.Evaluate(DiscountingModelSelection.GetFranckFunction());
 
                 engine.Evaluate("datHack<-data.frame(X = mDelays, Y = mIndiffs, ses=mSes)");
 
@@ -1538,7 +1538,7 @@ namespace BayesianModeling.ViewModel
                     engine.Evaluate("library(reshape2)");
                     engine.Evaluate("library(gridExtra)");
 
-                    engine.Evaluate(BayesianModelSelection.GetLogChartFunction());
+                    engine.Evaluate(DiscountingModelSelection.GetLogChartFunction());
 
                     WpfDrawingSettings settings = new WpfDrawingSettings();
                     settings.IncludeRuntime = true;
@@ -1767,7 +1767,7 @@ namespace BayesianModeling.ViewModel
 
                     if (mIndex == 0)
                     {
-                        engine.Evaluate(BayesianModelSelection.GetFranckFunction());
+                        engine.Evaluate(DiscountingModelSelection.GetFranckFunction());
                     }
 
                     engine.Evaluate("datHack<-data.frame(X = mDelays, Y = mIndiffs, ses=mSes)");
