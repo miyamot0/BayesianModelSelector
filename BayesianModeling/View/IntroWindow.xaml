@@ -36,8 +36,8 @@
                 <Paragraph>
                     <Image Source="/Resources/SNS.png" Width="90" Height="90" Margin="0,0,30,0" />
                     <Run 
-                        FontSize="22"
-                        BaselineAlignment="Center">Bayesian Model Simulator</Run>
+                        FontSize="20"
+                        BaselineAlignment="Center">Discounting Model Simulator</Run>
                 </Paragraph>
                 <Paragraph>
                     The

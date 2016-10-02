@@ -1,19 +1,19 @@
 ﻿<!--
     Copyright 2016 Shawn Gilroy 
 
-    This file is part of Bayesian Model Selector.
+    This file is part of Discounting Model Selector.
 
-    Bayesian Model Selector is free software: you can redistribute it and/or modify
+    Discounting Model Selector is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, version 2.
 
-    Bayesian Model Selector is distributed in the hope that it will be useful,
+    Discounting Model Selector is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Bayesian Model Selector.  If not, see <http://www.gnu.org/licenses/gpl-2.0.html>.
+    along with Discounting Model Selector.  If not, see <http://www.gnu.org/licenses/gpl-2.0.html>.
 -->
     
 <Window x:Class="BayesianModeling.View.UnifiedDiscountingWindow"
@@ -95,7 +95,7 @@
                 Grid.Column="0"
                 Grid.ColumnSpan="4"
                 FontSize="18"
-                Text="Bayesian Model Selection"
+                Text="Discounting Model Selection"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center">
             </TextBlock>
@@ -531,7 +531,7 @@
                         FontSize="12" 
                         FontFamily="Segoe UI" 
                         Padding="0,5,0,0">
-                        The Bayesian Model Selector determines the best performing model 
+                        The Discounting Model Selector determines the best performing model 
                         from common models of discounting. You may optionally exclude specific 
                         models from the comparison above.  It is worth noting that by default,
                         it is recommended that all models be considered. 
