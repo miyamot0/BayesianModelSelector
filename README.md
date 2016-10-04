@@ -11,7 +11,7 @@ Features include:
   - Wide range of model outputs/metrics, saveable in common spreadsheet file formats
 
 ### Version
-1.0.0.82
+1.0.0.84
 
 ### Changelog
  * 1.0.0.84 - Bounding settings, name changes and updates for clarity
