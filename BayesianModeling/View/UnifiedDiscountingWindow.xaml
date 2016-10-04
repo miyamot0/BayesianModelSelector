@@ -516,7 +516,7 @@
                 VerticalAlignment="Center"
                 HorizontalAlignment="Right"
                 Margin="0,0,10,0">
-                <Label Content="Constrain Myerson Model?"
+                <Label Content="Constrain Rachlin Model?"
                        FontWeight="Bold"/>
             </StackPanel>
 

@@ -5,11 +5,11 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly. 
-[assembly: AssemblyTitle("Discounting Modeling")]
+[assembly: AssemblyTitle("Discounting Model Selector")]
 [assembly: AssemblyDescription("Discounting Modeling Selection")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Small n Stats")]
-[assembly: AssemblyProduct("Discounting Modeling")]
+[assembly: AssemblyProduct("Discounting Model Selector")]
 [assembly: AssemblyCopyright("Shawn P. Gilroy Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
