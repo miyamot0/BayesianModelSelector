@@ -242,7 +242,7 @@ namespace BayesianModeling.ViewModel
             }
         }
 
-        private bool boundRachHyperboloidModel = true;
+        private bool boundRachHyperboloidModel = false;
         public bool BoundRachHyperboloidModel
         {
             get { return boundRachHyperboloidModel; }
