@@ -80,7 +80,6 @@ using RDotNet;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -346,7 +345,7 @@ namespace BayesianModeling.ViewModel
 
             if (!workingRecents.Contains(filePath))
             {
-                workingRecents.Add(filePath);
+                workingRecents.Insert(0, filePath);
                 Properties.Settings.Default.RecentFiles = string.Join(";", workingRecents.ToArray());
                 Properties.Settings.Default.Save();
 
