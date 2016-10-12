@@ -1395,6 +1395,12 @@ namespace BayesianModeling.ViewModel
 
             if (path != null)
             {
+
+                var item = RecentStuff.Where(r => r.Header.ToString() == path).FirstOrDefault();
+
+                RecentStuff.Remove(item);
+                RecentStuff.Insert(0, item);
+
                 OpenFileNoDialog(path);
             }
         }
@@ -1436,16 +1442,27 @@ namespace BayesianModeling.ViewModel
 
         #region Logging
 
+        /// <summary>
+        /// Route messages to main RTB
+        /// </summary>
+        /// <param name="message"></param>
         public void SendMessageToOutput(string message)
         {
             MainWindow.OutputEvents(message);
         }
 
+        /// <summary>
+        /// Save text from RTB
+        /// </summary>
         private void SaveLogs()
         {
             MainWindow.SaveLogs();
         }
 
+
+        /// <summary>
+        /// Clear text from RTB
+        /// </summary>
         private void ClearLogs()
         {
             MainWindow.ClearLogs();
