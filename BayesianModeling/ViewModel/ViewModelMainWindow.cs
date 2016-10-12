@@ -1277,6 +1277,10 @@ namespace BayesianModeling.ViewModel
                             UpdateTitle(openFileDialog1.SafeFileName);
                             haveFileLoaded = true;
                         }
+                        else
+                        {
+                            return;
+                        }
 
                         AddToRecents(@openFileDialog1.FileName);
                     }
@@ -1353,6 +1357,10 @@ namespace BayesianModeling.ViewModel
 
                     UpdateTitle(Path.GetFileName(filePath));
                     haveFileLoaded = true;
+                }
+                else
+                {
+                    return;
                 }
 
                 AddToRecents(@filePath);
