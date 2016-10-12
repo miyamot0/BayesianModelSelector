@@ -1155,6 +1155,10 @@ namespace BayesianModeling.ViewModel
                     {
                         OpenXMLHelper.ExportToCSV(new ObservableCollection<RowViewModel>(RowViewModels), saveFileDialog1.FileName);
                     }
+                    else
+                    {
+                        return;
+                    }
 
                     workingSheet = "Model Selector";
 
@@ -1206,6 +1210,10 @@ namespace BayesianModeling.ViewModel
                     else if (mExt.Equals(".csv"))
                     {
                         OpenXMLHelper.ExportToCSV(new ObservableCollection<RowViewModel>(RowViewModels), Path.Combine(path, title));
+                    }
+                    else
+                    {
+                        return;
                     }
 
                     UpdateTitle(title);
