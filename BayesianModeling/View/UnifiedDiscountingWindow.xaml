@@ -25,7 +25,7 @@
         mc:Ignorable="d"
         ResizeMode="NoResize"
         Height="500" 
-        Width="425"
+        Width="850"
         Loaded="Window_Loaded"
         Closing="Window_Closing"
         WindowStartupLocation="CenterOwner"
@@ -604,6 +604,27 @@
             <StackPanel
                 Orientation="Horizontal"
                 Grid.Row="9"
+                Grid.Column="2"
+                Grid.ColumnSpan="2"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Right"
+                Margin="0,0,25,0">
+                <Label >Output Model AIC</Label>
+                <CheckBox
+                    Grid.Row="4"
+                    Grid.Column="2"
+                    Grid.ColumnSpan="2"
+                    Margin="5,0,0,0"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Left"
+                    Content=""
+                    IsChecked="{Binding Path=OutputAIC, Mode=TwoWay}">
+                </CheckBox>
+            </StackPanel>
+
+            <StackPanel
+                Orientation="Horizontal"
+                Grid.Row="10"
                 Grid.Column="2"
                 Grid.ColumnSpan="2"
                 VerticalAlignment="Center"

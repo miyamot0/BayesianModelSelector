@@ -362,6 +362,18 @@ namespace BayesianModeling.ViewModel
             }
         }
 
+        private bool outputAIC = false;
+        public bool OutputAIC
+        {
+            get { return outputAIC; }
+            set
+            {
+                outputAIC = value;
+                Console.WriteLine("Aic output: " + value);
+                OnPropertyChanged("OutputAIC");
+            }
+        }
+
         private bool outputProb = false;
         public bool OutputProb
         {
@@ -1446,6 +1458,33 @@ namespace BayesianModeling.ViewModel
                 col++;
             }
 
+            if (OutputAIC)
+            {
+                mVM.RowViewModels[0].values[col] = "Noise Model AIC";
+                mVM.RowViewModels[1].values[col] = engine.Evaluate("as.numeric(output[[1]]['noise.AIC'])").AsVector().AsNumeric().First().ToString(mPrecision);
+                col++;
+
+                mVM.RowViewModels[0].values[col] = "Exponential Model AIC";
+                mVM.RowViewModels[1].values[col] = engine.Evaluate("as.numeric(output[[3]]['exp.AIC'])").AsVector().AsNumeric().First().ToString(mPrecision);
+                col++;
+
+                mVM.RowViewModels[0].values[col] = "Hyperbolic Model AIC";
+                mVM.RowViewModels[1].values[col] = engine.Evaluate("as.numeric(output[[2]]['Mazur.AIC'])").AsVector().AsNumeric().First().ToString(mPrecision);
+                col++;
+
+                mVM.RowViewModels[0].values[col] = "Quasi Hyperbolic Model AIC";
+                mVM.RowViewModels[1].values[col] = engine.Evaluate("as.numeric(output[[9]]['BD.AIC'])").AsVector().AsNumeric().First().ToString(mPrecision);
+                col++;
+
+                mVM.RowViewModels[0].values[col] = "Hyperboloid (Myerson) Model AIC";
+                mVM.RowViewModels[1].values[col] = engine.Evaluate("as.numeric(output[[4]]['MG.AIC'])").AsVector().AsNumeric().First().ToString(mPrecision);
+                col++;
+
+                mVM.RowViewModels[0].values[col] = "Hyperboloid (Rachlin) Model AIC";
+                mVM.RowViewModels[1].values[col] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.AIC'])").AsVector().AsNumeric().First().ToString(mPrecision);
+                col++;
+            }
+
             if (OutputRanks)
             {
                 int rank = 1;
@@ -1874,6 +1913,22 @@ namespace BayesianModeling.ViewModel
                             colTitle++;
                         }
 
+                        if (OutputAIC)
+                        {
+                            mVM.RowViewModels[0].values[colTitle] = "Noise Model AIC";
+                            colTitle++;
+                            mVM.RowViewModels[0].values[colTitle] = "Exponential Model AIC";
+                            colTitle++;
+                            mVM.RowViewModels[0].values[colTitle] = "Hyperbolic Model AIC";
+                            colTitle++;
+                            mVM.RowViewModels[0].values[colTitle] = "Quasi Hyperbolic Model AIC";
+                            colTitle++;
+                            mVM.RowViewModels[0].values[colTitle] = "Hyperboloid (Myerson) Model AIC";
+                            colTitle++;
+                            mVM.RowViewModels[0].values[colTitle] = "Hyperboloid (Rachlin) Model AIC";
+                            colTitle++;
+                        }
+
                         if (OutputRanks)
                         {
                             mVM.RowViewModels[0].values[colTitle] = "Ranked #1";
@@ -1988,6 +2043,27 @@ namespace BayesianModeling.ViewModel
                         col++;
 
                         mVM.RowViewModels[mIndex + 1].values[col] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.BIC'])").AsVector().AsNumeric().First().ToString(mPrecision);
+                        col++;
+                    }
+
+                    if (OutputAIC)
+                    {
+                        mVM.RowViewModels[mIndex + 1].values[col] = engine.Evaluate("as.numeric(output[[1]]['noise.AIC'])").AsVector().AsNumeric().First().ToString(mPrecision);
+                        col++;
+
+                        mVM.RowViewModels[mIndex + 1].values[col] = engine.Evaluate("as.numeric(output[[3]]['exp.AIC'])").AsVector().AsNumeric().First().ToString(mPrecision);
+                        col++;
+
+                        mVM.RowViewModels[mIndex + 1].values[col] = engine.Evaluate("as.numeric(output[[2]]['Mazur.AIC'])").AsVector().AsNumeric().First().ToString(mPrecision);
+                        col++;
+
+                        mVM.RowViewModels[mIndex + 1].values[col] = engine.Evaluate("as.numeric(output[[9]]['BD.AIC'])").AsVector().AsNumeric().First().ToString(mPrecision);
+                        col++;
+
+                        mVM.RowViewModels[mIndex + 1].values[col] = engine.Evaluate("as.numeric(output[[4]]['MG.AIC'])").AsVector().AsNumeric().First().ToString(mPrecision);
+                        col++;
+
+                        mVM.RowViewModels[mIndex + 1].values[col] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.AIC'])").AsVector().AsNumeric().First().ToString(mPrecision);
                         col++;
                     }
 
