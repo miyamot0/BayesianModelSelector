@@ -1947,7 +1947,6 @@ namespace BayesianModeling.ViewModel
                     mVM.RowViewModels[mIndex + 1].values[9] = items.First().Key.ToString();
                     mVM.RowViewModels[mIndex + 1].values[10] = ed50Best.ToString(mPrecision);
 
-                    //int row = 9;
                     int col = 11;
 
                     if (OutputProb)
@@ -2094,9 +2093,20 @@ namespace BayesianModeling.ViewModel
                     grayOut = !grayOut;
                 }
 
+                /*
+                 * Highlight yellow if Noise model won
+                 */
                 if (mVM.RowViewModels[i].values[9] == "Noise Model")
                 {
                     row.Background = Brushes.Yellow;
+                }
+
+                /*
+                 * Highlight dark orange of Rachlin won, with bounding
+                 */
+                if (mVM.RowViewModels[i].values[9] == "Hyperboloid (Rachlin) Model" && BoundRachHyperboloidModel)
+                {
+                    row.Background = Brushes.DarkOrange;
                 }
 
                 windowRef.calculateButton.IsEnabled = true;
