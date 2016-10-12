@@ -167,6 +167,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Dialogs\YesNoDialog.xaml.cs">
+      <DependentUpon>YesNoDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Mathematics\DiscountingModelSelection.cs" />
     <Compile Include="Utilities\ClipboardTools.cs" />
     <Compile Include="Utilities\CustomDataGrid.cs" />
@@ -208,6 +211,10 @@
     <Compile Include="View\UnifiedDiscountingWindow.xaml.cs">
       <DependentUpon>UnifiedDiscountingWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\YesNoDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\HelpWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

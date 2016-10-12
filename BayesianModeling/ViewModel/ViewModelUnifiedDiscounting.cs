@@ -55,6 +55,7 @@
 // </summary>
 //----------------------------------------------------------------------------------------------
 
+using BayesianModeling.Dialogs;
 using BayesianModeling.Mathematics;
 using BayesianModeling.Utilities;
 using BayesianModeling.View;
@@ -248,7 +249,12 @@ namespace BayesianModeling.ViewModel
             get { return boundRachHyperboloidModel; }
             set
             {
-                boundRachHyperboloidModel = value;
+                var confirmWithUser = new YesNoDialog();
+                confirmWithUser.QuestionText = "Note: constraining the s parameter assists in retaining the conceptual framework for interpreting k, but " +
+                    "numerically interferes with approximate Bayesian model selection and analytic solutions for ED50.  Please interpret with caution.";
+                confirmWithUser.ShowDialog();
+
+                boundRachHyperboloidModel = confirmWithUser.ReturnedAnswer;
                 OnPropertyChanged("BoundRachHyperboloidModel");
             }
         }
@@ -1795,7 +1801,14 @@ namespace BayesianModeling.ViewModel
                         ConvertBoolToString(MyerHyperboloidModel),
                         ConvertBoolToString(QuasiHyperbolicModel));
 
-                    engine.Evaluate(evalStatement);
+                    try
+                    {
+                        engine.Evaluate(evalStatement);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.ToString());
+                    }
 
                     double noiseProb = double.Parse(engine.Evaluate("as.numeric(output[[1]]['noise.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
                     double hyperProb = double.Parse(engine.Evaluate("as.numeric(output[[2]]['Mazur.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
