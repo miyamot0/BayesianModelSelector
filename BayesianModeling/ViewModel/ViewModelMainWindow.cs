@@ -473,6 +473,11 @@ namespace BayesianModeling.ViewModel
             }
         }
 
+        /// <summary>
+        /// Transposition a-la matrix, but list of arrays
+        /// </summary>
+        /// <param name="arrayList"></param>
+        /// <returns></returns>
         static List<string[]> CreateTransposedList(List<string[]> arrayList)
         {
             int lengthTemp = arrayList[0].Length;
@@ -517,6 +522,9 @@ namespace BayesianModeling.ViewModel
             return returnList;
         }
 
+        /// <summary>
+        /// Custom paste operation, swapping V/H loopings to make a transposition
+        /// </summary>
         private void PasteInverted()
         {
             List<string[]> rowData = ClipboardTools.ReadAndParseClipboardData();
@@ -742,7 +750,7 @@ namespace BayesianModeling.ViewModel
         #region Triggers
 
         /// <summary>
-        /// Loaded event trigger
+        /// Loaded event trigger, post license text
         /// </summary>
         private void ViewLoaded()
         {
@@ -952,7 +960,7 @@ namespace BayesianModeling.ViewModel
         }
 
         /// <summary>
-        /// Closed event trigger
+        /// Closed event trigger, save props and dispose of r session
         /// </summary>
         private void ViewClosed()
         {
@@ -1086,6 +1094,10 @@ namespace BayesianModeling.ViewModel
                         else if (mExt.Equals(".csv"))
                         {
                             OpenXMLHelper.ExportToCSV(new ObservableCollection<RowViewModel>(RowViewModels), saveFileDialog1.FileName);
+                        }
+                        else
+                        {
+                            return;
                         }
 
                         UpdateTitle(saveFileDialog1.SafeFileName);
