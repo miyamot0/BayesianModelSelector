@@ -796,7 +796,7 @@ namespace BayesianModeling.ViewModel
             }
             catch (Exception e)
             {
-                Logging.SubmitError("ViewLoadedMain", e.ToString());
+                //Logging.SubmitError("ViewLoadedMain", e.ToString());
                 SendMessageToOutput("R failed to load.  Error code: " + e.ToString());
                 failed = true;
             }
@@ -1111,7 +1111,7 @@ namespace BayesianModeling.ViewModel
                     catch (Exception e)
                     {
                         MessageBox.Show("We weren't able to save.  Is the target file either open, missing or in use?");
-                        Logging.SubmitError("SaveFile", e.ToString());
+                        //Logging.SubmitError("SaveFile", e.ToString());
                         Console.WriteLine(e.ToString());
                     }
 
@@ -1173,7 +1173,7 @@ namespace BayesianModeling.ViewModel
                 catch (Exception e)
                 {
                     MessageBox.Show("We weren't able to save.  Is the target file either open, missing or in use?");
-                    Logging.SubmitError("SaveFileAs", e.ToString());
+                    //Logging.SubmitError("SaveFileAs", e.ToString());
                     Console.WriteLine(e.ToString());
                     haveFileLoaded = false;
                 }
@@ -1222,7 +1222,7 @@ namespace BayesianModeling.ViewModel
                 catch (Exception e)
                 {
                     MessageBox.Show("We weren't able to save.  Is the target file either open, missing or in use?");
-                    Logging.SubmitError("SaveFileWithoutDialog", e.ToString());
+                    //Logging.SubmitError("SaveFileWithoutDialog", e.ToString());
                     Console.WriteLine(e.ToString());
                 }
             }
@@ -1287,14 +1287,14 @@ namespace BayesianModeling.ViewModel
                     catch (IOException e)
                     {
                         CloseFileUIProgressWindow();
-                        Logging.SubmitError("OpenFile", e.ToString());
+                        //Logging.SubmitError("OpenFile", e.ToString());
                         Console.WriteLine(e.ToString());
                         MessageBox.Show("We weren't able to save.  Is the target file either open, missing or in use?");
                     }
                     catch (Exception e)
                     {
                         CloseFileUIProgressWindow();
-                        Logging.SubmitError("OpenFile", e.ToString());
+                        //Logging.SubmitError("OpenFile", e.ToString());
                         Console.WriteLine(e.ToString());
                         MessageBox.Show("We weren't able to save.  Is the target file either open, missing or in use?");
                     }
@@ -1368,14 +1368,14 @@ namespace BayesianModeling.ViewModel
             catch (IOException e)
             {
                 CloseFileUIProgressWindow();
-                Logging.SubmitError("OpenFileNoDialog", e.ToString());
+                //Logging.SubmitError("OpenFileNoDialog", e.ToString());
                 Console.WriteLine(e.ToString());
                 MessageBox.Show("We weren't able to open the file.  Is the target file either open, missing or in use?");
             }
             catch (Exception e)
             {
                 CloseFileUIProgressWindow();
-                Logging.SubmitError("OpenFileNoDialog", e.ToString());
+                //Logging.SubmitError("OpenFileNoDialog", e.ToString());
                 Console.WriteLine(e.ToString());
                 MessageBox.Show("We weren't able to open the file.  Is the target file either open, missing or in use?");
             }
