@@ -123,8 +123,9 @@ logChart <- ggplot() +
   theme(panel.grid.minor = element_blank()) +
   ylab("Value") +
   scale_x_continuous(trans = 'log',
-                        breaks = scales::trans_breaks('log', function(x) exp(x)),
-                        labels = scales::trans_format('log', scales::math_format(.x))) +
+                     limits = c(1 , endDelay),
+                     breaks = scales::trans_breaks('log', function(x) exp(x)),
+                     labels = scales::trans_format('log', scales::math_format(.x))) +
   annotation_logticks(sides = "b") +
   xlab("ln(Delay)") +
   theme(panel.background = element_blank(),
