@@ -104,11 +104,24 @@ namespace BayesianModeling.Utilities
         {
             FileInfo existingFile = new FileInfo(filePath);
             ObservableCollection<RowViewModel> temp = new ObservableCollection<RowViewModel>();
+
+            int currRows = 50;
+
+            for (int i = 0; i < currRows; i++)
+            {
+                temp.Add(new RowViewModel());
+            }
+
             sheet = string.Empty;
 
             using (ExcelPackage package = new ExcelPackage(existingFile))
             {
                 var wsMult = package.Workbook.Worksheets;
+
+                if (wsMult == null || wsMult.Count < 1)
+                {
+                    return temp;
+                }
 
                 List<string> workSheets = new List<string>();
 
@@ -140,13 +153,6 @@ namespace BayesianModeling.Utilities
                 }
 
                 var ws = package.Workbook.Worksheets[sheetWindow.MessageOptions.SelectedIndex + 1];
-
-                int currRows = 50;
-
-                for (int i = 0; i < currRows; i++)
-                {
-                    temp.Add(new RowViewModel());
-                }
 
                 var cellsUsed = ws.Cells;
 

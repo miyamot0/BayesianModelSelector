@@ -1282,7 +1282,15 @@ namespace BayesianModeling.ViewModel
                             return;
                         }
 
-                        AddToRecents(@openFileDialog1.FileName);
+                        if (workingSheet != string.Empty)
+                        {
+                            AddToRecents(@openFileDialog1.FileName);
+                        }
+                        else
+                        {
+                            title = "Discounting Model Selection - New File";
+                        }
+
                     }
                     catch (IOException e)
                     {
@@ -1341,8 +1349,17 @@ namespace BayesianModeling.ViewModel
 
                     RowViewModels = new ObservableCollection<RowViewModel>(temp);
 
-                    UpdateTitle(Path.GetFileName(filePath));
-                    haveFileLoaded = true;
+                    if (workingSheet != string.Empty)
+                    {
+                        UpdateTitle(Path.GetFileName(filePath));
+                        haveFileLoaded = true;
+                    }
+                    else
+                    {
+                        title = "Discounting Model Selection - New File";
+                        haveFileLoaded = false;
+                    }
+
                 }
                 else if (mExt.Equals(".csv"))
                 {
