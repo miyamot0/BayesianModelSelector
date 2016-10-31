@@ -1243,12 +1243,26 @@ namespace BayesianModeling.ViewModel
             mWindow.OutputEvents("Computation successful!");
             mWindow.OutputEvents(" ");
 
-            double noiseProb = double.Parse(engine.Evaluate("as.numeric(output[[1]]['noise.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
-            double hyperProb = double.Parse(engine.Evaluate("as.numeric(output[[2]]['Mazur.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
-            double exponProb = double.Parse(engine.Evaluate("as.numeric(output[[3]]['exp.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
-            double quasiProb = double.Parse(engine.Evaluate("as.numeric(output[[9]]['BD.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
-            double myerProb = double.Parse(engine.Evaluate("as.numeric(output[[4]]['MG.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
-            double rachProb = double.Parse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
+            double noiseProb = double.NaN;
+            double hyperProb = double.NaN;
+            double exponProb = double.NaN;
+            double quasiProb = double.NaN;
+            double myerProb = double.NaN;
+            double rachProb = double.NaN;
+
+            double.TryParse(engine.Evaluate("as.numeric(output[[1]]['noise.prob'])").AsVector().First().ToString(), out noiseProb);
+            double.TryParse(engine.Evaluate("as.numeric(output[[2]]['Mazur.prob'])").AsVector().First().ToString(), out hyperProb);
+            double.TryParse(engine.Evaluate("as.numeric(output[[3]]['exp.prob'])").AsVector().First().ToString(), out exponProb);
+            double.TryParse(engine.Evaluate("as.numeric(output[[9]]['BD.prob'])").AsVector().First().ToString(), out quasiProb);
+            double.TryParse(engine.Evaluate("as.numeric(output[[4]]['MG.prob'])").AsVector().First().ToString(), out myerProb);
+            double.TryParse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.prob'])").AsVector().First().ToString(), out rachProb);
+
+            //double noiseProb = double.Parse(engine.Evaluate("as.numeric(output[[1]]['noise.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
+            //double hyperProb = double.Parse(engine.Evaluate("as.numeric(output[[2]]['Mazur.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
+            //double exponProb = double.Parse(engine.Evaluate("as.numeric(output[[3]]['exp.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
+            //double quasiProb = double.Parse(engine.Evaluate("as.numeric(output[[9]]['BD.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
+            //double myerProb = double.Parse(engine.Evaluate("as.numeric(output[[4]]['MG.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
+            //double rachProb = double.Parse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
 
             var dictionary = new Dictionary<string, double>();
             dictionary.Add("Noise Model", noiseProb);
@@ -1849,12 +1863,27 @@ namespace BayesianModeling.ViewModel
                         Console.WriteLine(e.ToString());
                     }
 
-                    double noiseProb = double.Parse(engine.Evaluate("as.numeric(output[[1]]['noise.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
-                    double hyperProb = double.Parse(engine.Evaluate("as.numeric(output[[2]]['Mazur.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
-                    double exponProb = double.Parse(engine.Evaluate("as.numeric(output[[3]]['exp.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
-                    double quasiProb = double.Parse(engine.Evaluate("as.numeric(output[[9]]['BD.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
-                    double myerProb = double.Parse(engine.Evaluate("as.numeric(output[[4]]['MG.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
-                    double rachProb = double.Parse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
+
+                    double noiseProb = double.NaN;
+                    double hyperProb = double.NaN;
+                    double exponProb = double.NaN;
+                    double quasiProb = double.NaN;
+                    double myerProb = double.NaN;
+                    double rachProb = double.NaN;
+
+                    double.TryParse(engine.Evaluate("as.numeric(output[[1]]['noise.prob'])").AsVector().First().ToString(), out noiseProb);
+                    double.TryParse(engine.Evaluate("as.numeric(output[[2]]['Mazur.prob'])").AsVector().First().ToString(), out hyperProb);
+                    double.TryParse(engine.Evaluate("as.numeric(output[[3]]['exp.prob'])").AsVector().First().ToString(), out exponProb);
+                    double.TryParse(engine.Evaluate("as.numeric(output[[9]]['BD.prob'])").AsVector().First().ToString(), out quasiProb);
+                    double.TryParse(engine.Evaluate("as.numeric(output[[4]]['MG.prob'])").AsVector().First().ToString(), out myerProb);
+                    double.TryParse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.prob'])").AsVector().First().ToString(), out rachProb);
+
+                    //double noiseProb = double.Parse(engine.Evaluate("as.numeric(output[[1]]['noise.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
+                    //double hyperProb = double.Parse(engine.Evaluate("as.numeric(output[[2]]['Mazur.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
+                    //double exponProb = double.Parse(engine.Evaluate("as.numeric(output[[3]]['exp.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
+                    //double quasiProb = double.Parse(engine.Evaluate("as.numeric(output[[9]]['BD.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
+                    //double myerProb = double.Parse(engine.Evaluate("as.numeric(output[[4]]['MG.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
+                    //double rachProb = double.Parse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
 
                     var dictionary = new Dictionary<string, double>();
                     dictionary.Add("Noise Model", noiseProb);
