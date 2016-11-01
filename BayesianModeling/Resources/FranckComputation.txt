@@ -219,7 +219,7 @@ BDS<-function(dat,Noise=1,Mazur=1,Exponential=1,Rachlin=1,GreenMyerson=1,BD=1){
 	}	
 
 	if((Rachlin==1)&(!is.character(try(nls(y~(1+exp(lnK)*(x^s))^(-1), start = ini.par), silent=FALSE)))){
-		modfit.Rachlin<-nls(y~(1+exp(lnK)*(x^s))^(-1), alg="port", start = ini.par)
+		modfit.Rachlin<-nls(y~(1+exp(lnK)*(x^s))^(-1), start = ini.par)
 		Rachlin.frame$Rachlin.lnk<-summary(modfit.Rachlin)$coeff[1,1]
 		Rachlin.frame$Rachlin.s<-summary(modfit.Rachlin)$coeff[2,1]
 		Rachlin.frame$Rachlin.RMSE<-summary(modfit.Rachlin)$sigma
