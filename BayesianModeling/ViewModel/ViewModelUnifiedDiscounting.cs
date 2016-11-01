@@ -1260,13 +1260,6 @@ namespace BayesianModeling.ViewModel
                     double.TryParse(engine.Evaluate("as.numeric(output[[9]]['BD.prob'])").AsVector().First().ToString(), out quasiProb);
                     double.TryParse(engine.Evaluate("as.numeric(output[[4]]['MG.prob'])").AsVector().First().ToString(), out myerProb);
                     double.TryParse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.prob'])").AsVector().First().ToString(), out rachProb);
-
-                    //double noiseProb = double.Parse(engine.Evaluate("as.numeric(output[[1]]['noise.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
-                    //double hyperProb = double.Parse(engine.Evaluate("as.numeric(output[[2]]['Mazur.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
-                    //double exponProb = double.Parse(engine.Evaluate("as.numeric(output[[3]]['exp.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
-                    //double quasiProb = double.Parse(engine.Evaluate("as.numeric(output[[9]]['BD.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
-                    //double myerProb = double.Parse(engine.Evaluate("as.numeric(output[[4]]['MG.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
-                    //double rachProb = double.Parse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
                 }
                 catch (Exception e)
                 {
@@ -1906,13 +1899,6 @@ namespace BayesianModeling.ViewModel
                             double.TryParse(engine.Evaluate("as.numeric(output[[9]]['BD.prob'])").AsVector().First().ToString(), out quasiProb);
                             double.TryParse(engine.Evaluate("as.numeric(output[[4]]['MG.prob'])").AsVector().First().ToString(), out myerProb);
                             double.TryParse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.prob'])").AsVector().First().ToString(), out rachProb);
-
-                            //double noiseProb = double.Parse(engine.Evaluate("as.numeric(output[[1]]['noise.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
-                            //double hyperProb = double.Parse(engine.Evaluate("as.numeric(output[[2]]['Mazur.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
-                            //double exponProb = double.Parse(engine.Evaluate("as.numeric(output[[3]]['exp.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
-                            //double quasiProb = double.Parse(engine.Evaluate("as.numeric(output[[9]]['BD.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
-                            //double myerProb = double.Parse(engine.Evaluate("as.numeric(output[[4]]['MG.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
-                            //double rachProb = double.Parse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
                         }
                         catch (Exception e)
                         {
