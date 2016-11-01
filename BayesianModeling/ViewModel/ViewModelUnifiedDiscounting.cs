@@ -251,7 +251,7 @@ namespace BayesianModeling.ViewModel
             {
                 var confirmWithUser = new YesNoDialog();
                 confirmWithUser.QuestionText = "Note: constraining the s parameter assists in retaining the conceptual framework for interpreting k, but " +
-                    "numerically interferes with approximate Bayesian model selection and analytic solutions for ED50.  Please interpret with caution.";
+                    "violates boundary assumptions for approximate Bayesian model selection.  Models can be fit but model selection will not be performed.";
                 confirmWithUser.ShowDialog();
 
                 boundRachHyperboloidModel = confirmWithUser.ReturnedAnswer;
@@ -1284,12 +1284,15 @@ namespace BayesianModeling.ViewModel
 
             var items = from pair in dictionary orderby pair.Value descending select pair;
 
-            mWindow.OutputEvents("Results of Model competition (output Highest to Lowest):");
-            mWindow.OutputEvents(" ");
-
-            foreach (KeyValuePair<string, double> pair in items)
+            if (!BoundRachHyperboloidModel)
             {
-                mWindow.OutputEvents(pair.Key + ":  " + pair.Value + " ");
+                mWindow.OutputEvents("Results of Model competition (output Highest to Lowest):");
+                mWindow.OutputEvents(" ");
+
+                foreach (KeyValuePair<string, double> pair in items)
+                {
+                    mWindow.OutputEvents(pair.Key + ":  " + pair.Value + " ");
+                }
             }
 
             mWindow.OutputEvents(" ");
