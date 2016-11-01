@@ -5,8 +5,8 @@
         xmlns:local="clr-namespace:BayesianModeling.Dialogs"
         ResizeMode="NoResize"              
         WindowStartupLocation="CenterScreen"       
-        Height="200" 
-        Width="300"
+        Height="225" 
+        Width="350"
         Title="Confirm constraint?">
     <Grid>
         <Grid.RowDefinitions >
@@ -21,7 +21,7 @@
 
         <TextBlock x:Name="QuestionTextBox" 
                    TextWrapping="WrapWithOverflow"
-                   Text="Note: constraining the s parameter assists in retaining the conceptual framework for interpreting k, but numerically interferes with approximate Bayesian model selection and analytic solutions for ED50.  Model parameters alone can only be reported in this case." 
+                   Text="Note: Constraining the s parameter assists in retaining the conceptual framework for interpreting k, but violates boundary assumptions necessary for approximate Bayesian model selection.  Rachlin can be bounded and model selection can continue by rerunning analyses without Rachlin's model when the s parameter is found to equal 1.0 or greater." 
                    HorizontalAlignment="Center"  
                    Margin="10,10,10,10" 
                    VerticalAlignment="Center" 

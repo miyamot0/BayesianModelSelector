@@ -210,13 +210,13 @@ BDS<-function(dat,Noise=1,Mazur=1,Exponential=1,Rachlin=1,GreenMyerson=1,BD=1){
     ini.par <- ini.par.Rach #Starting points
 
 	# Clamp starting points for s, since bounded
-	if (Rachlin==2) {
-		if (ini.par[2] > 1) {
-			ini.par[2] = 0.9999
-		} else if (ini.par[2] < 0) {
-			ini.par[2] = 0.0001		
-		}
-	}	
+	#if (Rachlin==2) {
+	#	if (ini.par[2] > 1) {
+	#		ini.par[2] = 0.9999
+	#	} else if (ini.par[2] < 0) {
+	#		ini.par[2] = 0.0001		
+	#	}
+	#}	
 
 	if((Rachlin==1)&(!is.character(try(nls(y~(1+exp(lnK)*(x^s))^(-1), start = ini.par), silent=FALSE)))){
 		modfit.Rachlin<-nls(y~(1+exp(lnK)*(x^s))^(-1), start = ini.par)
@@ -225,13 +225,13 @@ BDS<-function(dat,Noise=1,Mazur=1,Exponential=1,Rachlin=1,GreenMyerson=1,BD=1){
 		Rachlin.frame$Rachlin.RMSE<-summary(modfit.Rachlin)$sigma
 		Rachlin.frame$Rachlin.BIC<-BIC(modfit.Rachlin)
 		Rachlin.frame$Rachlin.AIC<-AIC(modfit.Rachlin)
-	} else if((Rachlin==2)&(!is.character(try(nls(y~(1+exp(lnK)*(x^s))^(-1), alg="port", start = ini.par, upper = list(lnK=1000, s = 1), lower = list(lnK=-1000, s = 0.0001)), silent=FALSE)))){
-		modfit.Rachlin<-nls(y~(1+exp(lnK)*(x^s))^(-1), alg="port", start = ini.par, upper = list(lnK = 1000, s = 1), lower = list(lnK = -1000, s = 0.001))
-		Rachlin.frame$Rachlin.lnk<-summary(modfit.Rachlin)$coeff[1,1]
-		Rachlin.frame$Rachlin.s<-summary(modfit.Rachlin)$coeff[2,1]
-		Rachlin.frame$Rachlin.RMSE<-summary(modfit.Rachlin)$sigma
-		Rachlin.frame$Rachlin.BIC<-BIC(modfit.Rachlin)
-		Rachlin.frame$Rachlin.AIC<-AIC(modfit.Rachlin)
+	#} else if((Rachlin==2)&(!is.character(try(nls(y~(1+exp(lnK)*(x^s))^(-1), alg="port", start = ini.par, upper = list(lnK=1000, s = 1), lower = list(lnK=-1000, s = 0.0001)), silent=FALSE)))){
+	#	modfit.Rachlin<-nls(y~(1+exp(lnK)*(x^s))^(-1), alg="port", start = ini.par, upper = list(lnK = 1000, s = 1), lower = list(lnK = -1000, s = 0.001))
+	#	Rachlin.frame$Rachlin.lnk<-summary(modfit.Rachlin)$coeff[1,1]
+	#	Rachlin.frame$Rachlin.s<-summary(modfit.Rachlin)$coeff[2,1]
+	#	Rachlin.frame$Rachlin.RMSE<-summary(modfit.Rachlin)$sigma
+	#	Rachlin.frame$Rachlin.BIC<-BIC(modfit.Rachlin)
+	#	Rachlin.frame$Rachlin.AIC<-AIC(modfit.Rachlin)
 	} else(AF[5]<-0)
     
     ini.par<-ini.par.BD

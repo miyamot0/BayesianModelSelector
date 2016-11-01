@@ -250,8 +250,9 @@ namespace BayesianModeling.ViewModel
             set
             {
                 var confirmWithUser = new YesNoDialog();
-                confirmWithUser.QuestionText = "Note: constraining the s parameter assists in retaining the conceptual framework for interpreting k, but " +
-                    "violates boundary assumptions for approximate Bayesian model selection.  Models can be fit but model selection will not be performed.";
+                confirmWithUser.QuestionText = "Note: Constraining the s parameter assists in retaining the conceptual framework for interpreting k, but " +
+                    "violates boundary assumptions necessary for approximate Bayesian model selection.  Rachlin can be bounded and model selection can continue " +
+                    "by rerunning analyses without Rachlin's model when the s parameter is found to equal 1.0 or greater.";
                 confirmWithUser.ShowDialog();
 
                 boundRachHyperboloidModel = confirmWithUser.ReturnedAnswer;
@@ -293,6 +294,8 @@ namespace BayesianModeling.ViewModel
         }
 
         private double MaxValueA = 0;
+
+        private bool RachlinIncluded = false;
 
         int lowRowDelay = -1,
             highRowDelay = -1,
@@ -1163,6 +1166,9 @@ namespace BayesianModeling.ViewModel
             {
                 engine.Evaluate("rm(list = setdiff(ls(), lsf.str()))");
 
+                // Set R included to tick box by default
+                RachlinIncluded = RachHyperboloidModel;
+
                 List<double>[] arrayNew = null;
 
                 if (RowModeRadio)
@@ -1203,18 +1209,46 @@ namespace BayesianModeling.ViewModel
 
                 engine.Evaluate("datHack<-data.frame(X = mDelays, Y = mIndiffs, ses=mSes)");
 
-                string rachlinBoundCheck = (ConvertBoolToString(RachHyperboloidModel) == "1" && BoundRachHyperboloidModel) ? "2" : ConvertBoolToString(RachHyperboloidModel);
+                //string rachlinBoundCheck = (ConvertBoolToString(RachHyperboloidModel) == "1" && BoundRachHyperboloidModel) ? "2" : ConvertBoolToString(RachHyperboloidModel);
 
                 engine.Evaluate("datHack<-data.frame(X = mDelays, Y = mIndiffs, ses=mSes)");
                 string evalStatement = string.Format("output <-BDS(datHack, Noise={0},Mazur={1},Exponential={2},Rachlin={3},GreenMyerson={4},BD={5})",
                     1,
                     ConvertBoolToString(HyperbolicModel),
                     ConvertBoolToString(ExponentialModel),
-                    rachlinBoundCheck,
+                    ConvertBoolToString(RachHyperboloidModel),
                     ConvertBoolToString(MyerHyperboloidModel),
                     ConvertBoolToString(QuasiHyperbolicModel));
 
                 engine.Evaluate(evalStatement);
+
+                // Rachlin here, push model out of consideration if beyond the bounds of 0-1 (s)
+
+                if (BoundRachHyperboloidModel)
+                {
+                    double tempS = double.NaN;
+                    if (double.TryParse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.s'])").AsVector().First().ToString(), out tempS))
+                    {
+                        if (tempS >= 1.0)
+                        {
+                            mWindow.OutputEvents("Note: Rachlin converged above limits... excluding from analysis!");
+                            mWindow.OutputEvents("Note: Re-running without Rachlin");
+
+                            evalStatement = string.Format("output <-BDS(datHack, Noise={0},Mazur={1},Exponential={2},Rachlin={3},GreenMyerson={4},BD={5})",
+                                1,
+                                ConvertBoolToString(HyperbolicModel),
+                                ConvertBoolToString(ExponentialModel),
+                                0,  // Kick Rachlin out of the running
+                                ConvertBoolToString(MyerHyperboloidModel),
+                                ConvertBoolToString(QuasiHyperbolicModel));
+
+                            engine.Evaluate(evalStatement);
+
+                            RachlinIncluded = false;
+
+                        }
+                    }
+                }
 
                 engine.Evaluate("ainslieK <- as.numeric(output[[2]]['Mazur.lnk'])");
                 engine.Evaluate("samuelsonK <- as.numeric(output[[3]]['exp.lnk'])");
@@ -1250,21 +1284,18 @@ namespace BayesianModeling.ViewModel
             double myerProb = double.NaN;
             double rachProb = double.NaN;
 
-            if (!BoundRachHyperboloidModel)
+            try
             {
-                try
-                {
-                    double.TryParse(engine.Evaluate("as.numeric(output[[1]]['noise.prob'])").AsVector().First().ToString(), out noiseProb);
-                    double.TryParse(engine.Evaluate("as.numeric(output[[2]]['Mazur.prob'])").AsVector().First().ToString(), out hyperProb);
-                    double.TryParse(engine.Evaluate("as.numeric(output[[3]]['exp.prob'])").AsVector().First().ToString(), out exponProb);
-                    double.TryParse(engine.Evaluate("as.numeric(output[[9]]['BD.prob'])").AsVector().First().ToString(), out quasiProb);
-                    double.TryParse(engine.Evaluate("as.numeric(output[[4]]['MG.prob'])").AsVector().First().ToString(), out myerProb);
-                    double.TryParse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.prob'])").AsVector().First().ToString(), out rachProb);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.ToString());
-                }
+                double.TryParse(engine.Evaluate("as.numeric(output[[1]]['noise.prob'])").AsVector().First().ToString(), out noiseProb);
+                double.TryParse(engine.Evaluate("as.numeric(output[[2]]['Mazur.prob'])").AsVector().First().ToString(), out hyperProb);
+                double.TryParse(engine.Evaluate("as.numeric(output[[3]]['exp.prob'])").AsVector().First().ToString(), out exponProb);
+                double.TryParse(engine.Evaluate("as.numeric(output[[9]]['BD.prob'])").AsVector().First().ToString(), out quasiProb);
+                double.TryParse(engine.Evaluate("as.numeric(output[[4]]['MG.prob'])").AsVector().First().ToString(), out myerProb);
+                double.TryParse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.prob'])").AsVector().First().ToString(), out rachProb);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
             }
 
             var dictionary = new Dictionary<string, double>();
@@ -1277,15 +1308,12 @@ namespace BayesianModeling.ViewModel
 
             var items = from pair in dictionary orderby pair.Value descending select pair;
 
-            if (!BoundRachHyperboloidModel)
-            {
-                mWindow.OutputEvents("Results of Model competition (output Highest to Lowest):");
-                mWindow.OutputEvents(" ");
+            mWindow.OutputEvents("Results of Model competition (output Highest to Lowest):");
+            mWindow.OutputEvents(" ");
 
-                foreach (KeyValuePair<string, double> pair in items)
-                {
-                    mWindow.OutputEvents(pair.Key + ":  " + pair.Value + " ");
-                }
+            foreach (KeyValuePair<string, double> pair in items)
+            {
+                mWindow.OutputEvents(pair.Key + ":  " + pair.Value + " ");
             }
 
             mWindow.OutputEvents(" ");
@@ -1386,49 +1414,54 @@ namespace BayesianModeling.ViewModel
             }
 
             //mVM.RowViewModels[1].values[6] = engine.Evaluate("as.numeric(output[[4]]['MG.s'])").AsVector().First().ToString();
-            
+
             mVM.RowViewModels[0].values[7] = "Rachlin-Hyperboloid - k: ";
-
-            double modR = double.NaN;
-            if (double.TryParse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.lnk'])").AsVector().First().ToString(), out modR))
-            {
-                mVM.RowViewModels[1].values[7] = Math.Exp(modR).ToString(mPrecision);
-            }
-            else
-            {
-                mVM.RowViewModels[1].values[7] = modR.ToString();
-            }
-
             mVM.RowViewModels[0].values[8] = "Rachlin-Hyperboloid - s: ";
 
-            double rS = double.NaN;
-            if (double.TryParse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.s'])").AsVector().First().ToString(), out rS))
+            if (!RachlinIncluded)
             {
-                mVM.RowViewModels[1].values[8] = rS.ToString(mPrecision);
+                mVM.RowViewModels[1].values[7] = "Excluded: exceeded bounds";
+                mVM.RowViewModels[1].values[8] = "Excluded: exceeded bounds";
             }
             else
             {
-                mVM.RowViewModels[1].values[8] = rS.ToString();
+
+                double modR = double.NaN;
+                if (double.TryParse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.lnk'])").AsVector().First().ToString(), out modR))
+                {
+                    mVM.RowViewModels[1].values[7] = Math.Exp(modR).ToString(mPrecision);
+                }
+                else
+                {
+                    mVM.RowViewModels[1].values[7] = modR.ToString();
+                }
+
+                double rS = double.NaN;
+                if (double.TryParse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.s'])").AsVector().First().ToString(), out rS))
+                {
+                    mVM.RowViewModels[1].values[8] = rS.ToString(mPrecision);
+                }
+                else
+                {
+                    mVM.RowViewModels[1].values[8] = rS.ToString();
+                }
             }
 
             //mVM.RowViewModels[1].values[8] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.s'])").AsVector().First().ToString();
 
             int col = 9;
 
-            if (!BoundRachHyperboloidModel)
-            {
-                mVM.RowViewModels[0].values[col] = "Most competitive model: ";
-                mVM.RowViewModels[1].values[col] = items.First().Key.ToString();
-                col++;
+            mVM.RowViewModels[0].values[col] = "Most competitive model: ";
+            mVM.RowViewModels[1].values[col] = items.First().Key.ToString();
+            col++;
 
-                double ed50Best = engine.Evaluate("as.numeric(output[[8]]['lnED50.mostprob'])").AsNumeric().First();
+            double ed50Best = engine.Evaluate("as.numeric(output[[8]]['lnED50.mostprob'])").AsNumeric().First();
 
-                mVM.RowViewModels[0].values[col] = "ED50 of Most Competitive Model - ln(x): ";
-                mVM.RowViewModels[1].values[col] = ed50Best.ToString(mPrecision);
-                col++;
-            }
+            mVM.RowViewModels[0].values[col] = "ED50 of Most Competitive Model - ln(x): ";
+            mVM.RowViewModels[1].values[col] = ed50Best.ToString(mPrecision);
+            col++;
 
-            if (OutputProb && !BoundRachHyperboloidModel)
+            if (OutputProb)
             {
 
                 mVM.RowViewModels[0].values[col] = "Noise Model Probs";
@@ -1510,7 +1543,7 @@ namespace BayesianModeling.ViewModel
                 col++;
             }
 
-            if (OutputRanks && !BoundRachHyperboloidModel)
+            if (OutputRanks)
             {
                 int rank = 1;
 
@@ -1541,11 +1574,6 @@ namespace BayesianModeling.ViewModel
             {
                 col = 11;
 
-                if (BoundRachHyperboloidModel)
-                {
-                    col = 9;
-                }
-
                 var row = GetGridRow(mWin.dataGrid, i);
 
                 if (row == null) continue;
@@ -1557,7 +1585,7 @@ namespace BayesianModeling.ViewModel
 
                 bool grayOut = true;
 
-                if (OutputProb && !BoundRachHyperboloidModel)
+                if (OutputProb)
                 {
                     if (grayOut)
                     {
@@ -1595,7 +1623,7 @@ namespace BayesianModeling.ViewModel
                     grayOut = !grayOut;
                 }
 
-                if (OutputRanks && !BoundRachHyperboloidModel)
+                if (OutputRanks)
                 {
                     if (grayOut)
                     {
@@ -1816,6 +1844,9 @@ namespace BayesianModeling.ViewModel
 
             for (int mIndex = 0; mIndex < wholeRange.GetLength(1); mIndex++)
             {
+                // Set R included to tick box by default
+                RachlinIncluded = RachHyperboloidModel;
+
                 engine.Evaluate("rm(list = setdiff(ls(), lsf.str()))");
 
                 yRange.Clear();
@@ -1861,20 +1892,47 @@ namespace BayesianModeling.ViewModel
                         engine.Evaluate(DiscountingModelSelection.GetFranckFunction());
                     }
 
-                    string rachlinBoundCheck = (ConvertBoolToString(RachHyperboloidModel) == "1" && BoundRachHyperboloidModel) ? "2" : ConvertBoolToString(RachHyperboloidModel);
+                    // Dump out 
+
+                    //string rachlinBoundCheck = (ConvertBoolToString(RachHyperboloidModel) == "1" && BoundRachHyperboloidModel) ? "2" : ConvertBoolToString(RachHyperboloidModel);
 
                     engine.Evaluate("datHack<-data.frame(X = mDelays, Y = mIndiffs, ses=mSes)");
                     string evalStatement = string.Format("output <-BDS(datHack, Noise={0},Mazur={1},Exponential={2},Rachlin={3},GreenMyerson={4},BD={5})",
                         1,
                         ConvertBoolToString(HyperbolicModel),
                         ConvertBoolToString(ExponentialModel),
-                        rachlinBoundCheck,
+                        ConvertBoolToString(RachHyperboloidModel),
                         ConvertBoolToString(MyerHyperboloidModel),
                         ConvertBoolToString(QuasiHyperbolicModel));
 
                     try
                     {
                         engine.Evaluate(evalStatement);
+
+                        if (BoundRachHyperboloidModel)
+                        {
+                            double tempS = double.NaN;
+                            if (double.TryParse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.s'])").AsVector().First().ToString(), out tempS))
+                            {
+                                if (tempS >= 1.0)
+                                {
+                                    mWindow.OutputEvents("Note: Rachlin converged above limits... excluding from analysis!");
+                                    mWindow.OutputEvents("Note: Re-running without Rachlin");
+
+                                    evalStatement = string.Format("output <-BDS(datHack, Noise={0},Mazur={1},Exponential={2},Rachlin={3},GreenMyerson={4},BD={5})",
+                                        1,
+                                        ConvertBoolToString(HyperbolicModel),
+                                        ConvertBoolToString(ExponentialModel),
+                                        0,  // Kick Rachlin out of the running
+                                        ConvertBoolToString(MyerHyperboloidModel),
+                                        ConvertBoolToString(QuasiHyperbolicModel));
+
+                                    engine.Evaluate(evalStatement);
+
+                                    RachlinIncluded = false;
+                                }
+                            }
+                        }
                     }
                     catch (Exception e)
                     {
@@ -1889,21 +1947,18 @@ namespace BayesianModeling.ViewModel
                     double myerProb = double.NaN;
                     double rachProb = double.NaN;
 
-                    if (!BoundRachHyperboloidModel)
+                    try
                     {
-                        try
-                        {
-                            double.TryParse(engine.Evaluate("as.numeric(output[[1]]['noise.prob'])").AsVector().First().ToString(), out noiseProb);
-                            double.TryParse(engine.Evaluate("as.numeric(output[[2]]['Mazur.prob'])").AsVector().First().ToString(), out hyperProb);
-                            double.TryParse(engine.Evaluate("as.numeric(output[[3]]['exp.prob'])").AsVector().First().ToString(), out exponProb);
-                            double.TryParse(engine.Evaluate("as.numeric(output[[9]]['BD.prob'])").AsVector().First().ToString(), out quasiProb);
-                            double.TryParse(engine.Evaluate("as.numeric(output[[4]]['MG.prob'])").AsVector().First().ToString(), out myerProb);
-                            double.TryParse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.prob'])").AsVector().First().ToString(), out rachProb);
-                        }
-                        catch (Exception e)
-                        {
-                            Console.WriteLine(e.ToString());
-                        }
+                        double.TryParse(engine.Evaluate("as.numeric(output[[1]]['noise.prob'])").AsVector().First().ToString(), out noiseProb);
+                        double.TryParse(engine.Evaluate("as.numeric(output[[2]]['Mazur.prob'])").AsVector().First().ToString(), out hyperProb);
+                        double.TryParse(engine.Evaluate("as.numeric(output[[3]]['exp.prob'])").AsVector().First().ToString(), out exponProb);
+                        double.TryParse(engine.Evaluate("as.numeric(output[[9]]['BD.prob'])").AsVector().First().ToString(), out quasiProb);
+                        double.TryParse(engine.Evaluate("as.numeric(output[[4]]['MG.prob'])").AsVector().First().ToString(), out myerProb);
+                        double.TryParse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.prob'])").AsVector().First().ToString(), out rachProb);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.ToString());
                     }
 
                     var dictionary = new Dictionary<string, double>();
@@ -1929,15 +1984,12 @@ namespace BayesianModeling.ViewModel
 
                         int colTitle = 9;
 
-                        if (!BoundRachHyperboloidModel)
-                        {
-                            mVM.RowViewModels[0].values[colTitle] = "Most competitive model: ";
-                            colTitle++;
-                            mVM.RowViewModels[0].values[colTitle] = "ED50 of Most Competitive Model - ln(x): ";
-                            colTitle++;
-                        }
+                        mVM.RowViewModels[0].values[colTitle] = "Most competitive model: ";
+                        colTitle++;
+                        mVM.RowViewModels[0].values[colTitle] = "ED50 of Most Competitive Model - ln(x): ";
+                        colTitle++;
 
-                        if (OutputProb && !BoundRachHyperboloidModel)
+                        if (OutputProb)
                         {
                             mVM.RowViewModels[0].values[colTitle] = "Noise Model Probs";
                             colTitle++;
@@ -1985,7 +2037,7 @@ namespace BayesianModeling.ViewModel
                             colTitle++;
                         }
 
-                        if (OutputRanks && !BoundRachHyperboloidModel)
+                        if (OutputRanks)
                         {
                             mVM.RowViewModels[0].values[colTitle] = "Ranked #1";
                             colTitle++;
@@ -2036,15 +2088,6 @@ namespace BayesianModeling.ViewModel
                         mVM.RowViewModels[mIndex + 1].values[5] = modMG.ToString();
                     }
 
-                    double modR = double.NaN;
-                    if (double.TryParse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.lnk'])").AsVector().First().ToString(), out modR))
-                    {
-                        mVM.RowViewModels[mIndex + 1].values[7] = Math.Exp(modR).ToString(mPrecision);
-                    }
-                    else
-                    {
-                        mVM.RowViewModels[mIndex + 1].values[7] = modR.ToString();
-                    }
 
                     //mVM.RowViewModels[mIndex + 1].values[1] = engine.Evaluate("as.numeric(output[[3]]['exp.lnk'])").AsVector().First().ToString();
                     //mVM.RowViewModels[mIndex + 1].values[2] = engine.Evaluate("as.numeric(output[[2]]['Mazur.lnk'])").AsVector().First().ToString();
@@ -2053,20 +2096,35 @@ namespace BayesianModeling.ViewModel
                     //mVM.RowViewModels[mIndex + 1].values[5] = engine.Evaluate("as.numeric(output[[4]]['MG.lnk'])").AsVector().First().ToString();
                     mVM.RowViewModels[mIndex + 1].values[6] = engine.Evaluate("as.numeric(output[[4]]['MG.s'])").AsVector().AsNumeric().First().ToString(mPrecision);
                     //mVM.RowViewModels[mIndex + 1].values[7] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.lnk'])").AsVector().First().ToString();
-                    mVM.RowViewModels[mIndex + 1].values[8] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.s'])").AsVector().AsNumeric().First().ToString(mPrecision);
+
+                    if (!RachlinIncluded)
+                    {
+                        mVM.RowViewModels[mIndex + 1].values[7] = "Excluded: exceeded bounds";
+                        mVM.RowViewModels[mIndex + 1].values[8] = "Excluded: exceeded bounds";
+                    }
+                    else
+                    {
+                        double modR = double.NaN;
+                        if (double.TryParse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.lnk'])").AsVector().First().ToString(), out modR))
+                        {
+                            mVM.RowViewModels[mIndex + 1].values[7] = Math.Exp(modR).ToString(mPrecision);
+                        }
+                        else
+                        {
+                            mVM.RowViewModels[mIndex + 1].values[7] = modR.ToString();
+                        }
+
+                        mVM.RowViewModels[mIndex + 1].values[8] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.s'])").AsVector().AsNumeric().First().ToString(mPrecision);
+                    }
 
                     int col = 9;
 
-                    if (!BoundRachHyperboloidModel)
-                    {
-                        mVM.RowViewModels[mIndex + 1].values[col] = items.First().Key.ToString();
-                        col++;
-                        mVM.RowViewModels[mIndex + 1].values[col] = ed50Best.ToString(mPrecision);
-                        col++;
-                    }
+                    mVM.RowViewModels[mIndex + 1].values[col] = items.First().Key.ToString();
+                    col++;
+                    mVM.RowViewModels[mIndex + 1].values[col] = ed50Best.ToString(mPrecision);
+                    col++;
 
-
-                    if (OutputProb && !BoundRachHyperboloidModel)
+                    if (OutputProb)
                     {
                         mVM.RowViewModels[mIndex + 1].values[col] = noiseProb.ToString(mPrecision);
                         col++;
@@ -2129,7 +2187,7 @@ namespace BayesianModeling.ViewModel
                         col++;
                     }
 
-                    if (OutputRanks && !BoundRachHyperboloidModel)
+                    if (OutputRanks)
                     {
                         int rank = 1;
 
@@ -2167,18 +2225,13 @@ namespace BayesianModeling.ViewModel
             {
                 int col = 11;
 
-                if (BoundRachHyperboloidModel)
-                {
-                    col = 9;
-                }
-
                 var row = GetGridRow(mWin.dataGrid, i);
 
                 if (row == null) continue;
 
                 bool grayOut = true;
 
-                if (OutputProb && !BoundRachHyperboloidModel)
+                if (OutputProb)
                 {
                     if (grayOut)
                     {
@@ -2216,7 +2269,7 @@ namespace BayesianModeling.ViewModel
                     grayOut = !grayOut;
                 }
 
-                if (OutputRanks && !BoundRachHyperboloidModel)
+                if (OutputRanks)
                 {
                     if (grayOut)
                     {
@@ -2238,18 +2291,21 @@ namespace BayesianModeling.ViewModel
                 /*
                  * Highlight yellow if Noise model won
                  */
-                if (mVM.RowViewModels[i].values[9] == "Noise Model" && !BoundRachHyperboloidModel)
+                if (mVM.RowViewModels[i].values[9] == "Noise Model")
                 {
                     row.Background = Brushes.Yellow;
                 }
 
                 /*
                  * Highlight dark orange of Rachlin won, with bounding
-                 */
-                if (mVM.RowViewModels[i].values[9] == "Hyperboloid (Rachlin) Model" && BoundRachHyperboloidModel)
+                 * 
+                 * Removed
+                 * 
+                if (mVM.RowViewModels[i].values[9] == "Hyperboloid (Rachlin) Model")
                 {
                     row.Background = Brushes.DarkOrange;
                 }
+                 */
 
                 if (windowRef != null)
                 {
