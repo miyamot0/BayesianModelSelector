@@ -21,7 +21,7 @@
 
         <TextBlock x:Name="QuestionTextBox" 
                    TextWrapping="WrapWithOverflow"
-                   Text="Note: constraining the s parameter assists in retaining the conceptual framework for interpreting k, but numerically interferes with approximate Bayesian model selection and analytic solutions for ED50.  Interpret results with caution." 
+                   Text="Note: constraining the s parameter assists in retaining the conceptual framework for interpreting k, but numerically interferes with approximate Bayesian model selection and analytic solutions for ED50.  Model parameters alone can only be reported in this case." 
                    HorizontalAlignment="Center"  
                    Margin="10,10,10,10" 
                    VerticalAlignment="Center" 
