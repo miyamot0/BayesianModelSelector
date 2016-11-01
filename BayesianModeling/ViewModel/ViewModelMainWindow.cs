@@ -1274,6 +1274,7 @@ namespace BayesianModeling.ViewModel
                             ObservableCollection<RowViewModel> temp = OpenXMLHelper.ReadFromCSVFile(openFileDialog1.FileName);
                             RowViewModels = new ObservableCollection<RowViewModel>(temp);
 
+                            workingSheet = openFileDialog1.SafeFileName;
                             UpdateTitle(openFileDialog1.SafeFileName);
                             haveFileLoaded = true;
                         }
