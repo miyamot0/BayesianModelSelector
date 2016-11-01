@@ -1250,19 +1250,29 @@ namespace BayesianModeling.ViewModel
             double myerProb = double.NaN;
             double rachProb = double.NaN;
 
-            double.TryParse(engine.Evaluate("as.numeric(output[[1]]['noise.prob'])").AsVector().First().ToString(), out noiseProb);
-            double.TryParse(engine.Evaluate("as.numeric(output[[2]]['Mazur.prob'])").AsVector().First().ToString(), out hyperProb);
-            double.TryParse(engine.Evaluate("as.numeric(output[[3]]['exp.prob'])").AsVector().First().ToString(), out exponProb);
-            double.TryParse(engine.Evaluate("as.numeric(output[[9]]['BD.prob'])").AsVector().First().ToString(), out quasiProb);
-            double.TryParse(engine.Evaluate("as.numeric(output[[4]]['MG.prob'])").AsVector().First().ToString(), out myerProb);
-            double.TryParse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.prob'])").AsVector().First().ToString(), out rachProb);
+            if (!BoundRachHyperboloidModel)
+            {
+                try
+                {
+                    double.TryParse(engine.Evaluate("as.numeric(output[[1]]['noise.prob'])").AsVector().First().ToString(), out noiseProb);
+                    double.TryParse(engine.Evaluate("as.numeric(output[[2]]['Mazur.prob'])").AsVector().First().ToString(), out hyperProb);
+                    double.TryParse(engine.Evaluate("as.numeric(output[[3]]['exp.prob'])").AsVector().First().ToString(), out exponProb);
+                    double.TryParse(engine.Evaluate("as.numeric(output[[9]]['BD.prob'])").AsVector().First().ToString(), out quasiProb);
+                    double.TryParse(engine.Evaluate("as.numeric(output[[4]]['MG.prob'])").AsVector().First().ToString(), out myerProb);
+                    double.TryParse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.prob'])").AsVector().First().ToString(), out rachProb);
 
-            //double noiseProb = double.Parse(engine.Evaluate("as.numeric(output[[1]]['noise.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
-            //double hyperProb = double.Parse(engine.Evaluate("as.numeric(output[[2]]['Mazur.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
-            //double exponProb = double.Parse(engine.Evaluate("as.numeric(output[[3]]['exp.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
-            //double quasiProb = double.Parse(engine.Evaluate("as.numeric(output[[9]]['BD.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
-            //double myerProb = double.Parse(engine.Evaluate("as.numeric(output[[4]]['MG.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
-            //double rachProb = double.Parse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
+                    //double noiseProb = double.Parse(engine.Evaluate("as.numeric(output[[1]]['noise.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
+                    //double hyperProb = double.Parse(engine.Evaluate("as.numeric(output[[2]]['Mazur.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
+                    //double exponProb = double.Parse(engine.Evaluate("as.numeric(output[[3]]['exp.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
+                    //double quasiProb = double.Parse(engine.Evaluate("as.numeric(output[[9]]['BD.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
+                    //double myerProb = double.Parse(engine.Evaluate("as.numeric(output[[4]]['MG.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
+                    //double rachProb = double.Parse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.ToString());
+                }
+            }
 
             var dictionary = new Dictionary<string, double>();
             dictionary.Add("Noise Model", noiseProb);
@@ -1407,17 +1417,22 @@ namespace BayesianModeling.ViewModel
 
             //mVM.RowViewModels[1].values[8] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.s'])").AsVector().First().ToString();
 
-            mVM.RowViewModels[0].values[9] = "Most competitive model: ";
-            mVM.RowViewModels[1].values[9] = items.First().Key.ToString();
+            int col = 9;
 
-            double ed50Best = engine.Evaluate("as.numeric(output[[8]]['lnED50.mostprob'])").AsNumeric().First();
+            if (!BoundRachHyperboloidModel)
+            {
+                mVM.RowViewModels[0].values[col] = "Most competitive model: ";
+                mVM.RowViewModels[1].values[col] = items.First().Key.ToString();
+                col++;
 
-            mVM.RowViewModels[0].values[10] = "ED50 of Most Competitive Model - ln(x): ";
-            mVM.RowViewModels[1].values[10] = ed50Best.ToString(mPrecision);
+                double ed50Best = engine.Evaluate("as.numeric(output[[8]]['lnED50.mostprob'])").AsNumeric().First();
 
-            int col = 11;
+                mVM.RowViewModels[0].values[col] = "ED50 of Most Competitive Model - ln(x): ";
+                mVM.RowViewModels[1].values[col] = ed50Best.ToString(mPrecision);
+                col++;
+            }
 
-            if (OutputProb)
+            if (OutputProb && !BoundRachHyperboloidModel)
             {
 
                 mVM.RowViewModels[0].values[col] = "Noise Model Probs";
@@ -1499,7 +1514,7 @@ namespace BayesianModeling.ViewModel
                 col++;
             }
 
-            if (OutputRanks)
+            if (OutputRanks && !BoundRachHyperboloidModel)
             {
                 int rank = 1;
 
@@ -1530,6 +1545,11 @@ namespace BayesianModeling.ViewModel
             {
                 col = 11;
 
+                if (BoundRachHyperboloidModel)
+                {
+                    col = 9;
+                }
+
                 var row = GetGridRow(mWin.dataGrid, i);
 
                 if (row == null) continue;
@@ -1541,7 +1561,7 @@ namespace BayesianModeling.ViewModel
 
                 bool grayOut = true;
 
-                if (OutputProb)
+                if (OutputProb && !BoundRachHyperboloidModel)
                 {
                     if (grayOut)
                     {
@@ -1579,7 +1599,7 @@ namespace BayesianModeling.ViewModel
                     grayOut = !grayOut;
                 }
 
-                if (OutputRanks)
+                if (OutputRanks && !BoundRachHyperboloidModel)
                 {
                     if (grayOut)
                     {
@@ -1689,7 +1709,10 @@ namespace BayesianModeling.ViewModel
                 mWindow.OutputEvents("Citation:: " + string.Join("", engine.Evaluate("citation('scales')$textVersion").AsCharacter().ToArray()));
             }
 
-            windowRef.calculateButton.IsEnabled = true;
+            if (windowRef != null)
+            {
+                windowRef.calculateButton.IsEnabled = true;
+            }
         }
 
         /// <summary>
@@ -1871,19 +1894,29 @@ namespace BayesianModeling.ViewModel
                     double myerProb = double.NaN;
                     double rachProb = double.NaN;
 
-                    double.TryParse(engine.Evaluate("as.numeric(output[[1]]['noise.prob'])").AsVector().First().ToString(), out noiseProb);
-                    double.TryParse(engine.Evaluate("as.numeric(output[[2]]['Mazur.prob'])").AsVector().First().ToString(), out hyperProb);
-                    double.TryParse(engine.Evaluate("as.numeric(output[[3]]['exp.prob'])").AsVector().First().ToString(), out exponProb);
-                    double.TryParse(engine.Evaluate("as.numeric(output[[9]]['BD.prob'])").AsVector().First().ToString(), out quasiProb);
-                    double.TryParse(engine.Evaluate("as.numeric(output[[4]]['MG.prob'])").AsVector().First().ToString(), out myerProb);
-                    double.TryParse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.prob'])").AsVector().First().ToString(), out rachProb);
+                    if (!BoundRachHyperboloidModel)
+                    {
+                        try
+                        {
+                            double.TryParse(engine.Evaluate("as.numeric(output[[1]]['noise.prob'])").AsVector().First().ToString(), out noiseProb);
+                            double.TryParse(engine.Evaluate("as.numeric(output[[2]]['Mazur.prob'])").AsVector().First().ToString(), out hyperProb);
+                            double.TryParse(engine.Evaluate("as.numeric(output[[3]]['exp.prob'])").AsVector().First().ToString(), out exponProb);
+                            double.TryParse(engine.Evaluate("as.numeric(output[[9]]['BD.prob'])").AsVector().First().ToString(), out quasiProb);
+                            double.TryParse(engine.Evaluate("as.numeric(output[[4]]['MG.prob'])").AsVector().First().ToString(), out myerProb);
+                            double.TryParse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.prob'])").AsVector().First().ToString(), out rachProb);
 
-                    //double noiseProb = double.Parse(engine.Evaluate("as.numeric(output[[1]]['noise.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
-                    //double hyperProb = double.Parse(engine.Evaluate("as.numeric(output[[2]]['Mazur.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
-                    //double exponProb = double.Parse(engine.Evaluate("as.numeric(output[[3]]['exp.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
-                    //double quasiProb = double.Parse(engine.Evaluate("as.numeric(output[[9]]['BD.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
-                    //double myerProb = double.Parse(engine.Evaluate("as.numeric(output[[4]]['MG.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
-                    //double rachProb = double.Parse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
+                            //double noiseProb = double.Parse(engine.Evaluate("as.numeric(output[[1]]['noise.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
+                            //double hyperProb = double.Parse(engine.Evaluate("as.numeric(output[[2]]['Mazur.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
+                            //double exponProb = double.Parse(engine.Evaluate("as.numeric(output[[3]]['exp.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
+                            //double quasiProb = double.Parse(engine.Evaluate("as.numeric(output[[9]]['BD.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
+                            //double myerProb = double.Parse(engine.Evaluate("as.numeric(output[[4]]['MG.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
+                            //double rachProb = double.Parse(engine.Evaluate("as.numeric(output[[5]]['Rachlin.prob'])").AsVector().First().ToString(), System.Globalization.NumberStyles.Float);
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e.ToString());
+                        }
+                    }
 
                     var dictionary = new Dictionary<string, double>();
                     dictionary.Add("Noise Model", noiseProb);
@@ -1905,12 +1938,18 @@ namespace BayesianModeling.ViewModel
                         mVM.RowViewModels[0].values[6] = "Myerson-Hyperboloid - s: ";
                         mVM.RowViewModels[0].values[7] = "Rachlin-Hyperboloid - k: ";
                         mVM.RowViewModels[0].values[8] = "Rachlin-Hyperboloid - s: ";
-                        mVM.RowViewModels[0].values[9] = "Most competitive model: ";
-                        mVM.RowViewModels[0].values[10] = "ED50 of Most Competitive Model - ln(x): ";
 
-                        int colTitle = 11;
+                        int colTitle = 9;
 
-                        if (OutputProb)
+                        if (!BoundRachHyperboloidModel)
+                        {
+                            mVM.RowViewModels[0].values[colTitle] = "Most competitive model: ";
+                            colTitle++;
+                            mVM.RowViewModels[0].values[colTitle] = "ED50 of Most Competitive Model - ln(x): ";
+                            colTitle++;
+                        }
+
+                        if (OutputProb && !BoundRachHyperboloidModel)
                         {
                             mVM.RowViewModels[0].values[colTitle] = "Noise Model Probs";
                             colTitle++;
@@ -1958,7 +1997,7 @@ namespace BayesianModeling.ViewModel
                             colTitle++;
                         }
 
-                        if (OutputRanks)
+                        if (OutputRanks && !BoundRachHyperboloidModel)
                         {
                             mVM.RowViewModels[0].values[colTitle] = "Ranked #1";
                             colTitle++;
@@ -2028,12 +2067,18 @@ namespace BayesianModeling.ViewModel
                     //mVM.RowViewModels[mIndex + 1].values[7] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.lnk'])").AsVector().First().ToString();
                     mVM.RowViewModels[mIndex + 1].values[8] = engine.Evaluate("as.numeric(output[[5]]['Rachlin.s'])").AsVector().AsNumeric().First().ToString(mPrecision);
 
-                    mVM.RowViewModels[mIndex + 1].values[9] = items.First().Key.ToString();
-                    mVM.RowViewModels[mIndex + 1].values[10] = ed50Best.ToString(mPrecision);
+                    int col = 9;
 
-                    int col = 11;
+                    if (!BoundRachHyperboloidModel)
+                    {
+                        mVM.RowViewModels[mIndex + 1].values[col] = items.First().Key.ToString();
+                        col++;
+                        mVM.RowViewModels[mIndex + 1].values[col] = ed50Best.ToString(mPrecision);
+                        col++;
+                    }
 
-                    if (OutputProb)
+
+                    if (OutputProb && !BoundRachHyperboloidModel)
                     {
                         mVM.RowViewModels[mIndex + 1].values[col] = noiseProb.ToString(mPrecision);
                         col++;
@@ -2096,7 +2141,7 @@ namespace BayesianModeling.ViewModel
                         col++;
                     }
 
-                    if (OutputRanks)
+                    if (OutputRanks && !BoundRachHyperboloidModel)
                     {
                         int rank = 1;
 
@@ -2135,13 +2180,18 @@ namespace BayesianModeling.ViewModel
             {
                 int col = 11;
 
+                if (BoundRachHyperboloidModel)
+                {
+                    col = 9;
+                }
+
                 var row = GetGridRow(mWin.dataGrid, i);
 
                 if (row == null) continue;
 
                 bool grayOut = true;
 
-                if (OutputProb)
+                if (OutputProb && !BoundRachHyperboloidModel)
                 {
                     if (grayOut)
                     {
@@ -2179,7 +2229,7 @@ namespace BayesianModeling.ViewModel
                     grayOut = !grayOut;
                 }
 
-                if (OutputRanks)
+                if (OutputRanks && !BoundRachHyperboloidModel)
                 {
                     if (grayOut)
                     {
@@ -2201,7 +2251,7 @@ namespace BayesianModeling.ViewModel
                 /*
                  * Highlight yellow if Noise model won
                  */
-                if (mVM.RowViewModels[i].values[9] == "Noise Model")
+                if (mVM.RowViewModels[i].values[9] == "Noise Model" && !BoundRachHyperboloidModel)
                 {
                     row.Background = Brushes.Yellow;
                 }
@@ -2214,7 +2264,10 @@ namespace BayesianModeling.ViewModel
                     row.Background = Brushes.DarkOrange;
                 }
 
-                windowRef.calculateButton.IsEnabled = true;
+                if (windowRef != null)
+                {
+                    windowRef.calculateButton.IsEnabled = true;
+                }
             }
         }
 
