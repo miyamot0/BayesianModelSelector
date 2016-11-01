@@ -34,71 +34,71 @@
                                   Focusable="False">
             <FlowDocument>
                 <Paragraph>
-                    <Image Source="/Resources/SNS.png" Width="90" Height="90" Margin="0,0,30,0" />
-                    <Run 
-                        FontSize="20"
-                        BaselineAlignment="Center">Discounting Model Simulator</Run>
+                    <InlineUIContainer>
+                        <Image Source="/Resources/SNS.png" Width="90" Height="90" Margin="0,0,30,0" />
+                    </InlineUIContainer>
+                    <Run Text=" "/>
+                    <Run BaselineAlignment="Center" FontSize="20" Text="Discounting Model Selector"/>
                 </Paragraph>
                 <Paragraph>
-                    The
-                    <Bold>Discounting Model Selector</Bold>
-                    is a tool designed to aid in the selection of models in
-                    temporal discounting.  Discounting Model Selection itself is 
-                    available as a script runnable in R alone and the 
-                    <Bold>Discounting Model Selector</Bold>
-                    serves as an easy bridge for accessing these methods in 
-                    familiar, spreadsheet-based interface.
+                    <Run Text="The "/>
+                    <Bold>
+                        <Run Text="Discounting Model Selector"/>
+                    </Bold>
+                    <Run Text=" is a tool designed to aid in the selection of models in temporal discounting. Discounting Model Selection itself is available as a script runnable in R alone and the "/>
+                    <Bold>
+                        <Run Text="Discounting Model Selector"/>
+                    </Bold>
+                    <Run Text=" serves as an easy bridge for accessing these methods in familiar, spreadsheet-based interface."/>
                 </Paragraph>
                 <Paragraph>
-                    In order to use this program to function, you will need 
-                    the following (Green items are found):
+                    <Run Text="In order to use this program to function, you will need the following (Green items are found):"/>
                 </Paragraph>
                 <List>
-                    <ListItem x:Name="checkNet" TextBlock.Foreground="Red">
+                    <ListItem x:Name="checkNet" Foreground="Red">
                         <Paragraph>
-                            Microsoft .NET Framework (at least 4.0)
+                            <Run Text="Microsoft .NET Framework (at least 4.0)"/>
                         </Paragraph>
                     </ListItem>
-                    <ListItem x:Name="checkR" TextBlock.Foreground="Red">
+                    <ListItem x:Name="checkR" Foreground="Red">
                         <Paragraph>
-                            The
-                            <Hyperlink x:Name="checkR2"
-                                       NavigateUri="https://www.r-project.org/"
-                                       TextBlock.Foreground="Red"
-                                       RequestNavigate="Hyperlink_RequestNavigate">R Statistical Package</Hyperlink>
+                            <Run Text="The "/>
+                            <Hyperlink x:Name="checkR2" Foreground="Red" NavigateUri="https://www.r-project.org/">
+                                <Run Text="R Statistical Package"/>
+                            </Hyperlink>
                         </Paragraph>
                     </ListItem>
-                    <ListItem x:Name="checkGgplot" TextBlock.Foreground="Red">
+                    <ListItem x:Name="checkGgplot" Foreground="Red">
                         <Paragraph>
-                            ggplot2 (R package)
+                            <Run Text="ggplot2 (R package)"/>
                         </Paragraph>
                     </ListItem>
-                    <ListItem x:Name="checkReshape2" TextBlock.Foreground="Red">
+                    <ListItem x:Name="checkReshape2" Foreground="Red">
                         <Paragraph>
-                            reshape2 (R package)
+                            <Run Text="reshape2 (R package)"/>
                         </Paragraph>
                     </ListItem>
-                    <ListItem x:Name="checkGridExtra" TextBlock.Foreground="Red">
+                    <ListItem x:Name="checkGridExtra" Foreground="Red">
                         <Paragraph>
-                            gridExtra (R package)
+                            <Run Text="gridExtra (R package)"/>
                         </Paragraph>
                     </ListItem>
-                    <ListItem x:Name="checkBase64enc" TextBlock.Foreground="Red">
+                    <ListItem x:Name="checkBase64enc" Foreground="Red">
                         <Paragraph>
-                            base64enc (R package)
+                            <Run Text="base64enc (R package)"/>
                         </Paragraph>
                     </ListItem>
                 </List>
                 <Paragraph>
-                    <Run Text="Status:" />
-                    <Run x:Name="loadText"  Text="Loading R" TextBlock.Foreground="Red" />
+                    <Run Text="Status:"/>
+                    <Run Text=" "/>
+                    <Run x:Name="loadText" Foreground="Red" Text="Loading R"/>
                 </Paragraph>
                 <Paragraph>
-                    This is an open-sourced project and all source material (including R scripts for direct use) 
-                    are available in the application install directory.
-                </Paragraph>                
+                    <Run Text="This is an open-sourced project and all source material (including R scripts for direct use) are available in the application install directory."/>
+                </Paragraph>
                 <Paragraph>
-                    Questions, feedback and bug reports can be submitted to shawn (dot) gilroy (at) temple.edu.
+                    <Run Text="Questions, feedback and bug reports can be submitted to shawn (dot) gilroy (at) temple.edu."/>
                 </Paragraph>
             </FlowDocument>
         </FlowDocumentScrollViewer>
