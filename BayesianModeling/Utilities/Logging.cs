@@ -51,6 +51,11 @@ namespace BayesianModeling.Utilities
             return webResponse;
         }
 
+        /// <summary>
+        /// Vestiges of old logging system, deprecated
+        /// </summary>
+        /// <param name="sysError"></param>
+        /// <param name="sysContent"></param>
         public static void SubmitError(string sysError, string sysContent)
         {
             NameValueCollection coll = new NameValueCollection();

@@ -97,7 +97,6 @@ namespace BayesianModeling.ViewModel
                 catch (Exception e)
                 {
                     MessageBox.Show("We weren't able to save.  Is the target file either open, missing or in use?");
-                    //Logging.SubmitError("SaveFile", e.ToString());
                     Console.WriteLine(e.ToString());
                 }
             }

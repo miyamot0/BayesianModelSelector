@@ -1697,7 +1697,6 @@ namespace BayesianModeling.ViewModel
                 }
                 catch (Exception e)
                 {
-                    //Logging.SubmitError("ViewModelDiscounting", e.ToString());
                     mWindow.OutputEvents(e.ToString());
                 }
 
@@ -2158,7 +2157,6 @@ namespace BayesianModeling.ViewModel
                 }
                 catch (ParseException pe)
                 {
-                    //Logging.SubmitError("ViewModelBatchDiscounting", pe.ToString());
                     mWindow.OutputEvents(pe.ToString());
                 }
 
