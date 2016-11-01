@@ -339,6 +339,9 @@ namespace BayesianModeling.ViewModel
         /// </param>
         private void AddToRecents(string filePath)
         {
+            var pathDir = Path.GetDirectoryName(filePath);
+            Properties.Settings.Default.LastDirectory = pathDir;
+
             recentsArray = Properties.Settings.Default.RecentFiles.Split(';');
 
             List<string> workingRecents = recentsArray.Select(item => item).Where(item => item.Trim().Length > 1).ToList();
@@ -1233,7 +1236,15 @@ namespace BayesianModeling.ViewModel
             {
                 OpenFileDialog openFileDialog1 = new OpenFileDialog();
 
-                openFileDialog1.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                if (Directory.Exists(Properties.Settings.Default.LastDirectory))
+                {
+                    openFileDialog1.InitialDirectory = Properties.Settings.Default.LastDirectory;
+                }
+                else
+                {
+                    openFileDialog1.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                }
+
                 openFileDialog1.Filter = "Spreadsheet Files (XLSX, CSV)|*.xlsx;*.csv";
                 openFileDialog1.Title = "Select an Excel File";
 
