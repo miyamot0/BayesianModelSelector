@@ -1302,7 +1302,7 @@ namespace BayesianModeling.ViewModel
             mWindow.OutputEvents("Outputting to workbook Started... Please wait... ");
 
             var mWin = new ResultsWindow();
-            var mVM = new ResultsViewModel();
+            var mVM = new ViewModelResults();
             mWin.DataContext = mVM;
             mWin.Owner = windowRef;
             mWin.WindowStartupLocation = WindowStartupLocation.CenterOwner;
@@ -1809,7 +1809,7 @@ namespace BayesianModeling.ViewModel
             windowRef.calculateButton.IsEnabled = false;
 
             var mWin = new ResultsWindow();
-            var mVM = new ResultsViewModel();
+            var mVM = new ViewModelResults();
             mWin.DataContext = mVM;
             mWin.Owner = windowRef;
             mWin.WindowStartupLocation = WindowStartupLocation.CenterOwner;

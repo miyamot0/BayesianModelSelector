@@ -178,7 +178,7 @@
     <Compile Include="Utilities\OpenXMLHelper.cs" />
     <Compile Include="Utilities\RelayCommand.cs" />
     <Compile Include="Utilities\Settings.cs" />
-    <Compile Include="ViewModel\ResultsViewModel.cs" />
+    <Compile Include="ViewModel\ViewModelResults.cs" />
     <Compile Include="ViewModel\RowViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="ViewModel\ViewModelLicense.cs" />

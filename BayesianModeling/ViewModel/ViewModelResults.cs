@@ -52,7 +52,7 @@ using System.Windows;
 
 namespace BayesianModeling.ViewModel
 {
-    class ResultsViewModel : ViewModelBase
+    class ViewModelResults : ViewModelBase
     {
         
         public ObservableCollection<RowViewModel> RowViewModels { get; set; }
@@ -62,7 +62,7 @@ namespace BayesianModeling.ViewModel
         public RelayCommand FileSaveCommand { get; set; }
         public RelayCommand FileCloseCommand { get; set; }
 
-        public ResultsViewModel()
+        public ViewModelResults()
         {
             RowViewModels = new ObservableCollection<RowViewModel>();
 
