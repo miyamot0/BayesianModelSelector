@@ -67,7 +67,7 @@
                     <LineBreak/>
                     <LineBreak/>
                     <Run Text="The program will talk to R to check that it has the packages it needs to run." />
-                    <Run Text="The BMS will install these packages at the outset, so that future use will not need the internet for anything except to update." />
+                    <Run Text="The DMS will install these packages at the outset, so that future use will not need the internet for anything except to update." />
                 </Paragraph>
 
                 <Paragraph>
@@ -76,7 +76,7 @@
                     </Bold>
                     <LineBreak/>
                     <LineBreak/>
-                    <Run Text="The BMS operates in a general fashion with R.  There are literally hundreds of R versions out there and depending your particular version, there may be variability in how it behaves." />
+                    <Run Text="The DMS operates in a general fashion with R.  There are literally hundreds of R versions out there and depending your particular version, there may be variability in how it behaves." />
                     <Run Text="Generally, you should attempt to re-start the program so that it has a chance to fetch the needed packages.  If this doesn't help, email shawn(dot)gilroy(at)temple(dot)edu your specific log."/>
                 </Paragraph>
 

@@ -643,7 +643,7 @@ namespace BayesianModeling.ViewModel
             var window = new License();
             window.DataContext = new ViewModelLicense
             {
-                licenseTitle = "License (GPLv2) - BDS Script",
+                licenseTitle = "License (GPLv2) - DMS Script",
                 licenseText = Properties.Resources.License_BDS
             };
             window.Owner = MainWindow;
