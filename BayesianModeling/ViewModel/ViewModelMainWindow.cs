@@ -601,7 +601,15 @@ namespace BayesianModeling.ViewModel
                 pasteContentRowIterator = 0,
                 pasteContentColumnIterator = 0;
 
-            rowData = CreateTransposedList(rowData);
+            try
+            {
+                rowData = CreateTransposedList(rowData);
+            }
+            catch
+            {
+                // Error in constructing dimensions, fail out
+                return;
+            }
 
             if (rowData == null) return;
 
