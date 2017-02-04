@@ -345,6 +345,8 @@ namespace BayesianModeling.ViewModel
             
             App.Workbook.CellsContextMenu = mContextMenu;
 
+            App.Workbook.SheetTabNewButtonVisible = false;
+
             #endregion
         }
 
@@ -1266,7 +1268,7 @@ namespace BayesianModeling.ViewModel
 
                 AddToRecents(@filePath);
 
-                SendMessageToOutput("Saved: " + @filePath);
+                SendMessageToOutput("Opened: " + @filePath);
             }
             catch (IOException e)
             {

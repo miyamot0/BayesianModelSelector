@@ -357,6 +357,65 @@
 
                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
 
+                <MenuItem Command="{Binding AddCommand}"
+                          Width="24">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/action_add_16xLG.png"/>
+                    </MenuItem.Icon>
+                    <MenuItem.ToolTip>
+                        <ToolTip>
+                            <StackPanel>
+                                <TextBlock FontWeight="Bold">Add new sheet</TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </MenuItem.ToolTip>
+                </MenuItem>
+
+                <MenuItem Command="{Binding ResizeCommand}" 
+                          Width="24">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Component_16xLG.png"
+                               RenderTransformOrigin="0.5, 0.5"/>
+                    </MenuItem.Icon>
+                    <MenuItem.ToolTip>
+                        <ToolTip>
+                            <StackPanel>
+                                <TextBlock FontWeight="Bold">Resize worksheet</TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </MenuItem.ToolTip>
+                </MenuItem>
+
+                <MenuItem Command="{Binding RenameCommand}"
+                          Width="24">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/book_Open_16xLG.png"/>
+                    </MenuItem.Icon>
+                    <MenuItem.ToolTip>
+                        <ToolTip>
+                            <StackPanel>
+                                <TextBlock FontWeight="Bold">Rename current sheet</TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </MenuItem.ToolTip>
+                </MenuItem>
+
+                <MenuItem Command="{Binding RemoveSheetCommand}"
+                          Width="24">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Offline_16xLG.png"/>
+                    </MenuItem.Icon>
+                    <MenuItem.ToolTip>
+                        <ToolTip>
+                            <StackPanel>
+                                <TextBlock FontWeight="Bold">Remove current sheet</TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </MenuItem.ToolTip>
+                </MenuItem>
+
+                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+
                 <MenuItem Command="{Binding SaveLogsWindowCommand}"
                             Width="24">
                     <MenuItem.Icon>

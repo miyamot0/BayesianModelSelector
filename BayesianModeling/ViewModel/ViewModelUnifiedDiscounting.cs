@@ -1410,13 +1410,6 @@ namespace BayesianModeling.ViewModel
             {
                 mNewResultsVM.ResultsBook.CurrentWorksheet.CreateAndGetCell(1, 7).Data = "Excluded: exceeded bounds ";
                 mNewResultsVM.ResultsBook.CurrentWorksheet.CreateAndGetCell(1, 8).Data = "Excluded: exceeded bounds ";
-
-                mNewResultsVM.ResultsBook.CurrentWorksheet.IterateCells(1, 0, 1, mNewResultsVM.ResultsBook.CurrentWorksheet.Columns, true, (row, column, cell) =>
-                {
-                    cell.Style.BackColor = Colors.LightBlue;
-
-                    return true;
-                });
             }
             else
             {
@@ -1446,16 +1439,6 @@ namespace BayesianModeling.ViewModel
             mNewResultsVM.ResultsBook.CurrentWorksheet.CreateAndGetCell(0, col).Data = "Most competitive model: ";
             mNewResultsVM.ResultsBook.CurrentWorksheet.CreateAndGetCell(1, col).Data = items.First().Key.ToString();
             col++;
-
-            if (items.First().Key.ToString().ToLower().Contains("noise"))
-            {
-                mNewResultsVM.ResultsBook.CurrentWorksheet.IterateCells(1, 0, 1, mNewResultsVM.ResultsBook.CurrentWorksheet.Columns, true, (row, column, cell) =>
-                {
-                    cell.Style.BackColor = Colors.Yellow;
-
-                    return true;
-                });
-            }
 
             double ed50Best = engine.Evaluate("as.numeric(output[[8]]['lnED50.mostprob'])").AsNumeric().First();
 
@@ -1555,6 +1538,23 @@ namespace BayesianModeling.ViewModel
                     rank++;
                     col++;
                 }
+            }
+
+            mNewResultsVM.ResultsBook.CurrentWorksheet.IterateCells(1, 0, 1, mNewResultsVM.ResultsBook.CurrentWorksheet.Columns, true, (row, column, cell) =>
+            {
+                cell.Style.BackColor = Colors.LightBlue;
+
+                return true;
+            });
+
+            if (items.First().Key.ToString().ToLower().Contains("noise"))
+            {
+                mNewResultsVM.ResultsBook.CurrentWorksheet.IterateCells(1, 0, 1, mNewResultsVM.ResultsBook.CurrentWorksheet.Columns, true, (row, column, cell) =>
+                {
+                    cell.Style.BackColor = Colors.Yellow;
+
+                    return true;
+                });
             }
 
             mNewResultsVM.ResultsBook.CurrentWorksheet.CreateAndGetCell(3, 0).Data = "Delayed Value";
@@ -2151,13 +2151,6 @@ namespace BayesianModeling.ViewModel
                     {
                         mNewResultsVM.ResultsBook.CurrentWorksheet.CreateAndGetCell(mIndex + 1, 7).Data = "Excluded: exceeded bounds";
                         mNewResultsVM.ResultsBook.CurrentWorksheet.CreateAndGetCell(mIndex + 1, 8).Data = "Excluded: exceeded bounds";
-
-                        mNewResultsVM.ResultsBook.CurrentWorksheet.IterateCells(mIndex + 1, 0, 1, mNewResultsVM.ResultsBook.CurrentWorksheet.Columns, true, (row, column, cell) =>
-                        {
-                            cell.Style.BackColor = Colors.LightBlue;
-
-                            return true;
-                        });
                     }
                     else
                     {
@@ -2178,16 +2171,6 @@ namespace BayesianModeling.ViewModel
 
                     mNewResultsVM.ResultsBook.CurrentWorksheet.CreateAndGetCell(mIndex + 1, col).Data = items.First().Key.ToString();
                     col++;
-
-                    if (items.First().Key.ToString().ToLower().Contains("noise"))
-                    {
-                        mNewResultsVM.ResultsBook.CurrentWorksheet.IterateCells(mIndex + 1, 0, 1, mNewResultsVM.ResultsBook.CurrentWorksheet.Columns, true, (row, column, cell) =>
-                        {
-                            cell.Style.BackColor = Colors.Yellow;
-
-                            return true;
-                        });
-                    }
 
                     mNewResultsVM.ResultsBook.CurrentWorksheet.CreateAndGetCell(mIndex + 1, col).Data = ed50Best.ToString(mPrecision);
                     col++;
@@ -2266,6 +2249,26 @@ namespace BayesianModeling.ViewModel
                             col++;
                         }
                     }
+
+                    if (items.First().Key.ToString().ToLower().Contains("noise"))
+                    {
+                        mNewResultsVM.ResultsBook.CurrentWorksheet.IterateCells(mIndex + 1, 0, 1, mNewResultsVM.ResultsBook.CurrentWorksheet.Columns, true, (row, column, cell) =>
+                        {
+                            cell.Style.BackColor = Colors.Yellow;
+
+                            return true;
+                        });
+                    }
+
+                    if (!RachlinIncluded)
+                    {
+                        mNewResultsVM.ResultsBook.CurrentWorksheet.IterateCells(mIndex + 1, 0, 1, mNewResultsVM.ResultsBook.CurrentWorksheet.Columns, true, (row, column, cell) =>
+                        {
+                            cell.Style.BackColor = Colors.LightBlue;
+
+                            return true;
+                        });
+                    }
                 }
                 catch (ParseException pe)
                 {
@@ -2273,12 +2276,11 @@ namespace BayesianModeling.ViewModel
                 }
 
                 mWindow.OutputEvents("Computation #" + ((int)mIndex + (int)1) + " of " + wholeRange.GetLength(1) + " Completed!");
-
             }
 
             mWindow.OutputEvents("Final Calculations Completed!");
             mWindow.OutputEvents("Please remember to cite the packages used in this process!");
-            mWindow.OutputEvents("Citation:: Gilroy, S. P., Franck, C. T. & Hantula, D. A. (2016). The Discounting Model Selector: Statistical discounting software.");
+            mWindow.OutputEvents("Citation:: Gilroy, S. P., Franck, C. T. & Hantula, D. A. (In Press). The Discounting Model Selector: Statistical discounting software. Journal of the Experimental Analysis of Behavior");
             mWindow.OutputEvents("Citation:: Franck, C. T., Koffarnus, M. N., House, L. L. & Bickel, W. K. (2015). Accurate characterization of delay discounting: a multiple model approach using approximate Bayesian model selection and a unified discounting measure. Journal of the Experimental Analysis of Behavior, 103(1), 218-233.");
             mWindow.OutputEvents("Citation:: " + string.Join("", engine.Evaluate("citation()$textVersion").AsCharacter().ToArray()));
             mWindow.OutputEvents("Citation:: " + string.Join("", engine.Evaluate("citation('ggplot2')$textVersion").AsCharacter().ToArray()));
