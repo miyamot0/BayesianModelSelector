@@ -51,6 +51,8 @@ namespace BayesianModeling
             }
         }
 
+        public static bool IsSearchingForPick = false;
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);

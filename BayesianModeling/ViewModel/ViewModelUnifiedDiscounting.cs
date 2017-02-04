@@ -882,8 +882,12 @@ namespace BayesianModeling.ViewModel
         /// </summary>
         private void GetDelaysRange()
         {
-            App.Workbook.CurrentWorksheet.SelectionMode = unvell.ReoGrid.WorksheetSelectionMode.None;
-            App.Workbook.CurrentWorksheet.SelectionMode = unvell.ReoGrid.WorksheetSelectionMode.Range;
+            if (App.IsSearchingForPick)
+            {
+                return;
+            }
+
+            App.IsSearchingForPick = true;
 
             App.Workbook.PickRange((inst, range) =>
             {
@@ -898,11 +902,12 @@ namespace BayesianModeling.ViewModel
                     highColDelay = -1;
                     highRowDelay = -1;
 
-                    App.Workbook.EndPickRange();
-
                     DefaultFieldsToGray();
 
-                    return true;
+                    App.Workbook.EndPickRange();
+                    App.IsSearchingForPick = false;
+
+                    return false;
                 }
 
                 if (RowModeRadio && range.Rows > 1)
@@ -916,11 +921,12 @@ namespace BayesianModeling.ViewModel
                     highColDelay = -1;
                     highRowDelay = -1;
 
-                    App.Workbook.EndPickRange();
-
                     DefaultFieldsToGray();
 
-                    return true;
+                    App.Workbook.EndPickRange();
+                    App.IsSearchingForPick = false;
+
+                    return false;
                 }
 
                 DelaysBrush = Brushes.LightBlue;
@@ -933,6 +939,11 @@ namespace BayesianModeling.ViewModel
 
                 DefaultFieldsToGray();
 
+                App.Workbook.EndPickRange();
+                App.IsSearchingForPick = false;
+
+                Console.WriteLine("Passed");
+
                 return true;
 
             }, Cursors.Hand);
@@ -940,15 +951,19 @@ namespace BayesianModeling.ViewModel
             DelaysBrush = Brushes.Yellow;
             Delays = "Select delays on spreadsheet";
         }
-        
+
         /// <summary>
         /// Call window reference (shameful deviation from MVVM) for PickRange function.
         /// Successful (or failing) selections result in a range string in respective text fields for later parsing.
         /// </summary>
         private void GetValuesRange()
         {
-            App.Workbook.CurrentWorksheet.SelectionMode = unvell.ReoGrid.WorksheetSelectionMode.None;
-            App.Workbook.CurrentWorksheet.SelectionMode = unvell.ReoGrid.WorksheetSelectionMode.Range;
+            if (App.IsSearchingForPick)
+            {
+                return;
+            }
+
+            App.IsSearchingForPick = true;
 
             App.Workbook.PickRange((inst, range) =>
             {
@@ -966,10 +981,11 @@ namespace BayesianModeling.ViewModel
                             highRowValue = -1;
 
                             App.Workbook.EndPickRange();
+                            App.IsSearchingForPick = false;
 
                             DefaultFieldsToGray();
 
-                            return true;
+                            return false;
                         }
                     }
                     else if (RowModeRadio)
@@ -984,10 +1000,11 @@ namespace BayesianModeling.ViewModel
                             highRowValue = -1;
 
                             App.Workbook.EndPickRange();
+                            App.IsSearchingForPick = false;
 
                             DefaultFieldsToGray();
 
-                            return true;
+                            return false;
                         }
                     }
                 }
@@ -1005,10 +1022,11 @@ namespace BayesianModeling.ViewModel
                             highRowValue = -1;
 
                             App.Workbook.EndPickRange();
+                            App.IsSearchingForPick = false;
 
                             DefaultFieldsToGray();
 
-                            return true;
+                            return false;
                         }
                     }
                     else if (RowModeRadio)
@@ -1023,10 +1041,11 @@ namespace BayesianModeling.ViewModel
                             highRowValue = -1;
 
                             App.Workbook.EndPickRange();
+                            App.IsSearchingForPick = false;
 
                             DefaultFieldsToGray();
 
-                            return true;
+                            return false;
                         }
                     }
                 }
@@ -1038,6 +1057,8 @@ namespace BayesianModeling.ViewModel
                 lowRowValue = range.Row;
                 highColValue = range.EndCol;
                 highRowValue = range.EndRow;
+                
+                App.IsSearchingForPick = true;
 
                 DefaultFieldsToGray();
 

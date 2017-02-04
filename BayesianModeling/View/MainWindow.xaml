@@ -311,10 +311,12 @@
 
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
                 <MenuItem Command="{Binding FileNewCommand}"
-                            Width="24">
+                          Width="24">
                     <MenuItem.Icon>
                         <Image Source="/Resources/NewDocumentHS.png"
-                               VerticalAlignment="Center"/>
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
+                               Stretch="Uniform"/>
                     </MenuItem.Icon>
                     <MenuItem.ToolTip>
                         <ToolTip>
@@ -329,7 +331,9 @@
                             Width="24">
                     <MenuItem.Icon>
                         <Image Source="/Resources/saveHS.png"
-                               VerticalAlignment="Center"/>
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
+                               Stretch="Uniform"/>
                     </MenuItem.Icon>
                     <MenuItem.ToolTip>
                         <ToolTip>
@@ -344,7 +348,9 @@
                             Width="24">
                     <MenuItem.Icon>
                         <Image Source="/Resources/openHS.png"
-                               VerticalAlignment="Center"/>
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
+                               Stretch="Uniform"/>
                     </MenuItem.Icon>
                     <MenuItem.ToolTip>
                         <ToolTip>
@@ -360,7 +366,10 @@
                 <MenuItem Command="{Binding AddCommand}"
                           Width="24">
                     <MenuItem.Icon>
-                        <Image Source="/Resources/action_add_16xLG.png"/>
+                        <Image Source="/Resources/action_add_16xLG.png"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
+                               Stretch="Uniform"/>
                     </MenuItem.Icon>
                     <MenuItem.ToolTip>
                         <ToolTip>
@@ -375,6 +384,9 @@
                           Width="24">
                     <MenuItem.Icon>
                         <Image Source="/Resources/Component_16xLG.png"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
+                               Stretch="Uniform"
                                RenderTransformOrigin="0.5, 0.5"/>
                     </MenuItem.Icon>
                     <MenuItem.ToolTip>
@@ -389,7 +401,10 @@
                 <MenuItem Command="{Binding RenameCommand}"
                           Width="24">
                     <MenuItem.Icon>
-                        <Image Source="/Resources/book_Open_16xLG.png"/>
+                        <Image Source="/Resources/book_Open_16xLG.png"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
+                               Stretch="Uniform"/>
                     </MenuItem.Icon>
                     <MenuItem.ToolTip>
                         <ToolTip>
@@ -403,7 +418,10 @@
                 <MenuItem Command="{Binding RemoveSheetCommand}"
                           Width="24">
                     <MenuItem.Icon>
-                        <Image Source="/Resources/Offline_16xLG.png"/>
+                        <Image Source="/Resources/Offline_16xLG.png"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
+                               Stretch="Uniform"/>
                     </MenuItem.Icon>
                     <MenuItem.ToolTip>
                         <ToolTip>
@@ -420,7 +438,9 @@
                             Width="24">
                     <MenuItem.Icon>
                         <Image Source="/Resources/Procedure_8937.png"
-                               VerticalAlignment="Center"/>
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
+                               Stretch="Uniform"/>
                     </MenuItem.Icon>
                     <MenuItem.ToolTip>
                         <ToolTip>
@@ -435,7 +455,9 @@
                             Width="24">
                     <MenuItem.Icon>
                         <Image Source="/Resources/ProcedureMissing_8939.png"
-                               VerticalAlignment="Center"/>
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
+                               Stretch="Uniform"/>
                     </MenuItem.Icon>
                     <MenuItem.ToolTip>
                         <ToolTip>
@@ -452,7 +474,9 @@
                             Width="24">
                     <MenuItem.Icon>
                         <Image Source="/Resources/Edit_UndoHS.png"
-                               VerticalAlignment="Center"/>
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
+                               Stretch="Uniform"/>
                     </MenuItem.Icon>
                     <MenuItem.ToolTip>
                         <ToolTip>
@@ -467,7 +491,9 @@
                             Width="24">
                     <MenuItem.Icon>
                         <Image Source="/Resources/Edit_RedoHS.png"
-                               VerticalAlignment="Center"/>
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
+                               Stretch="Uniform"/>
                     </MenuItem.Icon>
                     <MenuItem.ToolTip>
                         <ToolTip>
@@ -484,7 +510,9 @@
                             Width="24">
                     <MenuItem.Icon>
                         <Image Source="/Resources/CutHS.png"
-                               VerticalAlignment="Center"/>
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
+                               Stretch="Uniform"/>
                     </MenuItem.Icon>
                     <MenuItem.ToolTip>
                         <ToolTip>
@@ -499,7 +527,9 @@
                             Width="24">
                     <MenuItem.Icon>
                         <Image Source="/Resources/CopyHS.png"
-                               VerticalAlignment="Center"/>
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
+                               Stretch="Uniform"/>
                     </MenuItem.Icon>
                     <MenuItem.ToolTip>
                         <ToolTip>
@@ -514,7 +544,9 @@
                             Width="24">
                     <MenuItem.Icon>
                         <Image Source="/Resources/PasteHS.png"
-                               VerticalAlignment="Center"/>
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
+                               Stretch="Uniform"/>
                     </MenuItem.Icon>
                     <MenuItem.ToolTip>
                         <ToolTip>
@@ -531,7 +563,9 @@
                             Width="24">
                     <MenuItem.Icon>
                         <Image Source="/Resources/ScriptFile_452.png"
-                               VerticalAlignment="Center"/>
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
+                               Stretch="Uniform"/>
                     </MenuItem.Icon>
                     <MenuItem.ToolTip>
                         <ToolTip>
