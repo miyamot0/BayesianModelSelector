@@ -142,6 +142,7 @@ namespace BayesianModeling.ViewModel
         public RelayCommand FileCutCommand { get; set; }
         public RelayCommand FileCopyCommand { get; set; }
         public RelayCommand FilePasteCommand { get; set; }
+        public RelayCommand FilePasteInvertCommand { get; set; }
         public RelayCommand FileUndoCommand { get; set; }
         public RelayCommand FileRedoCommand { get; set; }
 
@@ -221,6 +222,7 @@ namespace BayesianModeling.ViewModel
             FileCutCommand = new RelayCommand(param => App.Workbook.CurrentWorksheet.Cut(), param => true);
             FileCopyCommand = new RelayCommand(param => App.Workbook.CurrentWorksheet.Copy(), param => true);
             FilePasteCommand = new RelayCommand(param => App.Workbook.CurrentWorksheet.Paste(), param => true);
+            FilePasteInvertCommand = new RelayCommand(param => PasteInverted(), param => true);
 
             FileSaveNoDialogCommand = new RelayCommand(param => SaveFileWithoutDialog(), param => true);
             FileOpenNoDialogCommand = new RelayCommand(param => FileOpenNoDialog(param), param => true);
@@ -342,7 +344,12 @@ namespace BayesianModeling.ViewModel
                 Header = "Paste",
                 Command = FilePasteCommand
             });
-            
+            mContextMenu.Items.Add(new MenuItem
+            {
+                Header = "Paste Inverted",
+                Command = FilePasteInvertCommand
+            });
+
             App.Workbook.CellsContextMenu = mContextMenu;
 
             App.Workbook.SheetTabNewButtonVisible = false;
@@ -524,6 +531,104 @@ namespace BayesianModeling.ViewModel
         public void UpdateTitle(string title)
         {
             Title = title;
+        }
+
+        /// <summary>
+        /// Transposition a-la matrix, but list of arrays
+        /// </summary>
+        /// <param name="arrayList"></param>
+        /// <returns></returns>
+        static List<string[]> CreateTransposedList(List<string[]> arrayList)
+        {
+            int lengthTemp = arrayList[0].Length;
+            string[,] tempMatrix = new string[arrayList.Count, lengthTemp];
+
+            for (int i = 0; i < arrayList.Count; i++)
+            {
+                string[] tempArray = arrayList[i];
+
+                if (tempArray.Length != lengthTemp)
+                {
+                    return null;
+                }
+                for (int j = 0; j < lengthTemp; j++)
+                {
+                    tempMatrix[i, j] = tempArray[j];
+                }
+            }
+
+            string[,] transposedMatrix = new string[tempMatrix.GetLength(1), tempMatrix.GetLength(0)];
+            for (int i = 0; i < tempMatrix.GetLength(1); i++)
+            {
+                for (int j = 0; j < tempMatrix.GetLength(0); j++)
+                {
+                    transposedMatrix[i, j] = tempMatrix[j, i];
+                }
+            }
+
+            List<string[]> returnList = new List<string[]>();
+
+            string[] holder;
+            for (int i = 0; i < transposedMatrix.GetLength(0); i++)
+            {
+                holder = new string[transposedMatrix.GetLength(1)];
+                for (int j = 0; j < transposedMatrix.GetLength(1); j++)
+                {
+                    holder[j] = transposedMatrix[i, j];
+                }
+                returnList.Add(holder);
+            }
+
+            return returnList;
+        }
+
+        /// <summary>
+        /// Custom paste operation, swapping V/H loopings to make a transposition
+        /// </summary>
+        private void PasteInverted()
+        {
+            List<string[]> rowData = ClipboardTools.ReadAndParseClipboardData();
+
+            if (rowData == null)
+            {
+                return;
+            }
+
+            int lowRow = App.Workbook.CurrentWorksheet.FocusPos.Row,        // Current highlighted cell's row
+                highRow = App.Workbook.CurrentWorksheet.Rows,               // Highest row in table
+                lowCol = App.Workbook.CurrentWorksheet.FocusPos.Col,        // Current highlighted cell's column
+                highCol = App.Workbook.CurrentWorksheet.Columns,
+                pasteContentRowIterator = 0,
+                pasteContentColumnIterator = 0;
+
+            rowData = CreateTransposedList(rowData);
+
+            if (rowData == null) return;
+
+            for (int i = lowRow; (i <= highRow) && (pasteContentRowIterator < rowData.Count); i++)
+            {
+                if (i == highRow)
+                {
+                    App.Workbook.CurrentWorksheet.AppendRows(1);
+                    highRow = (pasteContentRowIterator + 1 < rowData.Count) ? highRow + 1 : highRow;
+                }
+
+                pasteContentColumnIterator = 0;
+
+                for (int j = lowCol; pasteContentColumnIterator < rowData[pasteContentRowIterator].Length; j++)
+                {
+                    if (j == highCol)
+                    {
+                        App.Workbook.CurrentWorksheet.AppendCols(1);
+                        highCol = (pasteContentColumnIterator + 1 < rowData[0].Length) ? highCol + 1 : highCol;
+                    }
+
+                    App.Workbook.CurrentWorksheet.CreateAndGetCell(i, j).Data = rowData[pasteContentRowIterator][pasteContentColumnIterator];
+                    pasteContentColumnIterator++;
+                }
+
+                pasteContentRowIterator++;
+            }
         }
 
         #endregion

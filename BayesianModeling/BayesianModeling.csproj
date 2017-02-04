@@ -182,6 +182,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Utilities\ClipboardTools.cs" />
     <Compile Include="Utilities\DataGridTools.cs" />
     <Compile Include="Utilities\Logging.cs" />
     <Compile Include="Utilities\RelayCommand.cs" />
