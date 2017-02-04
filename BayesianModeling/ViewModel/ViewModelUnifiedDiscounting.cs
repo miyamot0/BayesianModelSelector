@@ -1899,6 +1899,12 @@ namespace BayesianModeling.ViewModel
             mNewResultsWindow.Height = 500;
             mNewResultsWindow.Width = 800;
 
+            // Add rows if necessary
+            if (mNewResultsVM.ResultsBook.CurrentWorksheet.Rows < wholeRange.GetLength(1))
+            {
+                mNewResultsVM.ResultsBook.CurrentWorksheet.AppendRows(wholeRange.GetLength(1));
+            }
+
             int col = -1;
 
             for (int mIndex = 0; mIndex < wholeRange.GetLength(1); mIndex++)
