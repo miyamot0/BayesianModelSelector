@@ -62,13 +62,13 @@
     <ApplicationIcon>Resources\SNS.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>false</SignManifests>
+    <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>A4BFF18D0AA581D30F6EC7253531C1411F4AFA3B</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>2ED77372A8B8B88717568A410B151DB3071CE523</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>BayesianModeling_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>BayesianModeling_ExtendedTemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <TargetZone>LocalIntranet</TargetZone>
@@ -294,7 +294,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="app.config" />
-    <None Include="BayesianModeling_TemporaryKey.pfx" />
+    <None Include="BayesianModeling_ExtendedTemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
@@ -327,7 +327,6 @@
     <Resource Include="Resources\PropertiesHS.png" />
     <Resource Include="Resources\RepeatHS.png" />
     <Resource Include="Resources\saveHS.png" />
-    <Resource Include="Resources\WorkItemQueryNodeOffline_11949.png" />
     <Resource Include="Resources\ProcedureMissing_8939.png" />
     <Resource Include="Resources\Procedure_8937.png" />
     <Resource Include="Resources\Textfile_818_16x.png" />

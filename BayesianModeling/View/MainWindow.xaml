@@ -290,79 +290,181 @@
                 <MenuItem Command="{Binding FileNewCommand}"
                             Width="24">
                     <MenuItem.Icon>
-                        <Image Source="/Resources/NewDocumentHS.png"/>
+                        <Image Source="/Resources/NewDocumentHS.png"
+                               VerticalAlignment="Center"/>
                     </MenuItem.Icon>
+                    <MenuItem.ToolTip>
+                        <ToolTip>
+                            <StackPanel>
+                                <TextBlock FontWeight="Bold">Open new workbook</TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </MenuItem.ToolTip>
+                </MenuItem>
+
+                <MenuItem Command="{Binding FileSaveCommand}"
+                            Width="24">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/saveHS.png"
+                               VerticalAlignment="Center"/>
+                    </MenuItem.Icon>
+                    <MenuItem.ToolTip>
+                        <ToolTip>
+                            <StackPanel>
+                                <TextBlock FontWeight="Bold">Save current workbook</TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </MenuItem.ToolTip>
                 </MenuItem>
 
                 <MenuItem Command="{Binding FileOpenCommand}"
                             Width="24">
                     <MenuItem.Icon>
-                        <Image Source="/Resources/openHS.png"/>
+                        <Image Source="/Resources/openHS.png"
+                               VerticalAlignment="Center"/>
                     </MenuItem.Icon>
+                    <MenuItem.ToolTip>
+                        <ToolTip>
+                            <StackPanel>
+                                <TextBlock FontWeight="Bold">Open existing workbook</TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </MenuItem.ToolTip>
                 </MenuItem>
 
+                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+
+                <MenuItem Command="{Binding SaveLogsWindowCommand}"
+                            Width="24">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Procedure_8937.png"
+                               VerticalAlignment="Center"/>
+                    </MenuItem.Icon>
+                    <MenuItem.ToolTip>
+                        <ToolTip>
+                            <StackPanel>
+                                <TextBlock FontWeight="Bold">Save debug logs</TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </MenuItem.ToolTip>
+                </MenuItem>
+
+                <MenuItem Command="{Binding ClearLogsWindowCommand}"
+                            Width="24">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/ProcedureMissing_8939.png"
+                               VerticalAlignment="Center"/>
+                    </MenuItem.Icon>
+                    <MenuItem.ToolTip>
+                        <ToolTip>
+                            <StackPanel>
+                                <TextBlock FontWeight="Bold">Clear debug logs</TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </MenuItem.ToolTip>
+                </MenuItem>
+
+                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+                
                 <MenuItem Command="{Binding FileUndoCommand}"
                             Width="24">
                     <MenuItem.Icon>
-                        <Image Source="/Resources/Edit_UndoHS.png"/>
+                        <Image Source="/Resources/Edit_UndoHS.png"
+                               VerticalAlignment="Center"/>
                     </MenuItem.Icon>
+                    <MenuItem.ToolTip>
+                        <ToolTip>
+                            <StackPanel>
+                                <TextBlock FontWeight="Bold">Undo last command</TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </MenuItem.ToolTip>
                 </MenuItem>
 
                 <MenuItem Command="{Binding FileRedoCommand}"
                             Width="24">
                     <MenuItem.Icon>
-                        <Image Source="/Resources/Edit_RedoHS.png"/>
+                        <Image Source="/Resources/Edit_RedoHS.png"
+                               VerticalAlignment="Center"/>
                     </MenuItem.Icon>
+                    <MenuItem.ToolTip>
+                        <ToolTip>
+                            <StackPanel>
+                                <TextBlock FontWeight="Bold">Redo last command</TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </MenuItem.ToolTip>
                 </MenuItem>
+
+                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
 
                 <MenuItem Command="{Binding FileCutCommand}"
                             Width="24">
                     <MenuItem.Icon>
-                        <Image Source="/Resources/CutHS.png"/>
+                        <Image Source="/Resources/CutHS.png"
+                               VerticalAlignment="Center"/>
                     </MenuItem.Icon>
+                    <MenuItem.ToolTip>
+                        <ToolTip>
+                            <StackPanel>
+                                <TextBlock FontWeight="Bold">Cut (Ctrl+X)</TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </MenuItem.ToolTip>
                 </MenuItem>
 
                 <MenuItem Command="{Binding FileCopyCommand}"
                             Width="24">
                     <MenuItem.Icon>
-                        <Image Source="/Resources/CopyHS.png"/>
+                        <Image Source="/Resources/CopyHS.png"
+                               VerticalAlignment="Center"/>
                     </MenuItem.Icon>
+                    <MenuItem.ToolTip>
+                        <ToolTip>
+                            <StackPanel>
+                                <TextBlock FontWeight="Bold">Copy (Ctrl+C)</TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </MenuItem.ToolTip>
                 </MenuItem>
 
                 <MenuItem Command="{Binding FilePasteCommand}"
                             Width="24">
                     <MenuItem.Icon>
-                        <Image Source="/Resources/PasteHS.png"/>
+                        <Image Source="/Resources/PasteHS.png"
+                               VerticalAlignment="Center"/>
                     </MenuItem.Icon>
+                    <MenuItem.ToolTip>
+                        <ToolTip>
+                            <StackPanel>
+                                <TextBlock FontWeight="Bold">Paste (Ctrl+V)</TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </MenuItem.ToolTip>
                 </MenuItem>
+
+                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
 
                 <MenuItem Command="{Binding UnifiedDiscountingWindowCommand}"
-                            Width="20">
+                            Width="24">
                     <MenuItem.Icon>
-                        <Image Source="/Resources/ScriptFile_452.png"/>
+                        <Image Source="/Resources/ScriptFile_452.png"
+                               VerticalAlignment="Center"/>
                     </MenuItem.Icon>
-                </MenuItem>
-
-                <MenuItem Command="{Binding SaveLogsWindowCommand}"
-                            Width="20">
-                    <MenuItem.Icon>
-                        <Image Source="/Resources/Procedure_8937.png"/>
-                    </MenuItem.Icon>
-                </MenuItem>
-
-                <MenuItem Command="{Binding ClearLogsWindowCommand}"
-                            Width="20">
-                    <MenuItem.Icon>
-                        <Image Source="/Resources/ProcedureMissing_8939.png"/>
-                    </MenuItem.Icon>
+                    <MenuItem.ToolTip>
+                        <ToolTip>
+                            <StackPanel>
+                                <TextBlock FontWeight="Bold">Open scripting window</TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </MenuItem.ToolTip>
                 </MenuItem>
 
                 </StackPanel>
 
             <ReoGrid:ReoGridControl x:Name="reoGridControl"
                                     HorizontalAlignment="Stretch"                                  
-                                    VerticalAlignment="Stretch" 
-                                    
+                                    VerticalAlignment="Stretch"                                     
                                     Grid.Row="0"
                                     Grid.RowSpan="4"
                                     Grid.Column="0"
