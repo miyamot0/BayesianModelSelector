@@ -41,7 +41,7 @@ The Small N Stats Discounting Model Selector uses a number of open source projec
 * RdotNet: Interface for the R Statistical Package - New BSD License (BSD 2-Clause). Copyright(c) 2010, RecycleBin. All rights reserved [Github](https://github.com/jmp75/rdotnet)
 * SharpVectors: Vector graphics rendering for WPF - New BSD License (BSD 3-Clause). Copyright(c) 2010, SharpVectorGraphics. All rights reserved [Codeplex](http://sharpvectors.codeplex.com/)
 * RdotNet/Dynamic Interop - MIT Licensed. Copyright (c) 2015 Jean-Michel Perraud, Copyright (c) 2014 Daniel Collins, CSIRO, Copyright (c) 2013 Kosei, evolvedmicrobe. [Github](https://github.com/jmp75/dynamic-interop-dll)
-* EPPlus - GPLv2 Licensed. Copyright (c) 2016 Jan Källman. [Codeplex](http://epplus.codeplex.com/)
+* Reogrid - MIT Licensed. Copyright(c) 2013-2016 Jing{lujing at unvell.com}, Copyright(c) 2013-2016 unvell.com. [Github](https://github.com/unvell/ReoGrid)
 
 ### Referenced Works (R packages/scripts)
 The Discounting Model Selector accesses the following R packages to perform statistical methods:
