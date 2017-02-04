@@ -96,6 +96,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace BayesianModeling.ViewModel
 {
@@ -173,7 +174,7 @@ namespace BayesianModeling.ViewModel
         public RelayCommand Reshape2LicenseWindowCommand { get; set; }
         public RelayCommand ScalesLicenseWindowCommand { get; set; }
         public RelayCommand BDSLicenseWindowCommand { get; set; }
-        public RelayCommand EPPLicenseWindowCommand { get; set; }
+        public RelayCommand ReogridLicenseWindowCommand { get; set; }
 
         /* Misc Commands */
 
@@ -230,6 +231,8 @@ namespace BayesianModeling.ViewModel
             RecentStuff = new ObservableCollection<MenuItem>();
             recentsArray = Properties.Settings.Default.RecentFiles.Trim().Split(';');
 
+            BitmapImage mIcon = new BitmapImage(new Uri("pack://application:,,,/Resources/Textfile_818_16x.png"));
+
             List<string> workingRecents = recentsArray.Select(item => item).Where(item => item.Trim().Length > 1).ToList();
 
             if (workingRecents != null && workingRecents.Count > 0)
@@ -247,7 +250,11 @@ namespace BayesianModeling.ViewModel
                     {
                         Header = recentFileLocation,
                         Command = FileOpenNoDialogCommand,
-                        CommandParameter = recentFileLocation
+                        CommandParameter = recentFileLocation,
+                        Icon = new Image
+                        {
+                            Source = mIcon
+                        }
                     });
                 }
             }
@@ -284,11 +291,11 @@ namespace BayesianModeling.ViewModel
             Reshape2LicenseWindowCommand = new RelayCommand(param => Reshape2LicenseInformationWindow(), param => true);
             ScalesLicenseWindowCommand = new RelayCommand(param => ScalesLicenseInformationWindow(), param => true);
             BDSLicenseWindowCommand = new RelayCommand(param => BDSLicenseWindow(), param => true);
-            EPPLicenseWindowCommand = new RelayCommand(param => EPPLicenseWindow(), param => true);
+            ReogridLicenseWindowCommand = new RelayCommand(param => ReogridLicenseWindow(), param => true);
 
             #endregion
 
-            #region Initial setup
+            #region Initial Setup
 
             if (Properties.Settings.Default.GUID.Trim().Length < 1)
             {
@@ -313,6 +320,8 @@ namespace BayesianModeling.ViewModel
 
             #endregion
 
+            #region Context Menu
+
             var mContextMenu = new ContextMenu();
             mContextMenu.Items.Add(new MenuItem
             {
@@ -331,6 +340,8 @@ namespace BayesianModeling.ViewModel
             });
             
             App.Workbook.CellsContextMenu = mContextMenu;
+
+            #endregion
         }
 
         #region UI
@@ -465,13 +476,13 @@ namespace BayesianModeling.ViewModel
         /// <summary>
         /// License window
         /// </summary>
-        private void EPPLicenseWindow()
+        private void ReogridLicenseWindow()
         {
             var window = new License();
             window.DataContext = new ViewModelLicense
             {
-                licenseTitle = "License (GPLv2) - EPPlus",
-                licenseText = Properties.Resources.License_EPPlus
+                licenseTitle = "License (MIT) - Reogrid",
+                licenseText = Properties.Resources.License_Reogrid
             };
             window.Owner = MainWindow;
             window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
@@ -824,10 +835,14 @@ namespace BayesianModeling.ViewModel
                 SendMessageToOutput("Citation:: " + string.Join("", engine.Evaluate("citation('scales')$textVersion").AsCharacter().ToArray()));
                 SendMessageToOutput("");
 
-                SendMessageToOutput("EPPlus - GPLv2 Licensed. Copyright (c) 2016 Jan Källman.");
+                SendMessageToOutput("Reogrid - MIT Licensed. Copyright (c) 2013-2016 Jing <lujing@unvell.com> Copyright(c) 2013 - 2016 unvel.com, All rights reserved.");
+
                 SendMessageToOutput("BDS R Script - GPLv2 Licensed. Copyright (c) 2016, Chris Franck.");
+
                 SendMessageToOutput("RdotNet: Interface for the R Statistical Package - New BSD License (BSD 2-Clause). Copyright(c) 2010, RecycleBin. All rights reserved.");
+
                 SendMessageToOutput("SharpVectors: Library for rendering SVG - New BSD License (BSD 3-Clause). Copyright(c) 2010, SharpVectorGraphics. All rights reserved.");
+
                 SendMessageToOutput("");
 
                 SendMessageToOutput("License information is also provided in Information > Licenses > ... as well as in the install directory of this program (under Resources).");

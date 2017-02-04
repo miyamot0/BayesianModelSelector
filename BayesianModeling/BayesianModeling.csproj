@@ -308,7 +308,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Resource Include="Resources\License_Gridextra.txt" />
-    <Resource Include="Resources\License_EPPlus.txt" />
     <Resource Include="Resources\License_Scales.txt" />
     <Resource Include="Resources\License_base64enc.txt" />
     <None Include="AUTHORS" />
@@ -331,8 +330,11 @@
     <Resource Include="Resources\Procedure_8937.png" />
     <Resource Include="Resources\Textfile_818_16x.png" />
     <Resource Include="Resources\ScriptFile_452.png" />
-    <None Include="Resources\Offline_16xLG.png" />
     <Resource Include="Resources\Files_7954.png" />
+    <Resource Include="Resources\Offline_16xLG.png" />
+    <Resource Include="Resources\WorkItemQueryNodeOffline_11949.png" />
+    <Resource Include="Resources\Component_16xLG.png" />
+    <None Include="Resources\License_Reogrid.txt" />
     <Content Include="Source\BayesianModelSelector-master.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

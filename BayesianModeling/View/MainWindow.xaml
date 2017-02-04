@@ -88,6 +88,7 @@
                             <Image Source="/Resources/saveHS.png"/>
                         </MenuItem.Icon>                        
                     </MenuItem>
+                    
                     <MenuItem Header="_Save As"
                               Command="{Binding FileSaveAsCommand}">
                         <MenuItem.Icon>
@@ -149,12 +150,17 @@
                 <MenuItem Header="_Sheet">
                     <MenuItem Header="_Resize Sheet"
                               Command="{Binding ResizeCommand}">
-                        
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/Component_16xLG.png"
+                                   RenderTransformOrigin="0.5, 0.5"/>
+                        </MenuItem.Icon>                        
                     </MenuItem>
 
                     <MenuItem Header="_Delete Current Sheet"
                               Command="{Binding RemoveSheetCommand}">
-
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/Offline_16xLG.png"/>
+                        </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>
                 
@@ -252,8 +258,8 @@
                             </MenuItem.Icon>
                         </MenuItem>
                         
-                        <MenuItem Header="EPPlus License (GPL-v2)" 
-                                  Command="{Binding EPPLicenseWindowCommand}">
+                        <MenuItem Header="Reogrid License (GPL-v2)" 
+                                  Command="{Binding ReogridLicenseWindowCommand}">
                             <MenuItem.Icon>
                                 <Image Source="/Resources/Textfile_818_16x.png"/>
                             </MenuItem.Icon>
@@ -276,6 +282,7 @@
                     </MenuItem>
                     
                 </MenuItem>
+                
                 <MenuItem Header="_Help">
                     <MenuItem Header="_FAQ"
                               Command="{Binding HelpCommand}">

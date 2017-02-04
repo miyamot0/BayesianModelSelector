@@ -83,6 +83,16 @@ namespace BayesianModeling.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap Component_16xLG {
+            get {
+                object obj = ResourceManager.GetObject("Component_16xLG", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap CopyHS {
             get {
                 object obj = ResourceManager.GetObject("CopyHS", resourceCulture);
@@ -216,27 +226,6 @@ namespace BayesianModeling.Properties {
         ///		       Version 2, June 1991
         ///
         /// Copyright (C) 1989, 1991 Free Software Foundation, Inc.
-        ///                       59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-        /// Everyone is permitted to copy and distribute verbatim copies
-        /// of this license document, but changing it is not allowed.
-        ///
-        ///			    Preamble
-        ///
-        ///  The licenses for most software are designed to take away your
-        ///freedom to share and change it.  By contrast, the GNU General Public
-        ///License is intended to guara [rest of string was truncated]&quot;;.
-        /// </summary>
-        public static string License_EPPlus {
-            get {
-                return ResourceManager.GetString("License_EPPlus", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 		    GNU GENERAL PUBLIC LICENSE
-        ///		       Version 2, June 1991
-        ///
-        /// Copyright (C) 1989, 1991 Free Software Foundation, Inc.
         ///                       51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
         /// Everyone is permitted to copy and distribute verbatim copies
         /// of this license document, but changing it is not allowed.
@@ -329,6 +318,25 @@ namespace BayesianModeling.Properties {
         public static string License_RdotNet {
             get {
                 return ResourceManager.GetString("License_RdotNet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MIT License
+        ///
+        ///Copyright (c) 2013-2016 Jing &lt;lujing@unvell.com&gt;
+        ///Copyright (c) 2013-2016 unvel.com, All rights reserved.
+        ///
+        ///Permission is hereby granted, free of charge, to any person obtaining a copy
+        ///of this software and associated documentation files (the &quot;Software&quot;), to deal
+        ///in the Software without restriction, including without limitation the rights
+        ///to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+        ///copies of the Software, and to permit persons to whom the Software is
+        ///furnish [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string License_Reogrid {
+            get {
+                return ResourceManager.GetString("License_Reogrid", resourceCulture);
             }
         }
         
@@ -543,6 +551,16 @@ namespace BayesianModeling.Properties {
             get {
                 object obj = ResourceManager.GetObject("trash", resourceCulture);
                 return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap WorkItemQueryNodeOffline_11949 {
+            get {
+                object obj = ResourceManager.GetObject("WorkItemQueryNodeOffline_11949", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
     }
