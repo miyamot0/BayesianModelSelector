@@ -167,6 +167,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Dialogs\NamingDialog.xaml.cs">
+      <DependentUpon>NamingDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\ResizeDialog.xaml.cs">
       <DependentUpon>ResizeDialog.xaml</DependentUpon>
     </Compile>
@@ -212,6 +215,10 @@
     <Compile Include="View\UnifiedDiscountingWindow.xaml.cs">
       <DependentUpon>UnifiedDiscountingWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\NamingDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Dialogs\ResizeDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -335,6 +342,8 @@
     <Resource Include="Resources\WorkItemQueryNodeOffline_11949.png" />
     <Resource Include="Resources\Component_16xLG.png" />
     <None Include="Resources\License_Reogrid.txt" />
+    <Resource Include="Resources\action_add_16xLG.png" />
+    <Resource Include="Resources\book_Open_16xLG.png" />
     <Content Include="Source\BayesianModelSelector-master.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

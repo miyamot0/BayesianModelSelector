@@ -27,7 +27,7 @@
         Height="550" 
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
-        Width="450">
+        Width="500">
     <Grid>
         <FlowDocumentScrollViewer>
             <FlowDocument>
@@ -43,11 +43,9 @@
                 </Paragraph>
                 <Paragraph>
                     <Run Text="The "/>
-                    <Run Text=" "/>
                     <Bold>
                         <Run Text="Discounting Model Selection"/>
                     </Bold>
-                    <Run Text=" "/>
                     <Run Text=" procedure is an implementation of earlier work by Chris Franck et al., 2015 and was designed to aid in the selection of temporal discounting models. This work utilized the Bayesian Information Criterion as a metric for comparing between fitted discounting models."/>
                 </Paragraph>
                 <Paragraph>
@@ -57,9 +55,7 @@
                             <Run Text="Small n Stats"/>
                         </Hyperlink>
                     </Bold>
-                    <Run Text=" "/>
                     <Run Text=" project references an on-going endeavor to expand upon the tools available to researchers and practitioners in the behavioral sciences."/>
-                    <Run Text=" "/>
                     <Run Text="Small n Stats is developed and maintained by Shawn P. Gilroy."/>
                 </Paragraph>
                 <Paragraph>

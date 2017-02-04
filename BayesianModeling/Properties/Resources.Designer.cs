@@ -61,6 +61,26 @@ namespace BayesianModeling.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap action_add_16xLG {
+            get {
+                object obj = ResourceManager.GetObject("action_add_16xLG", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap book_Open_16xLG {
+            get {
+                object obj = ResourceManager.GetObject("book_Open_16xLG", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to # 
         ///#    Copyright 2016 Shawn Gilroy
         ///#
@@ -204,16 +224,11 @@ namespace BayesianModeling.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Copyright (C) 2016 Chris Franck
         ///
-        ///BDS is free software: you can redistribute it and/or modify it 
-        ///under the terms of the GNU General Public License as published by the 
-        ///Free Software Foundation, version 2 or later.
+        ///BDS is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, version 2 or later.
         ///
-        ///BDS is distributed in the hope that it will be useful, but
-        ///WITHOUT ANY WARRANTY; without even the implied warranty of
-        ///MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
-        ///Public License for more details.
+        ///BDS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
         ///
-        ///You should have received a copy of the GNU General Public Lic [rest of string was truncated]&quot;;.
+        ///You should have received a copy of the GNU General Public License al [rest of string was truncated]&quot;;.
         /// </summary>
         public static string License_BDS {
             get {
@@ -264,18 +279,15 @@ namespace BayesianModeling.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to #  File src/library/stats/R/nls.R
-        ///#  Part of the R package, http://www.R-project.org
-        ///#
-        ///#  Copyright (C) 1999-1999 Saikat DebRoy, Douglas M. Bates, Jose C. Pinheiro
-        ///#  Copyright (C) 2000-7    The R Core Team
-        ///#
-        ///#  This program is free software; you can redistribute it and/or modify
-        ///#  it under the terms of the GNU General Public License as published by
-        ///#  the Free Software Foundation; either version 2 of the License, or
-        ///#  (at your option) any later version.
-        ///#
-        ///#  This program is distributed in the  [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to File src/library/stats/R/nls.R
+        ///Part of the R package, http://www.R-project.org
+        ///
+        ///Copyright (C) 1999-1999 Saikat DebRoy, Douglas M. Bates, Jose C. Pinheiro
+        ///Copyright (C) 2000-7    The R Core Team
+        ///
+        ///This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+        ///
+        ///This program is distributed in the hope that it will be useful, but  [rest of string was truncated]&quot;;.
         /// </summary>
         public static string License_NLS {
             get {
@@ -327,12 +339,7 @@ namespace BayesianModeling.Properties {
         ///Copyright (c) 2013-2016 Jing &lt;lujing@unvell.com&gt;
         ///Copyright (c) 2013-2016 unvel.com, All rights reserved.
         ///
-        ///Permission is hereby granted, free of charge, to any person obtaining a copy
-        ///of this software and associated documentation files (the &quot;Software&quot;), to deal
-        ///in the Software without restriction, including without limitation the rights
-        ///to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-        ///copies of the Software, and to permit persons to whom the Software is
-        ///furnish [rest of string was truncated]&quot;;.
+        ///Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to [rest of string was truncated]&quot;;.
         /// </summary>
         public static string License_Reogrid {
             get {
@@ -355,12 +362,7 @@ namespace BayesianModeling.Properties {
         ///
         ///Copyright 2010-2014 Hadley Wickham
         ///
-        ///Permission is hereby granted, free of charge, to any person obtaining a 
-        ///copy of this software and associated documentation files (the &quot;Software&quot;), 
-        ///to deal in the Software without restriction, including without limitation 
-        ///the rights to use, copy, modify, merge, publish, distribute, sublicense, 
-        ///and/or sell copies of the Software, and to permit persons to whom the 
-        ///Software is furnished to do so, subject to  [rest of string was truncated]&quot;;.
+        ///Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the follow [rest of string was truncated]&quot;;.
         /// </summary>
         public static string License_Scales {
             get {

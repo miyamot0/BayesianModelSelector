@@ -26,12 +26,11 @@
         Title="Introduction Window" 
         ResizeMode="NoResize"
         Height="655" 
-        Width="450"
+        Width="500"
         WindowStartupLocation="CenterOwner"
         Loaded="Window_Loaded">
     <Grid>
-        <FlowDocumentScrollViewer VerticalScrollBarVisibility="Disabled"
-                                  Focusable="False">
+        <FlowDocumentScrollViewer VerticalScrollBarVisibility="Disabled" Focusable="False">
             <FlowDocument>
                 <Paragraph>
                     <InlineUIContainer>

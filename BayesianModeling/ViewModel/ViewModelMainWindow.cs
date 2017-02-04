@@ -151,6 +151,8 @@ namespace BayesianModeling.ViewModel
         public RelayCommand RecentsClearCommand { get; set; }
         public RelayCommand HelpCommand { get; set; }
 
+        public RelayCommand AddCommand { get; set; }
+        public RelayCommand RenameCommand { get; set; }
         public RelayCommand ResizeCommand { get; set; }
         public RelayCommand RemoveSheetCommand { get; set; }
 
@@ -223,7 +225,9 @@ namespace BayesianModeling.ViewModel
             FileSaveNoDialogCommand = new RelayCommand(param => SaveFileWithoutDialog(), param => true);
             FileOpenNoDialogCommand = new RelayCommand(param => FileOpenNoDialog(param), param => true);
 
+            AddCommand = new RelayCommand(param => AddSheet(), param => true);
             ResizeCommand = new RelayCommand(param => ResizeCurrentSheet(), param => true);
+            RenameCommand = new RelayCommand(param => RenameSheet(), param => true);
             RemoveSheetCommand = new RelayCommand(param => DeleteCurrentSheet(), param => true);
 
             HelpCommand = new RelayCommand(param => OpenHelpWindow(), param => true);
@@ -347,6 +351,66 @@ namespace BayesianModeling.ViewModel
         #region UI
 
         /// <summary>
+        /// Add new sheet into workbook
+        /// </summary>
+        private void AddSheet()
+        {
+            var addNewSheet = new NamingDialog();
+            addNewSheet.Title = "Please name the new sheet";
+
+            addNewSheet.ShowDialog();
+
+            string mEntry = addNewSheet.nameBox.Text;
+
+            if (mEntry == null || mEntry.Trim().Length == 0)
+            {
+                MessageBox.Show("Invalid name");
+
+                return;
+            }
+            else
+            {
+                string mName = new string(mEntry.Take(24).ToArray());
+
+                if (!App.Workbook.Worksheets.Any(s => s.Name.Contains(mName)))
+                {
+                    var sheet = App.Workbook.CreateWorksheet(mName);
+                    App.Workbook.AddWorksheet(sheet);
+                }
+                else
+                {
+                    var sheet = App.Workbook.CreateWorksheet(mName + "1");
+                    App.Workbook.AddWorksheet(sheet);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Rename the current sheet
+        /// </summary>
+        private void RenameSheet()
+        {
+            var renameNewSheet = new NamingDialog();
+            renameNewSheet.Title = "Rename the current sheet";
+
+            renameNewSheet.ShowDialog();
+
+            string mEntry = renameNewSheet.nameBox.Text;
+
+            if (mEntry == null || mEntry.Trim().Length == 0)
+            {
+                MessageBox.Show("Invalid name");
+
+                return;
+            }
+            else
+            {
+                string mName = new string(mEntry.Take(24).ToArray());
+                App.Workbook.CurrentWorksheet.Name = mName;
+            }
+        }
+
+        /// <summary>
         /// Calls to RG to increase or decrease cells
         /// </summary>
         private void ResizeCurrentSheet()
@@ -368,6 +432,13 @@ namespace BayesianModeling.ViewModel
         /// </summary>
         private void DeleteCurrentSheet()
         {
+            if (App.Workbook.Worksheets.Count == 1)
+            {
+                MessageBox.Show("Only one sheet remains. All workbooks must have at least 1 sheet.");
+
+                return;
+            }
+
             var confirmDelete = new YesNoDialog();
             confirmDelete.Title = "Confirm Delete";
             confirmDelete.QuestionText = "Are you sure you want to delete this sheet?";

@@ -148,6 +148,13 @@
                 </MenuItem>
 
                 <MenuItem Header="_Sheet">
+                    <MenuItem Header="_Add Sheet"
+                              Command="{Binding AddCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/action_add_16xLG.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+
                     <MenuItem Header="_Resize Sheet"
                               Command="{Binding ResizeCommand}">
                         <MenuItem.Icon>
@@ -155,6 +162,15 @@
                                    RenderTransformOrigin="0.5, 0.5"/>
                         </MenuItem.Icon>                        
                     </MenuItem>
+
+                    <MenuItem Header="_Rename Sheet"
+                              Command="{Binding RenameCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/book_Open_16xLG.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                    <Separator />
 
                     <MenuItem Header="_Delete Current Sheet"
                               Command="{Binding RemoveSheetCommand}">
