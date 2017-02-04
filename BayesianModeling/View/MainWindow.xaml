@@ -23,36 +23,33 @@
         xmlns:local="clr-namespace:BayesianModeling"
         xmlns:settings="clr-namespace:BayesianModeling.Properties"
         xmlns:custom="clr-namespace:BayesianModeling.Utilities"
+        xmlns:ReoGrid="clr-namespace:unvell.ReoGrid;assembly=unvell.ReoGrid"
         x:Class="BayesianModeling.MainWindow"
         mc:Ignorable="d"
         Title="{Binding Title}"
         WindowStartupLocation="CenterOwner"
         Loaded="Window_Loaded"
         Closing="Window_Closing"
-        Height="{Binding Source={x:Static settings:Settings.Default}, Path=MainHeight, Mode=TwoWay}"
-        Width="{Binding Source={x:Static settings:Settings.Default}, Path=MainWidth, Mode=TwoWay}">
-
-    <Window.Resources>
-        <ItemsPanelTemplate x:Key="MenuItemTemplates">
-            <StackPanel Margin="-15,0,0,0" Background="White"/>
-        </ItemsPanelTemplate>
-
-        <Style TargetType="{x:Type MenuItem}">
-            <Setter Property="ItemsPanel" Value="{StaticResource MenuItemTemplates}"/>
-        </Style>
-    </Window.Resources>
+        Height="{Binding MainHeight, Mode=TwoWay, Source={x:Static settings:Settings.Default}}"
+        Width="{Binding MainWidth, Mode=TwoWay, Source={x:Static settings:Settings.Default}}">
 
     <Window.InputBindings>
         <KeyBinding Gesture="Ctrl+S" Command="{Binding FileSaveCommand}" />
+        <KeyBinding Gesture="Ctrl+Z" Command="{Binding FileUndoCommand}" />
+        <KeyBinding Gesture="Ctrl+Y" Command="{Binding FileRedoCommand}" />
     </Window.InputBindings>
-
+    
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
 
         <DockPanel Grid.Row="0"
                    Grid.RowSpan="3">
@@ -64,164 +61,313 @@
                     <MenuItem Header="_New" 
                               x:Name="newMenuItem" 
                               Command="{Binding FileNewCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/NewDocumentHS.png"/>
+                        </MenuItem.Icon>
                     </MenuItem>
+                    
                     <Separator />
+                    
                     <MenuItem Header="_Open" 
                               x:Name="openMenuItem" 
                               Command="{Binding FileOpenCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/openHS.png"/>
+                        </MenuItem.Icon>                        
                     </MenuItem>
+                    
                     <MenuItem Header="_Recent" 
-						x:Name="recentMenuItem"
-                        ItemsSource="{Binding RecentStuff}">
+                              ItemsSource="{Binding RecentStuff}">
                     </MenuItem>
+
                     <Separator />
-                    <MenuItem Header="_Save" 
-                              x:Name="saveMenuItem" 
+                    
+                    <MenuItem Header="_Save"
                               Command="{Binding FileSaveCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/saveHS.png"/>
+                        </MenuItem.Icon>                        
                     </MenuItem>
-                    <MenuItem Header="_Save As" 
-                              x:Name="saveAsMenuItem" 
+                    <MenuItem Header="_Save As"
                               Command="{Binding FileSaveAsCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/saveHS.png"/>
+                        </MenuItem.Icon>
                     </MenuItem>
+                    
                     <Separator />
+
                     <MenuItem Header="_Close" 
                               x:Name="closeMenuItem" 
                               Command="{Binding FileCloseCommand}"
                               CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}">
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/WorkItemQueryNodeOffline_11949.png"/>
+                        </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>
 
+                <MenuItem Header="_Edit">
+                    <MenuItem Header="_Undo"
+                              Command="{Binding FileUndoCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/Edit_UndoHS.png"/>
+                        </MenuItem.Icon>                        
+                    </MenuItem>
+                    
+                    <MenuItem Header="_Redo"
+                              Command="{Binding FileRedoCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/Edit_RedoHS.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                    <Separator />
+
+                    <MenuItem Header="_Cut"
+                              Command="{Binding FileCutCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/CutHS.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                    <MenuItem Header="_Copy"
+                              Command="{Binding FileCopyCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/CopyHS.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                    <MenuItem Header="_Paste"
+                              Command="{Binding FilePasteCommand}" >
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/PasteHS.png"/>
+                        </MenuItem.Icon>                        
+                    </MenuItem>
+                </MenuItem>
+
+                <MenuItem Header="_Sheet">
+                    <MenuItem Header="_Resize Sheet"
+                              Command="{Binding ResizeCommand}">
+                        
+                    </MenuItem>
+
+                    <MenuItem Header="_Delete Current Sheet"
+                              Command="{Binding RemoveSheetCommand}">
+
+                    </MenuItem>
+                </MenuItem>
+                
                 <MenuItem Header="_Analyses">
                     <MenuItem Header="_Discounting Model Selection" 
                               Command="{Binding UnifiedDiscountingWindowCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/ScriptFile_452.png"/>
+                        </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>
 
                 <MenuItem Header="_Logs">
                     <MenuItem Header="_Save Log Output" 
                               Command="{Binding SaveLogsWindowCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/Procedure_8937.png"/>
+                        </MenuItem.Icon>
                     </MenuItem>
+                    
                     <MenuItem Header="_Clear Logs" 
                               Command="{Binding ClearLogsWindowCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/ProcedureMissing_8939.png"/>
+                        </MenuItem.Icon>                        
                     </MenuItem>
                 </MenuItem>
 
                 <MenuItem Header="_Information">
                     <MenuItem Header="_Licenses">
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/Textfile_818_16x.png"/>
+                        </MenuItem.Icon>
+
                         <MenuItem Header="R License (GPL-v2)" 
                                   Command="{Binding RLicenseWindowCommand}">
+                            <MenuItem.Icon>
+                                <Image Source="/Resources/Textfile_818_16x.png"/>
+                            </MenuItem.Icon>
                         </MenuItem>
+                        
                         <MenuItem Header="R.Net License (BSD 2-Clause)" 
                                   Command="{Binding RdotNetLicenseWindowCommand}">
+                            <MenuItem.Icon>
+                                <Image Source="/Resources/Textfile_818_16x.png"/>
+                            </MenuItem.Icon>
                         </MenuItem>
+                    
                         <MenuItem Header="SharpVectors License (BSD 3-Clause)" 
                                   Command="{Binding SharpVectorGraphicsLicenseWindowCommand}">
+                            <MenuItem.Icon>
+                                <Image Source="/Resources/Textfile_818_16x.png"/>
+                            </MenuItem.Icon>
                         </MenuItem>
+
                         <MenuItem Header="nls (R Package) License (GPL-v2)" 
                                   Command="{Binding NlsLicenseWindowCommand}">
+                            <MenuItem.Icon>
+                                <Image Source="/Resources/Textfile_818_16x.png"/>
+                            </MenuItem.Icon>
                         </MenuItem>
+
                         <MenuItem Header="ggplot2 (R Package) License (GPL-v2)" 
                                   Command="{Binding Ggplot2LicenseWindowCommand}">
+                            <MenuItem.Icon>
+                                <Image Source="/Resources/Textfile_818_16x.png"/>
+                            </MenuItem.Icon>
                         </MenuItem>
+
                         <MenuItem Header="gridExtra (R Package) License (GPL-v2)" 
                                   Command="{Binding GridExtraLicenseWindowCommand}">
+                            <MenuItem.Icon>
+                                <Image Source="/Resources/Textfile_818_16x.png"/>
+                            </MenuItem.Icon>
                         </MenuItem>
+
                         <MenuItem Header="base64enc (R Package) License (GPL-v2)" 
                                   Command="{Binding BaseEncodeLicenseWindowCommand}">
+                            <MenuItem.Icon>
+                                <Image Source="/Resources/Textfile_818_16x.png"/>
+                            </MenuItem.Icon>
                         </MenuItem>
+
                         <MenuItem Header="reshape2 (R Package) License (MIT)" 
                                   Command="{Binding Reshape2LicenseWindowCommand}">
+                            <MenuItem.Icon>
+                                <Image Source="/Resources/Textfile_818_16x.png"/>
+                            </MenuItem.Icon>
                         </MenuItem>
+                        
                         <MenuItem Header="scales (R Package) License (MIT)" 
                                   Command="{Binding ScalesLicenseWindowCommand}">
+                            <MenuItem.Icon>
+                                <Image Source="/Resources/Textfile_818_16x.png"/>
+                            </MenuItem.Icon>
                         </MenuItem>
+                        
                         <MenuItem Header="EPPlus License (GPL-v2)" 
                                   Command="{Binding EPPLicenseWindowCommand}">
+                            <MenuItem.Icon>
+                                <Image Source="/Resources/Textfile_818_16x.png"/>
+                            </MenuItem.Icon>
                         </MenuItem>
+                        
                         <MenuItem Header="BDS (R Script) License (GPL-v2)" 
                                   Command="{Binding BDSLicenseWindowCommand}">
+                            <MenuItem.Icon>
+                                <Image Source="/Resources/Textfile_818_16x.png"/>
+                            </MenuItem.Icon>
                         </MenuItem>
                     </MenuItem>
-                    <MenuItem Header="_Credits" x:Name="credits" Command="{Binding InformationWindowCommand}">
+                    
+                    <MenuItem Header="_Credits" 
+                              x:Name="credits" 
+                              Command="{Binding InformationWindowCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/Textfile_818_16x.png"/>
+                        </MenuItem.Icon>
                     </MenuItem>
+                    
                 </MenuItem>
                 <MenuItem Header="_Help">
                     <MenuItem Header="_FAQ"
                               Command="{Binding HelpCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/Textfile_818_16x.png"/>
+                        </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>
             </Menu>
 
-            <custom:CustomDataGrid x:Name="dataGrid" 
-                                    HorizontalAlignment="Stretch" 
-                                    VerticalContentAlignment="Stretch"
-                                    SelectionUnit="Cell"
-                                    SelectionMode="Extended"
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                <MenuItem Command="{Binding FileNewCommand}"
+                            Width="24">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/NewDocumentHS.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                <MenuItem Command="{Binding FileOpenCommand}"
+                            Width="24">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/openHS.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                <MenuItem Command="{Binding FileUndoCommand}"
+                            Width="24">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Edit_UndoHS.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                <MenuItem Command="{Binding FileRedoCommand}"
+                            Width="24">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Edit_RedoHS.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                <MenuItem Command="{Binding FileCutCommand}"
+                            Width="24">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/CutHS.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                <MenuItem Command="{Binding FileCopyCommand}"
+                            Width="24">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/CopyHS.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                <MenuItem Command="{Binding FilePasteCommand}"
+                            Width="24">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/PasteHS.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                <MenuItem Command="{Binding UnifiedDiscountingWindowCommand}"
+                            Width="20">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/ScriptFile_452.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                <MenuItem Command="{Binding SaveLogsWindowCommand}"
+                            Width="20">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Procedure_8937.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                <MenuItem Command="{Binding ClearLogsWindowCommand}"
+                            Width="20">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/ProcedureMissing_8939.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                </StackPanel>
+
+            <ReoGrid:ReoGridControl x:Name="reoGridControl"
+                                    HorizontalAlignment="Stretch"                                  
+                                    VerticalAlignment="Stretch" 
+                                    
                                     Grid.Row="0"
                                     Grid.RowSpan="4"
                                     Grid.Column="0"
-                                    Grid.ColumnSpan="1"
-                                    CanUserReorderColumns="False"
-                                    CanUserSortColumns="False"
-                                    CanUserAddRows="True"
-                                    EnableRowVirtualization="True"
-                                    EnableColumnVirtualization="True"
-                                    RowDetailsVisibilityMode="Visible"
-                                    ClipboardCopyMode="ExcludeHeader"
-                                    ItemsSource="{Binding RowViewModels, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                    BorderThickness="0"
-                                    VerticalAlignment="Stretch">
-
-                <DataGrid.InputBindings>
-                    <KeyBinding Key="Delete" Command="{Binding DeleteSelectedCommand}" />
-                    <KeyBinding Gesture="Ctrl+X" Command="{Binding CutSelectedCommand}" />
-                </DataGrid.InputBindings>
-
-                <DataGrid.ColumnHeaderStyle>
-                    <Style TargetType="{x:Type DataGridColumnHeader}">
-                        <Setter Property="FontWeight"  Value="Bold" />
-                        <Setter Property="HorizontalAlignment" Value="Stretch" />
-                        <Setter Property="HorizontalContentAlignment" Value="Center" />
-                        <Setter Property="MinWidth" Value="100" />
-                        <Setter Property="ContextMenu">
-                            <Setter.Value>
-                                <ContextMenu IsEnabled="False" Visibility="Hidden">
-                                </ContextMenu>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </DataGrid.ColumnHeaderStyle>
-
-                <DataGrid.RowHeaderStyle>
-                    <Style TargetType="{x:Type DataGridRowHeader}">
-                        <Setter Property="FontWeight"  Value="Bold" />
-                        <Setter Property="HorizontalAlignment" Value="Stretch" />
-                        <Setter Property="HorizontalContentAlignment" Value="Center" />
-                        <Setter Property="VerticalAlignment" Value="Stretch" />
-                        <Setter Property="VerticalContentAlignment" Value="Center" />
-                        <Setter Property="MinWidth" Value="25" />
-                        <Setter Property="Height" Value="25" />
-                        <Setter Property="ContextMenu">
-                            <Setter.Value>
-                                <ContextMenu IsEnabled="False" Visibility="Hidden">
-                                </ContextMenu>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </DataGrid.RowHeaderStyle>
-
-                <DataGrid.ContextMenu>
-                    <ContextMenu>                        
-                        <MenuItem Header="Cut" Command="{Binding CutSelectedCommand}" />
-                        <MenuItem Header="Copy" Command="Copy" />
-                        <MenuItem Header="Paste" Command="Paste" />
-                        <MenuItem Header="Paste Transposed" Command="{Binding PasteInvertedCommand}" />
-                        <Separator />
-                        <MenuItem Header="Clear" Command="{Binding DeleteSelectedCommand}" />
-                    </ContextMenu>
-                </DataGrid.ContextMenu>
-
-            </custom:CustomDataGrid>
+                                    Grid.ColumnSpan="1"/>
+            
         </DockPanel>
 
         <ScrollViewer HorizontalScrollBarVisibility="Hidden" 

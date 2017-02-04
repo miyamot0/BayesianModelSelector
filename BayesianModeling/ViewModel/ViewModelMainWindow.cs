@@ -52,27 +52,37 @@
 //    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 //    OF SUCH DAMAGE.
 //
-// Discounting Model Selector utilizes EPPlus to leverage interactions with XML file formats
+// Discounting Model Selector utilizes Reogrid to leverage to load, save, and display data
 //
-//    EPPlus is distributed under this license:
+//    Reogrid is distributed under this license:
 //
-//    Copyright (c) 2016 Jan Källman
-//
-//    EPPlus is free software: you can redistribute it and/or modify
-//    it under the terms of the GNU General Public License as published by
-//    the Free Software Foundation, version 2.
-//
-//    EPPlus is distributed in the hope that it will be useful,
-//    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//    GNU General Public License for more details.
-//
-//    You should have received a copy of the GNU General Public License
-//    along with EPPlus.  If not, see <http://epplus.codeplex.com/license>.
-//
+//    MIT License
+//    
+//    Copyright(c) 2013-2016 Jing<lujing at unvell.com>
+//    Copyright(c) 2013-2016 unvell.com, All rights reserved.
+//    
+//    Permission is hereby granted, free of charge, to any person obtaining a copy
+//    of this software and associated documentation files (the "Software"), to deal
+//    in the Software without restriction, including without limitation the rights
+//    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//    copies of the Software, and to permit persons to whom the Software is
+//    furnished to do so, subject to the following conditions:
+//    
+//    The above copyright notice and this permission notice shall be included in all
+//    copies or substantial portions of the Software.
+//    
+//    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+//    SOFTWARE.
+//    
 // </summary>
 //----------------------------------------------------------------------------------------------
 
+using BayesianModeling.Dialogs;
 using BayesianModeling.Utilities;
 using BayesianModeling.View;
 using Microsoft.Win32;
@@ -83,32 +93,17 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Threading;
 
 namespace BayesianModeling.ViewModel
 {
     class ViewModelMainWindow : ViewModelBase
     {
         public MainWindow MainWindow { get; set; }
-        Thread loadThread;
-        Window window;
 
         #region Observable Bindings
-
-        private ObservableCollection<RowViewModel> rowViewModels { get; set; }
-        public ObservableCollection<RowViewModel> RowViewModels
-        {
-            get { return rowViewModels; }
-            set
-            {
-                rowViewModels = value;
-                OnPropertyChanged("RowViewModels");
-            }
-        }
 
         private ObservableCollection<MenuItem> recentStuff { get; set; }
         public ObservableCollection<MenuItem> RecentStuff
@@ -142,11 +137,21 @@ namespace BayesianModeling.ViewModel
         public RelayCommand FileOpenCommand { get; set; }
         public RelayCommand FileOpenNoDialogCommand { get; set; }
         public RelayCommand FileSaveCommand { get; set; }
+
+        public RelayCommand FileCutCommand { get; set; }
+        public RelayCommand FileCopyCommand { get; set; }
+        public RelayCommand FilePasteCommand { get; set; }
+        public RelayCommand FileUndoCommand { get; set; }
+        public RelayCommand FileRedoCommand { get; set; }
+
         public RelayCommand FileSaveAsCommand { get; set; }
         public RelayCommand FileCloseCommand { get; set; }
         public RelayCommand FileSaveNoDialogCommand { get; set; }
         public RelayCommand RecentsClearCommand { get; set; }
         public RelayCommand HelpCommand { get; set; }
+
+        public RelayCommand ResizeCommand { get; set; }
+        public RelayCommand RemoveSheetCommand { get; set; }
 
         /* Loading Commands */
 
@@ -174,9 +179,6 @@ namespace BayesianModeling.ViewModel
 
         public RelayCommand SaveLogsWindowCommand { get; set; }
         public RelayCommand ClearLogsWindowCommand { get; set; }
-        public RelayCommand DeleteSelectedCommand { get; set; }
-        public RelayCommand CutSelectedCommand { get; set; }
-        public RelayCommand PasteInvertedCommand { get; set; }
 
         #endregion Commands
 
@@ -198,6 +200,9 @@ namespace BayesianModeling.ViewModel
 
         #endregion
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public ViewModelMainWindow()
         {
             #region FileCommands
@@ -208,9 +213,18 @@ namespace BayesianModeling.ViewModel
             FileSaveAsCommand = new RelayCommand(param => SaveFileAs(), param => true);
             FileCloseCommand = new RelayCommand(param => CloseProgramWindow(param), param => true);
 
+            FileUndoCommand = new RelayCommand(param => App.Workbook.Undo(), param => true);
+            FileRedoCommand = new RelayCommand(param => App.Workbook.Redo(), param => true);
+            FileCutCommand = new RelayCommand(param => App.Workbook.CurrentWorksheet.Cut(), param => true);
+            FileCopyCommand = new RelayCommand(param => App.Workbook.CurrentWorksheet.Copy(), param => true);
+            FilePasteCommand = new RelayCommand(param => App.Workbook.CurrentWorksheet.Paste(), param => true);
+
             FileSaveNoDialogCommand = new RelayCommand(param => SaveFileWithoutDialog(), param => true);
             FileOpenNoDialogCommand = new RelayCommand(param => FileOpenNoDialog(param), param => true);
-            
+
+            ResizeCommand = new RelayCommand(param => ResizeCurrentSheet(), param => true);
+            RemoveSheetCommand = new RelayCommand(param => DeleteCurrentSheet(), param => true);
+
             HelpCommand = new RelayCommand(param => OpenHelpWindow(), param => true);
             RecentsClearCommand = new RelayCommand(param => ClearRecents(), param => true);
             RecentStuff = new ObservableCollection<MenuItem>();
@@ -251,10 +265,6 @@ namespace BayesianModeling.ViewModel
             SaveLogsWindowCommand = new RelayCommand(param => SaveLogs(), param => true);
             ClearLogsWindowCommand = new RelayCommand(param => ClearLogs(), param => true);
 
-            DeleteSelectedCommand = new RelayCommand(param => DeleteSelected(), param => true);
-            CutSelectedCommand = new RelayCommand(param => CutSelected(), param => true);
-            PasteInvertedCommand = new RelayCommand(param => PasteInverted(), param => true);
-
             ViewLoadedCommand = new RelayCommand(param => ViewLoaded(), param => true);
             ViewClosingCommand = new RelayCommand(param => ViewClosed(), param => true);
             UnifiedDiscountingWindowCommand = new RelayCommand(param => OpenUnifiedDiscountingWindow(), param => true);
@@ -278,18 +288,7 @@ namespace BayesianModeling.ViewModel
 
             #endregion
 
-            RowViewModels = new ObservableCollection<RowViewModel>();
-
-            ObservableCollection<RowViewModel> temp = new ObservableCollection<RowViewModel>();
-
-            for (int i = 0; i < RowSpans; i++)
-            {
-                temp.Add(new RowViewModel());
-            }
-
-            /* Minor speedup, avoids many UI update calls */
-
-            RowViewModels = new ObservableCollection<RowViewModel>(temp);
+            #region Initial setup
 
             if (Properties.Settings.Default.GUID.Trim().Length < 1)
             {
@@ -311,9 +310,64 @@ namespace BayesianModeling.ViewModel
                     Application.Current.Shutdown();
                 }
             }
+
+            #endregion
+
+            var mContextMenu = new ContextMenu();
+            mContextMenu.Items.Add(new MenuItem
+            {
+                Header = "Cut",
+                Command = FileCutCommand
+            });
+            mContextMenu.Items.Add(new MenuItem
+            {
+                Header = "Copy",
+                Command = FileCopyCommand
+            });
+            mContextMenu.Items.Add(new MenuItem
+            {
+                Header = "Paste",
+                Command = FilePasteCommand
+            });
+            
+            App.Workbook.CellsContextMenu = mContextMenu;
         }
 
         #region UI
+
+        /// <summary>
+        /// Calls to RG to increase or decrease cells
+        /// </summary>
+        private void ResizeCurrentSheet()
+        {
+            var getNewSizes = new ResizeDialog();
+            getNewSizes.rowBox.Text = App.Workbook.CurrentWorksheet.Rows.ToString();
+            getNewSizes.colBox.Text = App.Workbook.CurrentWorksheet.Columns.ToString();
+
+            getNewSizes.ShowDialog();
+
+            if (getNewSizes.rowBox.Text != "" && getNewSizes.colBox.Text != "")
+            {
+                App.Workbook.CurrentWorksheet.Resize(int.Parse(getNewSizes.rowBox.Text), int.Parse(getNewSizes.colBox.Text));
+            }
+        }
+
+        /// <summary>
+        /// Calls to RG to delete the currently selected sheet
+        /// </summary>
+        private void DeleteCurrentSheet()
+        {
+            var confirmDelete = new YesNoDialog();
+            confirmDelete.Title = "Confirm Delete";
+            confirmDelete.QuestionText = "Are you sure you want to delete this sheet?";
+
+            confirmDelete.ShowDialog();
+
+            if (confirmDelete.ReturnedAnswer)
+            {
+                App.Workbook.RemoveWorksheet(App.Workbook.CurrentWorksheet);
+            }
+        }
 
         /// <summary>
         /// Clears the recents list, saving a blank string to settings
@@ -386,186 +440,6 @@ namespace BayesianModeling.ViewModel
         public void UpdateTitle(string title)
         {
             Title = title;
-        }
-
-        /// <summary>
-        /// Loop through selected/highlighted cells, clear cell contents through bound collections
-        /// </summary>
-        private void DeleteSelected()
-        {
-            if (MainWindow.dataGrid.SelectedCells.Count > 0)
-            {
-                foreach (DataGridCellInfo obj in MainWindow.dataGrid.SelectedCells)
-                {
-                    var rvm = obj.Item as RowViewModel;
-
-                    if (rvm != null)
-                    {
-                        int x = RowViewModels.IndexOf(rvm);
-                        RowViewModels[x].values[obj.Column.DisplayIndex] = "";
-                        RowViewModels[x].ForcePropertyUpdate(obj.Column.DisplayIndex);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Cut cells after copying to clipboard
-        /// </summary>
-        private void CutSelected()
-        {
-            if (MainWindow.dataGrid.SelectedCells.Count > 0)
-            {
-                // Cells
-                List<string> holdPreClip = new List<string>();
-
-                // Rows
-                List<string> holdPostClip = new List<string>();
-
-                int rowHolder = -1;
-
-                foreach (DataGridCellInfo obj in MainWindow.dataGrid.SelectedCells)
-                {
-                    var rvm = obj.Item as RowViewModel;
-
-                    if (rvm != null)
-                    {
-                        int x = RowViewModels.IndexOf(rvm);
-
-                        if (rowHolder == -1)
-                        {
-                            rowHolder = x;
-                        }
-
-                        if (rowHolder == x)
-                        {
-                            // Same row, continue
-                            holdPreClip.Add(RowViewModels[x].values[obj.Column.DisplayIndex]);
-                        }
-                        else
-                        {
-                            // Different
-                            rowHolder = x;
-                            string holdClip = string.Join("\t", holdPreClip);
-                            holdPostClip.Add(holdClip);
-
-                            holdPreClip.Clear();
-                            holdPreClip.Add(RowViewModels[x].values[obj.Column.DisplayIndex]);
-                        }
-
-                    }
-                }
-
-                string lastRowClip = string.Join("\t", holdPreClip);
-                holdPostClip.Add(lastRowClip);
-
-                string holdPostClipText = string.Join("\r\n", holdPostClip);
-                Clipboard.SetText(holdPostClipText);
-
-                foreach (DataGridCellInfo obj in MainWindow.dataGrid.SelectedCells)
-                {
-                    var rvm = obj.Item as RowViewModel;
-
-                    if (rvm != null)
-                    {
-                        int x = RowViewModels.IndexOf(rvm);
-                        RowViewModels[x].values[obj.Column.DisplayIndex] = "";
-                        RowViewModels[x].ForcePropertyUpdate(obj.Column.DisplayIndex);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Transposition a-la matrix, but list of arrays
-        /// </summary>
-        /// <param name="arrayList"></param>
-        /// <returns></returns>
-        static List<string[]> CreateTransposedList(List<string[]> arrayList)
-        {
-            int lengthTemp = arrayList[0].Length;
-            string[,] tempMatrix = new string[arrayList.Count, lengthTemp];
-
-            for (int i = 0; i < arrayList.Count; i++)
-            {
-                string[] tempArray = arrayList[i];
-
-                if (tempArray.Length != lengthTemp)
-                {
-                    return null;
-                }
-                for (int j = 0; j < lengthTemp; j++)
-                {
-                    tempMatrix[i, j] = tempArray[j];
-                }
-            }
-
-            string[,] transposedMatrix = new string[tempMatrix.GetLength(1), tempMatrix.GetLength(0)];
-            for (int i = 0; i < tempMatrix.GetLength(1); i++)
-            {
-                for (int j = 0; j < tempMatrix.GetLength(0); j++)
-                {
-                    transposedMatrix[i, j] = tempMatrix[j, i];
-                }
-            }
-
-            List<string[]> returnList = new List<string[]>();
-
-            string[] holder;
-            for (int i = 0; i < transposedMatrix.GetLength(0); i++)
-            {
-                holder = new string[transposedMatrix.GetLength(1)];
-                for (int j = 0; j < transposedMatrix.GetLength(1); j++)
-                {
-                    holder[j] = transposedMatrix[i, j];
-                }
-                returnList.Add(holder);
-            }
-
-            return returnList;
-        }
-
-        /// <summary>
-        /// Custom paste operation, swapping V/H loopings to make a transposition
-        /// </summary>
-        private void PasteInverted()
-        {
-            List<string[]> rowData = ClipboardTools.ReadAndParseClipboardData();
-
-            int lowRow = MainWindow.dataGrid.Items.IndexOf(MainWindow.dataGrid.CurrentItem),        // Current highlighted cell's row
-                highRow = MainWindow.dataGrid.Items.Count - 1,                                      // Highest row in table
-                lowCol = MainWindow.dataGrid.Columns.IndexOf(MainWindow.dataGrid.CurrentColumn),    // Current highlighted cell's column
-                pasteContentRowIterator = 0,
-                pasteContentColumnIterator = 0;
-
-            var itemSource = MainWindow.dataGrid.ItemsSource as ObservableCollection<RowViewModel>;
-
-            if (itemSource == null) return;
-
-            rowData = CreateTransposedList(rowData);
-
-            if (rowData == null) return;
-
-            for (int i = lowRow; (i <= highRow) && (pasteContentRowIterator < rowData.Count); i++)
-            {
-                if (i == highRow)
-                {
-                    itemSource.Add(new RowViewModel());
-                    highRow = (pasteContentRowIterator + 1 < rowData.Count) ? highRow + 1 : highRow;
-                }
-
-                pasteContentColumnIterator = 0;
-
-                for (int j = lowCol; (j < 99) && (pasteContentColumnIterator < rowData[pasteContentRowIterator].Length); j++)
-                {
-                    itemSource[i].values[j] = rowData[pasteContentRowIterator][pasteContentColumnIterator];
-                    itemSource[i].ForcePropertyUpdate(j);
-
-                    pasteContentColumnIterator++;
-                }
-
-                pasteContentRowIterator++;
-            }
         }
 
         #endregion
@@ -795,7 +669,6 @@ namespace BayesianModeling.ViewModel
 
                 introWindow.checkR.Foreground = Brushes.Green;
                 introWindow.checkR2.Foreground = Brushes.Green;
-
             }
             catch (Exception e)
             {
@@ -986,6 +859,7 @@ namespace BayesianModeling.ViewModel
             if (failed)
             {
                 SendMessageToOutput("R Installation not found, please install in order to continue.");
+
                 if (MessageBox.Show("R was not found on your computer.  Do you want to be directed to the R web site for more information?", "R Not Found", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                 {
                     Process.Start("https://www.r-project.org/");
@@ -1038,23 +912,14 @@ namespace BayesianModeling.ViewModel
         /// </summary>
         private void CreateNewFile()
         {
-            loadThread = new Thread(new ThreadStart(ShowFileUIProgressWindow));
-            loadThread.SetApartmentState(ApartmentState.STA);
-            loadThread.IsBackground = true;
-            loadThread.Start();
-
-            RowViewModels.Clear();
-            for (int i = 0; i < RowSpans; i++)
-            {
-                RowViewModels.Add(new RowViewModel());
-            }
+            App.Workbook.Reset();
 
             UpdateTitle("New File");
             workingSheet = "Sheet1";
 
             haveFileLoaded = false;
 
-            CloseFileUIProgressWindow();
+            SendMessageToOutput("New File Created!");
         }
 
         /// <summary>
@@ -1062,8 +927,6 @@ namespace BayesianModeling.ViewModel
         /// </summary>
         private void SaveFile()
         {
-            MainWindow.dataGrid.CommitEdit();
-
             if (haveFileLoaded)
             {
                 SaveFileWithoutDialog();
@@ -1084,18 +947,11 @@ namespace BayesianModeling.ViewModel
 
                         if (mExt.Equals(".xlsx"))
                         {
-                            loadThread = new Thread(new ThreadStart(ShowFileUIProgressWindow));
-                            loadThread.SetApartmentState(ApartmentState.STA);
-                            loadThread.IsBackground = true;
-                            loadThread.Start();
-
-                            OpenXMLHelper.ExportToExcel(new ObservableCollection<RowViewModel>(RowViewModels), saveFileDialog1.FileName);
-
-                            CloseFileUIProgressWindow();
+                            App.Workbook.Save(saveFileDialog1.FileName, unvell.ReoGrid.IO.FileFormat.Excel2007);
                         }
                         else if (mExt.Equals(".csv"))
                         {
-                            OpenXMLHelper.ExportToCSV(new ObservableCollection<RowViewModel>(RowViewModels), saveFileDialog1.FileName);
+                            App.Workbook.Save(saveFileDialog1.FileName, unvell.ReoGrid.IO.FileFormat.CSV);
                         }
                         else
                         {
@@ -1109,14 +965,15 @@ namespace BayesianModeling.ViewModel
                         haveFileLoaded = true;
                         
                         AddToRecents(@saveFileDialog1.FileName);
+
+
+                        SendMessageToOutput("Saved: " + @saveFileDialog1.FileName);
                     }
                     catch (Exception e)
                     {
                         MessageBox.Show("We weren't able to save.  Is the target file either open, missing or in use?");
-                        Console.WriteLine(e.ToString());
+                        SendMessageToOutput("Error: " + e.ToString());
                     }
-
-                    workingSheet = "Model Selector";
                 }
             }
         }
@@ -1126,8 +983,6 @@ namespace BayesianModeling.ViewModel
         /// </summary>
         private void SaveFileAs()
         {
-            MainWindow.dataGrid.CommitEdit();
-
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
 
             saveFileDialog1.FileName = title;
@@ -1143,18 +998,11 @@ namespace BayesianModeling.ViewModel
                 {
                     if (mExt.Equals(".xlsx"))
                     {
-                        loadThread = new Thread(new ThreadStart(ShowFileUIProgressWindow));
-                        loadThread.SetApartmentState(ApartmentState.STA);
-                        loadThread.IsBackground = true;
-                        loadThread.Start();
-
-                        OpenXMLHelper.ExportToExcel(new ObservableCollection<RowViewModel>(RowViewModels), saveFileDialog1.FileName);
-
-                        CloseFileUIProgressWindow();
+                        App.Workbook.Save(saveFileDialog1.FileName, unvell.ReoGrid.IO.FileFormat.Excel2007);
                     }
                     else if (mExt.Equals(".csv"))
                     {
-                        OpenXMLHelper.ExportToCSV(new ObservableCollection<RowViewModel>(RowViewModels), saveFileDialog1.FileName);
+                        App.Workbook.Save(saveFileDialog1.FileName, unvell.ReoGrid.IO.FileFormat.CSV);
                     }
                     else
                     {
@@ -1170,14 +1018,15 @@ namespace BayesianModeling.ViewModel
                     haveFileLoaded = true;
 
                     AddToRecents(@saveFileDialog1.FileName);
+
+                    SendMessageToOutput("Saved: " + @saveFileDialog1.FileName);
                 }
                 catch (Exception e)
                 {
                     MessageBox.Show("We weren't able to save.  Is the target file either open, missing or in use?");
-                    Console.WriteLine(e.ToString());
+                    SendMessageToOutput("Error: " + e.ToString());
                     haveFileLoaded = false;
                 }
-
             }
         }
 
@@ -1186,8 +1035,6 @@ namespace BayesianModeling.ViewModel
         /// </summary>
         private void SaveFileWithoutDialog()
         {
-            MainWindow.dataGrid.CommitEdit();
-
             if (haveFileLoaded)
             {
                 try
@@ -1198,18 +1045,11 @@ namespace BayesianModeling.ViewModel
 
                     if (mExt.Equals(".xlsx"))
                     {
-                        loadThread = new Thread(new ThreadStart(ShowFileUIProgressWindow));
-                        loadThread.SetApartmentState(ApartmentState.STA);
-                        loadThread.IsBackground = true;
-                        loadThread.Start();
-
-                        OpenXMLHelper.ExportToExcel(new ObservableCollection<RowViewModel>(RowViewModels), Path.Combine(path, title));
-
-                        CloseFileUIProgressWindow();
+                        App.Workbook.Save(Path.Combine(path, title), unvell.ReoGrid.IO.FileFormat.Excel2007);
                     }
                     else if (mExt.Equals(".csv"))
                     {
-                        OpenXMLHelper.ExportToCSV(new ObservableCollection<RowViewModel>(RowViewModels), Path.Combine(path, title));
+                        App.Workbook.Save(Path.Combine(path, title), unvell.ReoGrid.IO.FileFormat.CSV);
                     }
                     else
                     {
@@ -1218,11 +1058,12 @@ namespace BayesianModeling.ViewModel
 
                     UpdateTitle(title);
 
+                    SendMessageToOutput("Saved: " + Path.Combine(path, title));
                 }
                 catch (Exception e)
                 {
                     MessageBox.Show("We weren't able to save.  Is the target file either open, missing or in use?");
-                    Console.WriteLine(e.ToString());
+                    SendMessageToOutput("Error: " + e.ToString());
                 }
             }
         }
@@ -1246,40 +1087,25 @@ namespace BayesianModeling.ViewModel
                 }
 
                 openFileDialog1.Filter = "Spreadsheet Files (XLSX, CSV)|*.xlsx;*.csv";
-                openFileDialog1.Title = "Select an Excel File";
+                openFileDialog1.Title = "Select a spreadsheet";
 
                 if (openFileDialog1.ShowDialog() == true)
                 {
-                    loadThread = new Thread(new ThreadStart(ShowFileUIProgressWindow));
-                    loadThread.SetApartmentState(ApartmentState.STA);
-                    loadThread.IsBackground = true;
-                    loadThread.Start();
-
                     string mExt = Path.GetExtension(openFileDialog1.FileName);
-
                     path = Path.GetDirectoryName(openFileDialog1.FileName);
 
                     try
                     {
                         if (mExt.Equals(".xlsx"))
                         {
-                            ObservableCollection<RowViewModel> temp = OpenXMLHelper.ReadFromExcelFile(openFileDialog1.FileName, out workingSheet);
-
-                            if (temp == null)
-                            {
-                                CloseFileUIProgressWindow();
-                                return;
-                            }
-
-                            RowViewModels = new ObservableCollection<RowViewModel>(temp);
+                            App.Workbook.Load(openFileDialog1.FileName, unvell.ReoGrid.IO.FileFormat._Auto);
 
                             UpdateTitle(openFileDialog1.SafeFileName);
                             haveFileLoaded = true;
                         }
                         else if (mExt.Equals(".csv"))
                         {
-                            ObservableCollection<RowViewModel> temp = OpenXMLHelper.ReadFromCSVFile(openFileDialog1.FileName);
-                            RowViewModels = new ObservableCollection<RowViewModel>(temp);
+                            App.Workbook.Load(openFileDialog1.FileName, unvell.ReoGrid.IO.FileFormat._Auto);
 
                             workingSheet = openFileDialog1.SafeFileName;
                             UpdateTitle(openFileDialog1.SafeFileName);
@@ -1298,30 +1124,25 @@ namespace BayesianModeling.ViewModel
                         {
                             title = "Discounting Model Selection - New File";
                         }
-
+                        
+                        SendMessageToOutput("Opened: " + @openFileDialog1.FileName);
                     }
                     catch (IOException e)
                     {
-                        CloseFileUIProgressWindow();
-                        Console.WriteLine(e.ToString());
                         MessageBox.Show("We weren't able to save.  Is the target file either open, missing or in use?");
+                        SendMessageToOutput("Error: " + e.ToString());
                     }
                     catch (Exception e)
                     {
-                        CloseFileUIProgressWindow();
-                        Console.WriteLine(e.ToString());
                         MessageBox.Show("We weren't able to save.  Is the target file either open, missing or in use?");
+                        SendMessageToOutput("Error: " + e.ToString());
                     }
-
-                    CloseFileUIProgressWindow();
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
+                SendMessageToOutput("Error: " + e.ToString());
             }
-
-
         }
 
         /// <summary>
@@ -1332,11 +1153,6 @@ namespace BayesianModeling.ViewModel
         /// </param>
         private void OpenFileNoDialog(string filePath)
         {
-            loadThread = new Thread(new ThreadStart(ShowFileUIProgressWindow));
-            loadThread.SetApartmentState(ApartmentState.STA);
-            loadThread.IsBackground = true;
-            loadThread.Start();
-
             string mExt = Path.GetExtension(@filePath);
 
             path = Path.GetDirectoryName(@filePath);
@@ -1345,38 +1161,14 @@ namespace BayesianModeling.ViewModel
             {
                 if (mExt.Equals(".xlsx"))
                 {
-                    ObservableCollection<RowViewModel> temp = OpenXMLHelper.ReadFromExcelFile(filePath, out workingSheet);
+                    App.Workbook.Load(@filePath, unvell.ReoGrid.IO.FileFormat._Auto);
 
-                    if (temp == null)
-                    {
-                        CloseFileUIProgressWindow();
-                        return;
-                    }
-
-                    RowViewModels = new ObservableCollection<RowViewModel>(temp);
-
-                    if (workingSheet != string.Empty)
-                    {
-                        UpdateTitle(Path.GetFileName(filePath));
-                        haveFileLoaded = true;
-                    }
-                    else
-                    {
-                        title = "Discounting Model Selection - New File";
-                        haveFileLoaded = false;
-                    }
-
+                    UpdateTitle(Path.GetFileName(@filePath));
+                    haveFileLoaded = true;
                 }
                 else if (mExt.Equals(".csv"))
                 {
-                    ObservableCollection<RowViewModel> temp = OpenXMLHelper.ReadFromCSVFile(@filePath);
-
-                    if (temp == null)
-                    {
-                        return;
-                    }
-
-                    RowViewModels = new ObservableCollection<RowViewModel>(temp);
+                    App.Workbook.Load(@filePath, unvell.ReoGrid.IO.FileFormat._Auto);
 
                     UpdateTitle(Path.GetFileName(filePath));
                     haveFileLoaded = true;
@@ -1387,21 +1179,19 @@ namespace BayesianModeling.ViewModel
                 }
 
                 AddToRecents(@filePath);
+
+                SendMessageToOutput("Saved: " + @filePath);
             }
             catch (IOException e)
             {
-                CloseFileUIProgressWindow();
-                Console.WriteLine(e.ToString());
+                SendMessageToOutput("Error: " + e.ToString());
                 MessageBox.Show("We weren't able to open the file.  Is the target file either open, missing or in use?");
             }
             catch (Exception e)
             {
-                CloseFileUIProgressWindow();
-                Console.WriteLine(e.ToString());
+                SendMessageToOutput("Error: " + e.ToString());
                 MessageBox.Show("We weren't able to open the file.  Is the target file either open, missing or in use?");
             }
-
-            CloseFileUIProgressWindow();
         }
 
         /// <summary>
@@ -1424,25 +1214,6 @@ namespace BayesianModeling.ViewModel
 
                 OpenFileNoDialog(path);
             }
-        }
-
-        /// <summary>
-        /// Shows progress bar on another thread
-        /// </summary>
-        void ShowFileUIProgressWindow()
-        {
-            window = new ProgressDialog("Processing", "File operations ongoing...");
-            window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            window.Show();
-            Dispatcher.Run();
-        }
-
-        /// <summary>
-        /// Closes progress bar on another thread
-        /// </summary>
-        void CloseFileUIProgressWindow()
-        {
-            window.Dispatcher.Invoke(DispatcherPriority.Normal, new ThreadStart(window.Close));
         }
 
         /// <summary>

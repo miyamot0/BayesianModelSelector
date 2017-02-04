@@ -25,11 +25,8 @@
 // </summary>
 //----------------------------------------------------------------------------------------------
 
-using BayesianModeling.ViewModel;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace BayesianModeling.Utilities
 {
@@ -72,23 +69,6 @@ namespace BayesianModeling.Utilities
         }
 
         /// <summary>
-        /// Linq companion for referencing object's location in collection.
-        /// </summary>
-        /// <param name="model">
-        /// Individual row model reference
-        /// </param>
-        /// <param name="coll">
-        /// Collection overall
-        /// </param>
-        /// <returns>
-        /// int-based index
-        /// </returns>
-        public static int GetIndexViewModel(RowViewModel model, ObservableCollection<RowViewModel> coll)
-        {
-            return coll.IndexOf(model);
-        }
-
-        /// <summary>
         /// Walk through ranged values as needed, finding necessary pairs
         /// </summary>
         /// <param name="startColDelay">
@@ -112,7 +92,7 @@ namespace BayesianModeling.Utilities
         /// <returns>
         /// List of all range/value pairs that correspond
         /// </returns>
-        public static List<double>[] GetRangedValuesHorizontal(int startColDelay, int endColDelay, int rowDelay, int startColValue, int endColValue, int rowValue, object source)
+        public static List<double>[] GetRangedValuesHorizontal(int startColDelay, int endColDelay, int rowDelay, int startColValue, int endColValue, int rowValue)
         {
             List<double>[] array = new List<double>[2];
             array[0] = new List<double>();
@@ -126,15 +106,15 @@ namespace BayesianModeling.Utilities
             int i = startColDelay,
                 j = startColValue;
 
-            var itemSource = source as ObservableCollection<RowViewModel>;
-
-            if (itemSource == null)
-                return null;
+            var itemSource = App.Workbook.CurrentWorksheet;
 
             for (; i <= endColDelay && j <= endColValue;)
             {
-                mCellDelay = itemSource[rowDelay].values[i];
-                mCellValue = itemSource[rowValue].values[j];
+                mCellDelay = itemSource.CreateAndGetCell(rowDelay, i).Data.ToString();
+                mCellValue = itemSource.CreateAndGetCell(rowValue, j).Data.ToString();
+
+                //mCellDelay = itemSource[rowDelay].values[i];
+                //mCellValue = itemSource[rowValue].values[j];
 
                 if (Double.TryParse(mCellDelay, out testDelay) && Double.TryParse(mCellValue, out testValue))
                 {
@@ -173,7 +153,7 @@ namespace BayesianModeling.Utilities
         /// <returns>
         /// List of all range/value pairs that correspond
         /// </returns>
-        public static List<double>[] GetRangedValuesVertical(int startRowDelay, int endRowDelay, int colDelay, int startRowValue, int endRowValue, int colValue, object source)
+        public static List<double>[] GetRangedValuesVertical(int startRowDelay, int endRowDelay, int colDelay, int startRowValue, int endRowValue, int colValue)
         {
             List<double>[] array = new List<double>[2];
             array[0] = new List<double>();
@@ -187,15 +167,12 @@ namespace BayesianModeling.Utilities
             int i = startRowDelay,
                 j = startRowValue;
 
-            var itemSource = source as ObservableCollection<RowViewModel>;
-
-            if (itemSource == null)
-                return null;
+            var itemSource = App.Workbook.CurrentWorksheet;
 
             for (; i <= endRowDelay && j <= endRowValue;)
             {
-                mCellDelay = itemSource[i].values[colDelay];
-                mCellValue = itemSource[j].values[colValue];
+                mCellDelay = itemSource.CreateAndGetCell(i, colDelay).Data.ToString();
+                mCellValue = itemSource.CreateAndGetCell(j, colValue).Data.ToString();
 
                 if (Double.TryParse(mCellDelay, out testDelay) && Double.TryParse(mCellValue, out testValue))
                 {
@@ -213,14 +190,11 @@ namespace BayesianModeling.Utilities
         /// <summary>
         /// Function for parsing values of individual cells by referencing view model
         /// </summary>
-        public static List<double> GetRangedValuesVM(int startCol, int endCol, int startRow, object source)
+        public static List<double> GetRangedValuesVM(int startCol, int endCol, int startRow)
         {
             if (startCol == -1 || startRow == -1) return null;
 
-            var itemSource = source as ObservableCollection<RowViewModel>;
-
-            if (itemSource == null)
-                return null;
+            var itemSource = App.Workbook.CurrentWorksheet;
 
             List<double> mRange = new List<double>();
 
@@ -228,7 +202,9 @@ namespace BayesianModeling.Utilities
 
             for (int i = startCol; i <= endCol; i++)
             {
-                string mRowItem = itemSource[startRow].values[i];
+                string mRowItem = itemSource.CreateAndGetCell(startRow, i).Data.ToString();
+
+                //string mRowItem = itemSource[startRow, i].ToString();
 
                 if (!Double.TryParse(mRowItem, out test))
                 {
@@ -246,7 +222,7 @@ namespace BayesianModeling.Utilities
         /// <summary>
         /// Function for parsing values of individual cells by referencing view model
         /// </summary>
-        public static List<double> GetRangedValuesVerticalVM(int startRow, int endRow, int col, object source)
+        public static List<double> GetRangedValuesVerticalVM(int startRow, int endRow, int col)
         {
             List<double> mRange = new List<double>();
 
@@ -255,16 +231,14 @@ namespace BayesianModeling.Utilities
                 return null;
             }
 
-            var itemSource = source as ObservableCollection<RowViewModel>;
-
-            if (itemSource == null)
-                return null;
+            var itemSource = App.Workbook.CurrentWorksheet;
 
             double test;
 
             for (int i = startRow; i <= endRow; i++)
             {
-                string mRowItemCell = itemSource[i].values[col];
+                string mRowItemCell = itemSource.CreateAndGetCell(i, col).Data.ToString();
+                //string mRowItemCell = itemSource[i].values[col];
 
                 if (!Double.TryParse(mRowItemCell, out test))
                 {
@@ -285,14 +259,11 @@ namespace BayesianModeling.Utilities
         /// <param name="range">
         /// List of double values returned for use as delay or value points in Computation
         /// </param>
-        public static string[,] ParseBulkRangeStringsVM(int lowRowValue, int highRowValue, int lowColValue, int highColValue, object source)
+        public static string[,] ParseBulkRangeStringsVM(int lowRowValue, int highRowValue, int lowColValue, int highColValue)
         {
             string[,] mDouble = null;
 
-            var itemSource = source as ObservableCollection<RowViewModel>;
-
-            if (itemSource == null)
-                return null;
+            var itemSource = App.Workbook.CurrentWorksheet;
 
             double tempHolder;
             List<double> tempHolderList = new List<double>();
@@ -308,7 +279,8 @@ namespace BayesianModeling.Utilities
                 {
                     for (int j = lowColValue; j <= highColValue; j++)
                     {
-                        string mRowItem = itemSource[i].values[j];
+                        string mRowItem = itemSource.CreateAndGetCell(i, j).Data.ToString();
+                        //string mRowItem = itemSource[i].values[j];
                         mDouble[j - lowColValue, i - lowRowValue] = mRowItem;
 
                         if (double.TryParse(mRowItem, out tempHolder))
@@ -332,14 +304,11 @@ namespace BayesianModeling.Utilities
         /// <param name="range">
         /// List of double values returned for use as delay or value points in Computation
         /// </param>
-        public static string[,] ParseBulkRangeStringsVerticalVM(int lowRowValue, int highRowValue, int lowColValue, int highColValue, object source)
+        public static string[,] ParseBulkRangeStringsVerticalVM(int lowRowValue, int highRowValue, int lowColValue, int highColValue)
         {
             string[,] mDouble = null;
 
-            var itemSource = source as ObservableCollection<RowViewModel>;
-
-            if (itemSource == null)
-                return null;
+            var itemSource = App.Workbook.CurrentWorksheet;
 
             double tempHolder;
             List<double> tempHolderList = new List<double>();
@@ -356,7 +325,8 @@ namespace BayesianModeling.Utilities
                 {
                     for (int j = lowColValue; j <= highColValue; j++)
                     {
-                        string mRowItem = itemSource[i].values[j];
+                        //string mRowItem = itemSource[i].values[j];
+                        string mRowItem = itemSource.CreateAndGetCell(i, j).Data.ToString();
                         mDouble[i - lowRowValue, j - lowColValue] = mRowItem;
 
                         if (double.TryParse(mRowItem, out tempHolder))
@@ -374,64 +344,5 @@ namespace BayesianModeling.Utilities
             return mDouble;
         }
 
-        /// <summary>
-        /// Bool check if there are zeroes in the supplied two dimensional arrow
-        /// </summary>
-        /// <param name="source">
-        /// Two dimensional array
-        /// </param>
-        /// <returns>
-        /// Return two index array of the lowest (1) and highest (2) non-zero elements
-        /// </returns>
-        public static double[] GetLowestAndHighestInMatrix(string[,] source)
-        {
-            int cols = source.GetLength(0);
-            int rows = source.GetLength(1);
-
-            double low = 9999999.0;
-            double high = 0.0;
-
-            for (int i = 0; i < rows; i++)
-            {
-                for (int j = 0; j < cols; j++)
-                {
-                    double temp;
-                    if (double.TryParse(source[j, i], out temp))
-                    {
-                        if (temp > high)
-                        {
-                            high = temp;
-                        }
-                        else if (temp < low && temp > 0)
-                        {
-                            low = temp;
-                        }
-                    }
-                }
-            }
-
-            return new double[] { low, high };
-        }
-
-        /// <summary>
-        /// Get Standard Deviation
-        /// </summary>
-        /// <param name="values">
-        /// List of doubles
-        /// </param>
-        /// <returns></returns>
-        public static double StandardDeviation(List<double> values)
-        {
-            double ret = -1;
-
-            if (values.Count() > 1)
-            {
-                double avg = values.Average();
-                double sum = values.Sum(d => (d - avg) * (d - avg));
-                ret = Math.Sqrt(sum / values.Count());
-            }
-
-            return ret;
-        }
     }
 }

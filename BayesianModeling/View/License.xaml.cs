@@ -34,6 +34,9 @@ namespace BayesianModeling.View
     /// </summary>
     public partial class License : Window
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public License()
         {
             InitializeComponent();

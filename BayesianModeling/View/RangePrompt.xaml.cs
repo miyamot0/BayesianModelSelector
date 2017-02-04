@@ -34,17 +34,28 @@ namespace BayesianModeling.View
     /// </summary>
     public partial class RangePrompt : Window
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public RangePrompt()
         {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Return text
+        /// </summary>
         public string ResponseText
         {
             get { return RangeText.Text; }
             set { RangeText.Text = value; }
         }
 
+        /// <summary>
+        /// Click event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             DialogResult = true;

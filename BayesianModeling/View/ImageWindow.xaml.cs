@@ -74,11 +74,19 @@ namespace BayesianModeling.View
     {
         public string filePath = null;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public ImageWindow()
         {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Save action
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void saveMenuItem_Click(object sender, RoutedEventArgs e)
         {
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
@@ -120,6 +128,11 @@ namespace BayesianModeling.View
             }
         }
 
+        /// <summary>
+        /// Close window action
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void closeMenuItem_Click(object sender, RoutedEventArgs e)
         {
             Close();

@@ -84,7 +84,7 @@ namespace BayesianModeling
         }
 
         /// <summary>
-        /// 
+        /// Loaded event
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -97,7 +97,7 @@ namespace BayesianModeling
         }
 
         /// <summary>
-        /// 
+        /// Closing event
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

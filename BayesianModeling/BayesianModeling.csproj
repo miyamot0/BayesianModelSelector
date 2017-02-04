@@ -62,7 +62,7 @@
     <ApplicationIcon>Resources\SNS.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>A4BFF18D0AA581D30F6EC7253531C1411F4AFA3B</ManifestCertificateThumbprint>
@@ -100,10 +100,6 @@
   <ItemGroup>
     <Reference Include="DynamicInterop, Version=0.7.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\DynamicInterop.0.7.4\lib\net40\DynamicInterop.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="EPPlus, Version=4.0.5.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
-      <HintPath>..\packages\EPPlus.4.0.5\lib\net20\EPPlus.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
@@ -158,6 +154,10 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="unvell.ReoGrid, Version=2.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\unvell.ReoGridWPF.dll.2.0.1.0\lib\20\unvell.ReoGrid.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -167,19 +167,23 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Dialogs\ResizeDialog.xaml.cs">
+      <DependentUpon>ResizeDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\YesNoDialog.xaml.cs">
       <DependentUpon>YesNoDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Mathematics\DiscountingModelSelection.cs" />
-    <Compile Include="Utilities\ClipboardTools.cs" />
-    <Compile Include="Utilities\CustomDataGrid.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Utilities\DataGridTools.cs" />
     <Compile Include="Utilities\Logging.cs" />
-    <Compile Include="Utilities\OpenXMLHelper.cs" />
     <Compile Include="Utilities\RelayCommand.cs" />
     <Compile Include="Utilities\Settings.cs" />
-    <Compile Include="ViewModel\ViewModelResults.cs" />
-    <Compile Include="ViewModel\RowViewModel.cs" />
+    <Compile Include="ViewModel\ViewModelResultsWindow.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="ViewModel\ViewModelLicense.cs" />
     <Compile Include="ViewModel\ViewModelMainWindow.cs" />
@@ -196,14 +200,11 @@
     <Compile Include="View\InitialLicense.xaml.cs">
       <DependentUpon>InitialLicense.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\ProgressDialog.xaml.cs">
-      <DependentUpon>ProgressDialog.xaml</DependentUpon>
-    </Compile>
     <Compile Include="View\RangePrompt.xaml.cs">
       <DependentUpon>RangePrompt.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\ResultsWindow.xaml.cs">
-      <DependentUpon>ResultsWindow.xaml</DependentUpon>
+    <Compile Include="View\ResultsGridWindow.xaml.cs">
+      <DependentUpon>ResultsGridWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\SelectionWindow.xaml.cs">
       <DependentUpon>SelectionWindow.xaml</DependentUpon>
@@ -211,6 +212,10 @@
     <Compile Include="View\UnifiedDiscountingWindow.xaml.cs">
       <DependentUpon>UnifiedDiscountingWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\ResizeDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Dialogs\YesNoDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -257,15 +262,11 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="View\ProgressDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="View\RangePrompt.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ResultsWindow.xaml">
+    <Page Include="View\ResultsGridWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -282,11 +283,6 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
@@ -294,8 +290,8 @@
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="BayesianModeling_TemporaryKey.pfx" />
@@ -306,18 +302,38 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <None Include="Resources\License.txt" />
-    <None Include="Resources\License_BDS.txt" />
+    <Resource Include="Resources\License.txt" />
+    <Resource Include="Resources\License_BDS.txt" />
     <None Include="COPYING">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Resources\License_Gridextra.txt" />
-    <None Include="Resources\License_EPPlus.txt" />
-    <None Include="Resources\License_Scales.txt" />
-    <None Include="Resources\License_base64enc.txt" />
+    <Resource Include="Resources\License_Gridextra.txt" />
+    <Resource Include="Resources\License_EPPlus.txt" />
+    <Resource Include="Resources\License_Scales.txt" />
+    <Resource Include="Resources\License_base64enc.txt" />
     <None Include="AUTHORS" />
-    <None Include="Resources\License_SharpVectorGraphics.txt" />
-    <None Include="Resources\LicenseGPL.txt" />
+    <Resource Include="Resources\License_SharpVectorGraphics.txt" />
+    <Resource Include="Resources\LicenseGPL.txt" />
+    <Resource Include="Resources\OpenFile.png" />
+    <Resource Include="Resources\trash.cur" />
+    <Resource Include="Resources\CopyHS.png" />
+    <Resource Include="Resources\CutHS.png" />
+    <Resource Include="Resources\Edit_RedoHS.png" />
+    <Resource Include="Resources\Edit_UndoHS.png" />
+    <Resource Include="Resources\NewDocumentHS.png" />
+    <Resource Include="Resources\openHS.png" />
+    <Resource Include="Resources\PasteHS.png" />
+    <Resource Include="Resources\pick_range.cur" />
+    <Resource Include="Resources\PropertiesHS.png" />
+    <Resource Include="Resources\RepeatHS.png" />
+    <Resource Include="Resources\saveHS.png" />
+    <Resource Include="Resources\WorkItemQueryNodeOffline_11949.png" />
+    <Resource Include="Resources\ProcedureMissing_8939.png" />
+    <Resource Include="Resources\Procedure_8937.png" />
+    <Resource Include="Resources\Textfile_818_16x.png" />
+    <Resource Include="Resources\ScriptFile_452.png" />
+    <None Include="Resources\Offline_16xLG.png" />
+    <Resource Include="Resources\Files_7954.png" />
     <Content Include="Source\BayesianModelSelector-master.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -326,7 +342,7 @@
     <Resource Include="Resources\SNS.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\SNS.ico" />
+    <Resource Include="Resources\SNS.ico" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">

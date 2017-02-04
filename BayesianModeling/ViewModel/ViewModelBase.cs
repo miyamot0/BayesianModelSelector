@@ -33,7 +33,8 @@ namespace BayesianModeling.ViewModel
     public abstract class ViewModelBase : INotifyPropertyChanged, IDisposable
     {
         /// <summary>
-        /// Base view model.  Essentially a template for inheriting INotifyPropertyChanged and IDisposable
+        /// Base view model.  
+        /// Essentially a template for inheriting INotifyPropertyChanged and IDisposable
         /// </summary>
         protected ViewModelBase() {}
 

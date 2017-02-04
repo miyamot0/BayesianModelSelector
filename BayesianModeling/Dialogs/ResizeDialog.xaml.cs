@@ -1,5 +1,5 @@
 ﻿//----------------------------------------------------------------------------------------------
-// <copyright file="SelectionWindow.cs" 
+// <copyright file="ResizeDialog.cs" 
 // Copyright 2016 Shawn Gilroy
 //
 // This file is part of Discounting Model Selector.
@@ -25,43 +25,62 @@
 // </summary>
 //----------------------------------------------------------------------------------------------
 
+using System.Text.RegularExpressions;
 using System.Windows;
+using System.Windows.Input;
 
-namespace BayesianModeling.View
+namespace BayesianModeling.Dialogs
 {
     /// <summary>
-    /// Interaction logic for SelectionWindow.xaml
+    /// Interaction logic for YesNoDialog.xaml
     /// </summary>
-    public partial class SelectionWindow : Window
+    public partial class ResizeDialog : Window
     {
-        public bool hadClick = false;
+        /// <summary>
+        /// Reference for response
+        /// </summary>
+        public bool ReturnedAnswer { get; set; }
+
+        /// <summary>
+        /// Return for affirm
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button_Click_Yes(object sender, RoutedEventArgs e)
+        {
+            ReturnedAnswer = true;
+            DialogResult = true;
+        }
+
+        /// <summary>
+        /// Return for decline
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button_Click_No(object sender, RoutedEventArgs e)
+        {
+            ReturnedAnswer = false;
+            DialogResult = true;
+        }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="options"></param>
-        /// <param name="defaultItem"></param>
-        public SelectionWindow(string[] options, string defaultItem)
+        public ResizeDialog()
         {
             InitializeComponent();
-
-            foreach (string str in options)
-            {
-                MessageOptions.Items.Add(str);
-            }
-
-            MessageOptions.SelectedItem = defaultItem;
+            ReturnedAnswer = false;
         }
 
         /// <summary>
-        /// Returning event
+        /// Validation
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
-            hadClick = true;
-            DialogResult = true;
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
         }
     }
 }

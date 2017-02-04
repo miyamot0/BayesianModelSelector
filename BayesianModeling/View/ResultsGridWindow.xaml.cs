@@ -1,5 +1,5 @@
 ﻿//----------------------------------------------------------------------------------------------
-// <copyright file="ResultsWindow.cs" 
+// <copyright file="ResultsGridWindow.cs" 
 // Copyright 2016 Shawn Gilroy
 //
 // This file is part of Discounting Model Selector.
@@ -30,11 +30,14 @@ using System.Windows;
 namespace BayesianModeling.View
 {
     /// <summary>
-    /// Interaction logic for ResultsWindow.xaml
+    /// Interaction logic for ResultsGridWindow.xaml
     /// </summary>
-    public partial class ResultsWindow : Window
+    public partial class ResultsGridWindow : Window
     {
-        public ResultsWindow()
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public ResultsGridWindow()
         {
             InitializeComponent();
         }

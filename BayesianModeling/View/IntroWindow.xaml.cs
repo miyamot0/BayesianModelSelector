@@ -37,17 +37,30 @@ namespace BayesianModeling.View
     /// </summary>
     public partial class IntroWindow : Window
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public IntroWindow()
         {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Link action
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
         {
             Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
             e.Handled = true;
         }
 
+        /// <summary>
+        /// On load action, call display version numbers
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             if (ApplicationDeployment.IsNetworkDeployed)

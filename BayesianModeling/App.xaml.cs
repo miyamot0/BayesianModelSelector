@@ -27,6 +27,7 @@
 
 using BayesianModeling.ViewModel;
 using System.Windows;
+using unvell.ReoGrid;
 
 namespace BayesianModeling
 {
@@ -35,11 +36,26 @@ namespace BayesianModeling
     /// </summary>
     public partial class App : Application
     {
+        private static MainWindow window;
+
+        private static ReoGridControl workbook;
+        public static ReoGridControl Workbook
+        {
+            get
+            {
+                return window.reoGridControl;
+            }
+            set
+            {
+                workbook = value;
+            }
+        }
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
 
-            MainWindow window = new MainWindow();
+            window = new MainWindow();
             window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             window.DataContext = new ViewModelMainWindow
             {
@@ -47,7 +63,6 @@ namespace BayesianModeling
             };
 
             window.Show();
-
         }
     }
 }

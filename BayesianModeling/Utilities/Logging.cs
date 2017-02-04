@@ -32,6 +32,11 @@ namespace BayesianModeling.Utilities
 {
     class Logging
     {
+        /// <summary>
+        /// Submit logs to site (DEPRECATED)
+        /// </summary>
+        /// <param name="pairs"></param>
+        /// <returns></returns>
         public static byte[] SubmitLogs(NameValueCollection pairs)
         {
             byte[] webResponse = null;

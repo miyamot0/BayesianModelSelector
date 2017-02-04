@@ -29,6 +29,9 @@ namespace BayesianModeling.ViewModel
 {
     class ViewModelLicense : ViewModelBase
     {
+        /// <summary>
+        /// Title for license window
+        /// </summary>
         public string licenseTitle { get; set; }
         public string LicenseTitle
         {
@@ -40,6 +43,9 @@ namespace BayesianModeling.ViewModel
             }
         }
 
+        /// <summary>
+        /// Text for license window
+        /// </summary>
         public string licenseText { get; set; }
         public string LicenseText
         {
