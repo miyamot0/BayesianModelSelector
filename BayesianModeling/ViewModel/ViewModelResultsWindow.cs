@@ -97,7 +97,7 @@ namespace BayesianModeling.ViewModel
         /// <summary>
         /// Bindable title
         /// </summary>
-        public string title = "Discounting Model Selection - New File";
+        public string title = "Discounting Model Selection - Results";
         public string Title
         {
             get { return title; }
@@ -131,9 +131,9 @@ namespace BayesianModeling.ViewModel
 
         /* IO Commands */
 
-        public RelayCommand FileSaveCommand { get; set; }
-        public RelayCommand FileSaveAsCommand { get; set; }
-        public RelayCommand FileCloseCommand { get; set; }
+        public RelayCommand ResultsFileSaveCommand { get; set; }
+        public RelayCommand ResultsFileSaveAsCommand { get; set; }
+        public RelayCommand ResultsFileCloseCommand { get; set; }
 
         #endregion Commands
 
@@ -144,9 +144,9 @@ namespace BayesianModeling.ViewModel
         {
             #region FileCommands
 
-            FileSaveCommand = new RelayCommand(param => SaveFile(), param => true);
-            FileSaveAsCommand = new RelayCommand(param => SaveFileAs(), param => true);
-            FileCloseCommand = new RelayCommand(param => CloseProgramWindow(param), param => true);
+            ResultsFileSaveCommand = new RelayCommand(param => SaveFile(), param => true);
+            ResultsFileSaveAsCommand = new RelayCommand(param => SaveFileAs(), param => true);
+            ResultsFileCloseCommand = new RelayCommand(param => CloseProgramWindow(param), param => true);
 
             #endregion
         }
@@ -179,11 +179,11 @@ namespace BayesianModeling.ViewModel
 
                     if (mExt.Equals(".xlsx"))
                     {
-                        App.Workbook.Save(saveFileDialog1.FileName, unvell.ReoGrid.IO.FileFormat.Excel2007);
+                        ResultsBook.Save(saveFileDialog1.FileName, unvell.ReoGrid.IO.FileFormat.Excel2007);
                     }
                     else if (mExt.Equals(".csv"))
                     {
-                        App.Workbook.Save(saveFileDialog1.FileName, unvell.ReoGrid.IO.FileFormat.CSV);
+                        ResultsBook.Save(saveFileDialog1.FileName, unvell.ReoGrid.IO.FileFormat.CSV);
                     }
                     else
                     {
@@ -217,11 +217,11 @@ namespace BayesianModeling.ViewModel
                 {
                     if (mExt.Equals(".xlsx"))
                     {
-                        App.Workbook.Save(saveFileDialog1.FileName, unvell.ReoGrid.IO.FileFormat.Excel2007);
+                        ResultsBook.Save(saveFileDialog1.FileName, unvell.ReoGrid.IO.FileFormat.Excel2007);
                     }
                     else if (mExt.Equals(".csv"))
                     {
-                        App.Workbook.Save(saveFileDialog1.FileName, unvell.ReoGrid.IO.FileFormat.CSV);
+                        ResultsBook.Save(saveFileDialog1.FileName, unvell.ReoGrid.IO.FileFormat.CSV);
                     }
                     else
                     {

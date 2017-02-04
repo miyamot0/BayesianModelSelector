@@ -1343,8 +1343,11 @@ namespace BayesianModeling.ViewModel
             mWindow.OutputEvents("Outputting to workbook Started... Please wait... ");
 
             var mNewResultsWindow = new ResultsGridWindow();
-            var mNewResultsVM = new ViewModelResultsWindow();
-            mNewResultsVM.ResultsBook = mNewResultsWindow.reoGridControl;
+            var mNewResultsVM = new ViewModelResultsWindow
+            {
+                ResultsBook = mNewResultsWindow.reoGridControl
+            };
+            mNewResultsWindow.DataContext = mNewResultsVM;
             mNewResultsWindow.Owner = windowRef;
             mNewResultsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             mNewResultsWindow.Height = 500;
@@ -1886,8 +1889,11 @@ namespace BayesianModeling.ViewModel
             windowRef.calculateButton.IsEnabled = false;
 
             var mNewResultsWindow = new ResultsGridWindow();
-            var mNewResultsVM = new ViewModelResultsWindow();
-            mNewResultsVM.ResultsBook = mNewResultsWindow.reoGridControl;
+            var mNewResultsVM = new ViewModelResultsWindow
+            {
+                ResultsBook = mNewResultsWindow.reoGridControl
+            };
+            mNewResultsWindow.DataContext = mNewResultsVM;
             mNewResultsWindow.Owner = windowRef;
             mNewResultsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             mNewResultsWindow.Height = 500;
