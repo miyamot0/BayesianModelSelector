@@ -51,7 +51,7 @@
                 <Paragraph>
                     <Run Text="The "/>
                     <Bold>
-                        <Hyperlink NavigateUri="http://www.smallnstats.com/">
+                        <Hyperlink NavigateUri="http://www.smallnstats.com/" RequestNavigate="Hyperlink_RequestNavigate">
                             <Run Text="Small n Stats"/>
                         </Hyperlink>
                     </Bold>
@@ -69,7 +69,7 @@
                 <List>
                     <ListItem>
                         <Paragraph>
-                            <Hyperlink NavigateUri="http://onlinelibrary.wiley.com/doi/10.1002/jeab.128/abstract">
+                            <Hyperlink NavigateUri="http://onlinelibrary.wiley.com/doi/10.1002/jeab.128/abstract" RequestNavigate="Hyperlink_RequestNavigate">
                                 <Run Text="Franck, C. T., Koffarnus, M. N., House, L. L., Bickel, W. (2015). Accurate characterization of delay discounting: A multiple model approach using approximate bayesian model selection and a unified discounting measure, Journal of the Experimental Analysis of Behavior, 103, 218-233."/>
                             </Hyperlink>
                             <LineBreak/>
