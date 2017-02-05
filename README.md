@@ -11,9 +11,11 @@ Features include:
   - Wide range of model outputs/metrics, saveable in common spreadsheet file formats
 
 ### Version
-1.0.0.85
+1.0.1.14
 
 ### Changelog
+ * 1.0.1.4 - Incorporated native icon visuals, fixed link following, corrected grid styling, and better grid management with 10k+ series.
+ * 1.0.1.0 - Incorporated recently re-licensed Reogrid control (MIT).  Begin migrate away from manual VM grid managagement and xml write/reads. 
  * 1.0.0.85 - User reviews/feedback: 1) Added new goodness of fit measures (i.e., AIC), 2) optional bounding for models with corresponding user feedback, 3) spreadsheet reading bugs squashed and 4) recents menu improved. 
  * 1.0.0.84 - Bounding settings, name changes and updates for clarity
  * 1.0.0.82 - Upstream changes..., licensing updates, formatting updates, standardized precision, spelling fixes, etc. 
